@@ -57,6 +57,8 @@
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
     "createTarBall": "oclif-dev pack",
+    "npxPublish": "oclif-dev pack",
+    "createInstallers": "oclif-dev pack:win &&  oclif-dev pack:macos && oclif-dev pack:deb",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
     "eslint:fix": "eslint . --ext .ts --config .eslintrc --fix"
