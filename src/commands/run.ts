@@ -12,9 +12,9 @@ $  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com
 
   static flags = {
     help: flags.help({char: 'h'}),
-    crusher_token: flags.string({description: 'Token from your cruser app', required: true}),
+    crusher_token: flags.string({description: 'Token from your crusher app', required: true}),
     base_url: flags.string({description: 'base_url, Not required with tunnelling'}),
-    test_ids: flags.string({description: 'IDs of test you want to run [ Optiona]'}),
+    test_ids: flags.string({description: 'IDs of test you want to run [Optional]'}),
     test_group_id: flags.string({description: 'Test group ID'}),
     tunnel: flags.boolean({char: 't', description: 'Enable tunneling for remote machine'}),
   }

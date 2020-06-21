@@ -1,7 +1,9 @@
 import {Command, flags} from '@oclif/command'
+import {getBackendServerUrl, getFrontendServerUrl, getUniqueString} from "../utils";
 const {cli} = require('cli-ux')
+const fetch = require('node-fetch');
 
-export default class Hello extends Command {
+export default class Setup extends Command {
   static description = 'Run visual diff'
 
   static examples = [
@@ -13,9 +15,33 @@ export default class Hello extends Command {
     help: flags.help({char: 'h'}),
   }
 
+  static randomGeneratedToken = getUniqueString();
+
+  static waitForUserLogin = ():Promise<string> => {
+    return new Promise((resolve,reject) => {
+      const userLoginCheckPoll = async () : Promise<any> => {
+        const response = await fetch(`${getBackendServerUrl()}/cli/status/${Setup.randomGeneratedToken}`).then(res => res.json());
+        response.status==='Completed' && resolve(response);
+      }
+
+      setInterval(userLoginCheckPoll, 2500)
+    })
+  }
+
+  static registerToken =  ()=>{
+    return fetch(`${getBackendServerUrl()}/cli/add_token/${Setup.randomGeneratedToken}`)
+  }
+
   async userLogin() {
-    await cli.action.start('Opening a broswer to login')
-    await new Promise(r => setTimeout(r, 2000))
+    await cli.action.start('Opening a browser to login. Please complete that process.')
+    // Intentional delay so user can read the message
+    await Setup.registerToken()
+    await new Promise(r => setTimeout(r, 500))
+
+    await cli.open(`${getFrontendServerUrl()}/?cli_token=${Setup.randomGeneratedToken}`)
+    const userData = await Setup.waitForUserLogin();
+    console.log(userData,"mera")
+
     await cli.action.stop()
     return '--crusher_token=123'
   }
@@ -30,10 +56,13 @@ export default class Hello extends Command {
   }
 
   async runLocally() {
-    const runLocal = await cli.confirm('Do you run test locally? [y/n]')
+    const runLocal = await cli.confirm('Do you run test for locally hosted website? [y/n]')
+    // If not ask for base host
     if (!runLocal) {
-      return `--base_url=${await cli.prompt('Base Host')}`
+      const baseHost = await cli.prompt('Base Host');
+      return `--base_url=${baseHost}`
     }
+
     return ' -t'
   }
 
