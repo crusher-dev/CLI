@@ -16,6 +16,7 @@ export default class Setup extends Command {
   }
 
   static randomGeneratedToken = getUniqueString();
+  static userData:any = null;
 
   static waitForUserLogin = ():Promise<string> => {
     return new Promise((resolve,reject) => {
@@ -39,8 +40,8 @@ export default class Setup extends Command {
     await new Promise(r => setTimeout(r, 500))
 
     await cli.open(`${getFrontendServerUrl()}/?cli_token=${Setup.randomGeneratedToken}`)
-    const userData = await Setup.waitForUserLogin();
-    console.log(userData,"mera")
+    Setup.userData =  await Setup.waitForUserLogin();
+    console.log(Setup.userData ,"user_info")
 
     await cli.action.stop()
     return '--crusher_token=123'
