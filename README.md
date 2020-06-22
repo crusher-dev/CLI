@@ -15,11 +15,11 @@ crusher
 # Usage
 <!-- usage -->
 ```sh-session
-$ npm install -g crusher
+$ npm install -g crusher-cli
 $ crusher COMMAND
 running command...
 $ crusher (-v|--version|version)
-crusher/1.0.0 darwin-x64 node-v10.20.1
+crusher-cli/1.0.0 darwin-x64 node-v10.20.1
 $ crusher --help [COMMAND]
 USAGE
   $ crusher COMMAND
@@ -61,7 +61,7 @@ OPTIONS
   -h, --help                     show CLI help
   -t, --tunnel                   Enable tunneling for remote machine
   --base_url=base_url            base_url, Not required with tunnelling
-  --crusher_token=crusher_token  (required) Token from your crusher app
+  --crusher_token=crusher_token  (required) Token from your crusher-cli-macos app
   --project_id=project_id        Project ID
   --test_ids=test_ids            IDs of test you want to run [Optional]
 

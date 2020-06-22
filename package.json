@@ -1,9 +1,9 @@
 {
-  "name": "crusher",
-  "version": "1.0.0",
+  "name": "crusher-cli",
+  "version": "1.0.1",
   "author": "Himanshu @himanshu-dixit",
   "bin": {
-    "crusher": "./bin/run"
+    "crusher-cli": "./bin/run"
   },
   "bugs": "https://github.com/himanshu-dixit/crusher/issues",
   "dependencies": {
@@ -13,6 +13,7 @@
     "cli-ux": "^5.4.6",
     "enquirer": "^2.3.5",
     "node-fetch": "^2.6.0",
+    "pkg": "^4.4.8",
     "tslib": "^1",
     "uuid": "^8.1.0"
   },
@@ -56,6 +57,9 @@
       "@oclif/plugin-help"
     ]
   },
+  "pkg": {
+    "scripts": "lib/**/*.js"
+  },
   "repository": "crusherdev/CLI",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
@@ -66,7 +70,8 @@
     "createInstallers": "NODE_ENV=production oclif-dev pack:win &&  oclif-dev pack:macos && oclif-dev pack:deb",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
-    "eslint:fix": "eslint . --ext .ts --config .eslintrc --fix"
+    "eslint:fix": "eslint . --ext .ts --config .eslintrc --fix",
+    "createBinary": " pkg . && mkdir binaries && mv crusher-cli-linux binaries/crusher-cli-linux && mv crusher-cli-macos binaries/crusher-cli-macos && mv crusher-cli-win.exe binaries/crusher-cli-win.exe"
   },
   "types": "lib/index.d.ts"
 }

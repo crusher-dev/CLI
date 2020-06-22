@@ -6,14 +6,12 @@ export const getUniqueString = () : string =>{
 }
 
 export const getBackendServerUrl = (): string => {
-  const {DEV,PROD} = BACKEND_SERVER_URLS;
-  if(process.env.NODE_ENV=== 'production') return PROD
-  return DEV;
+  const {PROD} = BACKEND_SERVER_URLS;
+  return PROD;
 }
 
 export const getFrontendServerUrl = (): string => {
   const {DEV,PROD} = FRONTEND_SERVER_URLS;
-  if(process.env.NODE_ENV=== 'production') return PROD
-  return DEV;
+  return PROD;
 }
 

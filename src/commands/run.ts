@@ -12,7 +12,7 @@ $  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com
 
   static flags = {
     help: flags.help({char: 'h'}),
-    crusher_token: flags.string({description: 'Token from your crusher app', required: true}),
+    crusher_token: flags.string({description: 'Token from your crusher-cli-macos app', required: true}),
     base_url: flags.string({description: 'base_url, Not required with tunnelling'}),
     test_ids: flags.string({description: 'IDs of test you want to run [Optional]'}),
     project_id: flags.string({description: 'Project ID'}),
