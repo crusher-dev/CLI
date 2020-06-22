@@ -19,7 +19,7 @@ $ npm install -g crusher-cli
 $ crusher COMMAND
 running command...
 $ crusher (-v|--version|version)
-crusher-cli/1.0.0 darwin-x64 node-v10.20.1
+crusher-cli/1.0.2 darwin-x64 node-v10.20.1
 $ crusher --help [COMMAND]
 USAGE
   $ crusher COMMAND
@@ -70,7 +70,7 @@ EXAMPLE
   $  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com
 ```
 
-_See code: [src/commands/run.ts](https://github.com/crusherdev/CLI/blob/v1.0.0/src/commands/run.ts)_
+_See code: [src/commands/run.ts](https://github.com/crusherdev/CLI/blob/v1.0.2/src/commands/run.ts)_
 
 ## `crusher setup`
 
@@ -87,5 +87,5 @@ EXAMPLE
   Generate config for running commands
 ```
 
-_See code: [src/commands/setup.ts](https://github.com/crusherdev/CLI/blob/v1.0.0/src/commands/setup.ts)_
+_See code: [src/commands/setup.ts](https://github.com/crusherdev/CLI/blob/v1.0.2/src/commands/setup.ts)_
 <!-- commandsstop -->
