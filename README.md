@@ -19,7 +19,7 @@ $ npm install -g crusher
 $ crusher COMMAND
 running command...
 $ crusher (-v|--version|version)
-crusher/0.1.0 darwin-x64 node-v10.20.1
+crusher/0.1.1 darwin-x64 node-v10.20.1
 $ crusher --help [COMMAND]
 USAGE
   $ crusher COMMAND
@@ -61,16 +61,16 @@ OPTIONS
   -h, --help                     show CLI help
   -t, --tunnel                   Enable tunneling for remote machine
   --base_url=base_url            base_url, Not required with tunnelling
-  --crusher_token=crusher_token  (required) Token from your cruser app
-  --test_group_id=test_group_id  Test group ID
-  --test_ids=test_ids            IDs of test you want to run [ Optiona]
+  --crusher_token=crusher_token  (required) Token from your crusher app
+  --project_id=project_id        Project ID
+  --test_ids=test_ids            IDs of test you want to run [Optional]
 
 EXAMPLE
   $  crusher run --crusher_token=123 --test_ids=32 -t
   $  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com
 ```
 
-_See code: [src/commands/run.ts](https://github.com/crusherdev/CLI/blob/v0.1.0/src/commands/run.ts)_
+_See code: [src/commands/run.ts](https://github.com/crusherdev/CLI/blob/v0.1.1/src/commands/run.ts)_
 
 ## `crusher setup`
 
@@ -87,5 +87,5 @@ EXAMPLE
   Generate config for running commands
 ```
 
-_See code: [src/commands/setup.ts](https://github.com/crusherdev/CLI/blob/v0.1.0/src/commands/setup.ts)_
+_See code: [src/commands/setup.ts](https://github.com/crusherdev/CLI/blob/v0.1.1/src/commands/setup.ts)_
 <!-- commandsstop -->

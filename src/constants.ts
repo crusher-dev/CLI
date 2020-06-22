@@ -1,9 +1,9 @@
-export const BACKEND_SERVER_URLS: object = {
+export const BACKEND_SERVER_URLS: {DEV:string, PROD: string}  = {
   DEV: 'http://localhost:8000',
   PROD: 'https://backend.dcrusher.dev'
 }
 
-export const FRONTEND_SERVER_URLS: object = {
+export const FRONTEND_SERVER_URLS: {DEV:string, PROD: string}  = {
   DEV: 'http://localhost:7000',
   PROD: 'https://app.crusher.dev'
 }

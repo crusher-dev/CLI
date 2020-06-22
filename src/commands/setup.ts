@@ -54,7 +54,7 @@ export default class Setup extends Command {
       initial: 'N',
       message: 'Select Environment for the PR?',
       choices,
-      result(names) {
+      result(names:any) {
         return this.map(names);
       }
     })).selectedProject;
@@ -75,7 +75,7 @@ export default class Setup extends Command {
         name: 'selectTestOption',
         message: 'Select Test Group Ids',
         choices: selectedProject.projectTestList.map(test=> ({name: test.name, value: test.id})),
-        result(value) {
+        result(value:any) {
           return this.map(value);
         }
       }).selectTestOption;

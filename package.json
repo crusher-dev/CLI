@@ -1,6 +1,6 @@
 {
   "name": "crusher",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "Himanshu @himanshu-dixit",
   "bin": {
     "crusher": "./bin/run"
@@ -61,9 +61,9 @@
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b && oclif-dev manifest && oclif-dev readme",
-    "createTarBall": "oclif-dev pack",
-    "npxPublish": "oclif-dev pack",
-    "createInstallers": "oclif-dev pack:win &&  oclif-dev pack:macos && oclif-dev pack:deb",
+    "createTarBall": "NODE_ENV=production oclif-dev pack",
+    "npxPublish": "NODE_ENV=production oclif-dev pack",
+    "createInstallers": "NODE_ENV=production oclif-dev pack:win &&  oclif-dev pack:macos && oclif-dev pack:deb",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
     "eslint:fix": "eslint . --ext .ts --config .eslintrc --fix"
