@@ -15,15 +15,15 @@ $  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com
     crusher_token: flags.string({description: 'Token from your crusher app', required: true}),
     base_url: flags.string({description: 'base_url, Not required with tunnelling'}),
     test_ids: flags.string({description: 'IDs of test you want to run [Optional]'}),
-    test_group_id: flags.string({description: 'Test group ID'}),
+    project_id: flags.string({description: 'Project ID'}),
     tunnel: flags.boolean({char: 't', description: 'Enable tunneling for remote machine'}),
   }
 
   async run() {
     const { flags} = this.parse(Hello)
-    const {base_url, test_ids, test_group_id, tunnel} = flags
+    const {base_url, test_ids, project_id, tunnel} = flags
 
-    if (typeof (test_ids) === 'undefined' && typeof (test_group_id) === 'undefined') {
+    if (typeof (test_ids) === 'undefined' && typeof (project_id) === 'undefined') {
       console.log('Either test ID or Test Group IDs are needed to run the test.')
       return
     }

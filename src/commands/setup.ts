@@ -2,6 +2,7 @@ import {Command, flags} from '@oclif/command'
 import {getBackendServerUrl, getFrontendServerUrl, getUniqueString} from "../utils";
 const {cli} = require('cli-ux')
 const fetch = require('node-fetch');
+const { prompt,MultiSelect } = require('enquirer');
 
 export default class Setup extends Command {
   static description = 'Run visual diff'
@@ -35,44 +36,79 @@ export default class Setup extends Command {
 
   async userLogin() {
     await cli.action.start('Opening a browser to login. Please complete that process.')
-    // Intentional delay so user can read the message
     await Setup.registerToken()
     await new Promise(r => setTimeout(r, 500))
-
     await cli.open(`${getFrontendServerUrl()}/?cli_token=${Setup.randomGeneratedToken}`)
     Setup.userData =  await Setup.waitForUserLogin();
-    console.log(Setup.userData ,"user_info")
+    await cli.action.stop();
 
-    await cli.action.stop()
-    return '--crusher_token=123'
+    return  `--crusher_token=${Setup.userData.requestToken}`;
   }
 
-  async selectTestId() {
+  async selectTests() {
+    const choices = Setup.userData.projects.map(project=> ({name: project.name, value: project.id}));
+
+    const selectedProjectOption = (await prompt({
+      type: 'select',
+      name: 'selectedProject',
+      initial: 'N',
+      message: 'Select Environment for the PR?',
+      choices,
+      result(names) {
+        return this.map(names);
+      }
+    })).selectedProject;
+
+    const selectedProjectId = selectedProjectOption[Object.keys(selectedProjectOption)[0]];
+    const selectedProject = Setup.userData.projects.find((project) => project.id === selectedProjectId);
     const runIndividualTest = await cli.confirm('Do you want to run individual test? [y/n]')
+
     if (runIndividualTest) {
-      return `--test_ids=${await cli.prompt('Enter individual test ids separated by comma')}`
+      const {projectTestList} = selectedProject;
+
+      if(projectTestList.length<1){
+        console.log("Please add test in project.")
+        return;
+      }
+
+      const selectTestOption = new MultiSelect({
+        name: 'selectTestOption',
+        message: 'Select Test Group Ids',
+        choices: selectedProject.projectTestList.map(test=> ({name: test.name, value: test.id})),
+        result(value) {
+          return this.map(value);
+        }
+      }).selectTestOption;
+
+      const testIds = Object.keys(selectTestOption).map((key)=>{
+        return selectTestOption[key]
+      })
+
+      if(testIds.length<1){
+        console.log("Please select some tests")
+        return;
+      }
+       return `--test_ids=${testIds.join(',')}`
     }
 
-    return `--test_group_id=${await cli.prompt('Enter test group id')}`
+     return `--project_id=${selectedProjectId}`
   }
 
   async runLocally() {
     const runLocal = await cli.confirm('Do you run test for locally hosted website? [y/n]')
     // If not ask for base host
     if (!runLocal) {
-      const baseHost = await cli.prompt('Base Host');
+      const baseHost = await cli.prompt('Base Host (https://google.com)');
       return `--base_url=${baseHost}`
     }
-
     return ' -t'
   }
 
   async run() {
     const crusherTokenFlag = await this.userLogin()
-    const testIDsFlag = await this.selectTestId()
+    const testIDsFlag = await this.selectTests()
     const hostParamFlag = await this.runLocally()
-
-    const generatedCommand = `./bin/run run ${crusherTokenFlag} ${testIDsFlag} ${hostParamFlag}`
+    const generatedCommand = `./bin/run run ${testIDsFlag} ${hostParamFlag} ${crusherTokenFlag} `
 
     console.log('\n\n 💁💁 Please use following command to run test\n\n')
     console.log(generatedCommand)
