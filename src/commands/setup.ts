@@ -71,14 +71,17 @@ export default class Setup extends Command {
         return;
       }
 
-      const selectTestOption = new MultiSelect({
+      const selectTestOptionPropmpt = new MultiSelect({
         name: 'selectTestOption',
         message: 'Select Test Group Ids',
         choices: selectedProject.projectTestList.map(test=> ({name: test.name, value: test.id})),
         result(value:any) {
           return this.map(value);
         }
-      }).selectTestOption;
+      });
+
+      const selectTestOption =  await selectTestOptionPropmpt.run();
+
 
       const testIds = Object.keys(selectTestOption).map((key)=>{
         return selectTestOption[key]
