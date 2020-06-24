@@ -16,17 +16,19 @@ export default class Setup extends Command {
     help: flags.help({char: 'h'}),
   }
 
+  static userLoginCheckPoll: any = null;
+
   static randomGeneratedToken = getUniqueString();
   static userData:any = null;
 
   static waitForUserLogin = ():Promise<string> => {
     return new Promise((resolve,reject) => {
-      const userLoginCheckPoll = async () : Promise<any> => {
+       const userLoginCheckPoll = async () : Promise<any> => {
         const response = await fetch(`${getBackendServerUrl()}/cli/status/${Setup.randomGeneratedToken}`).then(res => res.json());
         response.status==='Completed' && resolve(response);
       }
 
-      setInterval(userLoginCheckPoll, 2500)
+      Setup.userLoginCheckPoll = setInterval(userLoginCheckPoll, 2500)
     })
   }
 
@@ -38,9 +40,13 @@ export default class Setup extends Command {
     await cli.action.start('Opening a browser to login. Please complete that process.')
     await Setup.registerToken()
     await new Promise(r => setTimeout(r, 500))
-    await cli.open(`${getFrontendServerUrl()}/?cli_token=${Setup.randomGeneratedToken}`)
+    await cli.open(`${getFrontendServerUrl()}?cli_token=${Setup.randomGeneratedToken}`)
     Setup.userData =  await Setup.waitForUserLogin();
     await cli.action.stop();
+    if(Setup.userLoginCheckPoll){
+      clearInterval(Setup.userLoginCheckPoll);
+      Setup.userLoginCheckPoll = null;
+    }
 
     return  `--crusher_token=${Setup.userData.requestToken}`;
   }

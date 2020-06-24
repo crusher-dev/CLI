@@ -1,13 +1,15 @@
 import {Command, flags} from '@oclif/command'
+import { getBackendServerUrl } from '../utils';
+import Setup from './setup';
 const {cli} = require('cli-ux')
+const fetch = require('node-fetch');
 
-export default class Hello extends Command {
+export default class Run extends Command {
   static description = 'Run visual diff'
 
   static examples = [
-    `$  crusher run --crusher_token=123 --test_ids=32 -t
-$  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com
-    `,
+    `$  crusher run --crusher_token=123 --test_ids=32 -t\n` +
+    `$  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com`,
   ]
 
   static flags = {
@@ -20,8 +22,8 @@ $  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com
   }
 
   async run() {
-    const { flags} = this.parse(Hello)
-    const {base_url, test_ids, project_id, tunnel} = flags
+    const { flags} = this.parse(Run);
+    const {base_url, test_ids, project_id, crusher_token, tunnel} = flags;
 
     if (typeof (test_ids) === 'undefined' && typeof (project_id) === 'undefined') {
       console.log('Either test ID or Test Group IDs are needed to run the test.')
@@ -41,11 +43,23 @@ $  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com
       await new Promise(r => setTimeout(r, 1000))
     }
 
-    await cli.action.start('Starting to run Test')
-
-    await cli.action.start('Running visual diff')
-    await cli.action.start('Test complete')
-
+    if(project_id && !test_ids) {
+      const response = await fetch(`${getBackendServerUrl()}/projects/runTests/${project_id}`, {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json',}, body: JSON.stringify({cliToken: crusher_token, host: base_url})}).then(res => res.json());
+      if(response && response.status === "RUNNING_TESTS"){
+        console.log("Test have started running");
+      } else {
+        console.error("Something went wrong while running tests");
+      }
+    } else if(project_id && test_ids){
+      const response = await fetch(`${getBackendServerUrl()}/projects/runTestWithIds`, {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'}, body: JSON.stringify({cliToken: crusher_token, host: base_url, projectId: project_id, test_ids})}).then(res => res.json());
+      if(response && response.status === "RUNNING_TESTS"){
+        console.log("Test have started running");
+      } else {
+        console.error("Something went wrong while running tests");
+      }
+    }
     await cli.action.stop()
   }
 }
