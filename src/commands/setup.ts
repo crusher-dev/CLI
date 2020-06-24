@@ -7,6 +7,8 @@ const { prompt,MultiSelect } = require('enquirer');
 export default class Setup extends Command {
   static description = 'Run visual diff'
 
+  static userLoginCheckInterval: any = null;
+
   static examples = [
     `Generate config for running commands
     `,
@@ -26,7 +28,7 @@ export default class Setup extends Command {
         response.status==='Completed' && resolve(response);
       }
 
-      setInterval(userLoginCheckPoll, 2500)
+      Setup.userLoginCheckInterval = setInterval(userLoginCheckPoll, 2500)
     })
   }
 
@@ -41,7 +43,9 @@ export default class Setup extends Command {
     await cli.open(`${getFrontendServerUrl()}/?cli_token=${Setup.randomGeneratedToken}`)
     Setup.userData =  await Setup.waitForUserLogin();
     await cli.action.stop();
-
+    if (Setup.userLoginCheckInterval) {
+      clearInterval(Setup.userLoginCheckInterval);
+    }
     return  `--crusher_token=${Setup.userData.requestToken}`;
   }
 
