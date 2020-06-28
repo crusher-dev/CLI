@@ -47,6 +47,7 @@ export default class Run extends Command {
     const gitRepos = await getGitRepos();
 
     if(project_id && !test_ids) {
+      //@ts-ignore
       const response = await fetch(`${getBackendServerUrl()}/projects/runTests/${project_id}`, {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
           'Content-Type': 'application/json',}, body: JSON.stringify({cliToken: crusher_token, host: base_url, branchName: gitBranchName, commitId: gitSha, repoName: Object.values(gitRepos)[0].fetch})}).then(res => res.json());
       if(response && response.status === "RUNNING_TESTS"){
@@ -55,6 +56,7 @@ export default class Run extends Command {
         console.error("Something went wrong while running tests");
       }
     } else if(project_id && test_ids){
+      //@ts-ignore
       const response = await fetch(`${getBackendServerUrl()}/projects/runTestWithIds`, {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
           'Content-Type': 'application/json'}, body: JSON.stringify({cliToken: crusher_token, host: base_url, projectId: project_id, test_ids, branchName: gitBranchName, commitId: gitSha, repoName: Object.values(gitRepos)[0].fetch})}).then(res => res.json());
       if(response && response.status === "RUNNING_TESTS"){
