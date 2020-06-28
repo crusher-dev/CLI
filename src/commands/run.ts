@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { getBackendServerUrl } from '../utils';
+import { getBackendServerUrl, getGitBranchName, getGitLastCommitSHA, getGitRepos } from '../utils';
 import Setup from './setup';
 const {cli} = require('cli-ux')
 const fetch = require('node-fetch');
@@ -32,7 +32,6 @@ export default class Run extends Command {
 
     if (typeof (base_url) === 'undefined' && !tunnel) {
       console.log('Please enter base url or use tunnelling')
-      return
     }
 
     await cli.action.start('Starting visual test')
@@ -43,9 +42,13 @@ export default class Run extends Command {
       await new Promise(r => setTimeout(r, 1000))
     }
 
+    const gitSha = await getGitLastCommitSHA();
+    const gitBranchName = await getGitBranchName();
+    const gitRepos = await getGitRepos();
+
     if(project_id && !test_ids) {
       const response = await fetch(`${getBackendServerUrl()}/projects/runTests/${project_id}`, {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',}, body: JSON.stringify({cliToken: crusher_token, host: base_url})}).then(res => res.json());
+          'Content-Type': 'application/json',}, body: JSON.stringify({cliToken: crusher_token, host: base_url, branchName: gitBranchName, commitId: gitSha, repoName: Object.values(gitRepos)[0].fetch})}).then(res => res.json());
       if(response && response.status === "RUNNING_TESTS"){
         console.log("Test have started running");
       } else {
@@ -53,13 +56,14 @@ export default class Run extends Command {
       }
     } else if(project_id && test_ids){
       const response = await fetch(`${getBackendServerUrl()}/projects/runTestWithIds`, {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json'}, body: JSON.stringify({cliToken: crusher_token, host: base_url, projectId: project_id, test_ids})}).then(res => res.json());
+          'Content-Type': 'application/json'}, body: JSON.stringify({cliToken: crusher_token, host: base_url, projectId: project_id, test_ids, branchName: gitBranchName, commitId: gitSha, repoName: Object.values(gitRepos)[0].fetch})}).then(res => res.json());
       if(response && response.status === "RUNNING_TESTS"){
         console.log("Test have started running");
       } else {
         console.error("Something went wrong while running tests");
       }
     }
+
     await cli.action.stop()
   }
 }
