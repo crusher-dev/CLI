@@ -26,6 +26,7 @@ export default class Setup extends Command {
   static waitForUserLogin = ():Promise<string> => {
     return new Promise((resolve,reject) => {
        const userLoginCheckPoll = async () : Promise<any> => {
+         // console.log(getBackendServerUrl());
         const response = await fetch(`${getBackendServerUrl()}/cli/status/${Setup.randomGeneratedToken}`).then(res => res.json());
         response.status==='Completed' && resolve(response);
       }
