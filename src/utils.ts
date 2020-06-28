@@ -57,7 +57,7 @@ export function getGitLastCommitSHA() {
 
 export function getGitBranchName() {
   return new Promise((resolve, reject) => {
-    exec(`git branch | awk '/\\*/ { print $2; }'`, function(err, stdout){
+    exec(`git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$(git rev-parse HEAD)/ {print \\$2}"`, function(err, stdout){
       if(err){reject(err); return;}
 
       const branchName = stdout.toString().trim();
