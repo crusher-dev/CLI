@@ -1,5 +1,5 @@
 import {Command, flags} from '@oclif/command'
-import { getBackendServerUrl, getGitBranchName, getGitLastCommitSHA, getGitRepos } from '../utils';
+import { extractRepoFullName, getBackendServerUrl, getGitBranchName, getGitLastCommitSHA, getGitRepos } from '../utils';
 import Setup from './setup';
 const {cli} = require('cli-ux')
 const fetch = require('node-fetch');
@@ -45,7 +45,6 @@ export default class Run extends Command {
     const gitSha = await getGitLastCommitSHA();
     const gitBranchName = await getGitBranchName();
     const gitRepos : any = await getGitRepos();
-    console.log(gitRepos);
 
     const firstRepoName = (Object.values(gitRepos)[0] as any).fetch;
     if(project_id && !test_ids) {
@@ -60,7 +59,7 @@ export default class Run extends Command {
           host: base_url,
           branchName: gitBranchName,
           commitId: gitSha,
-          repoName: firstRepoName
+          repoName: await extractRepoFullName(firstRepoName)
         })}).then(res => res.json());
       if(response && response.status === "RUNNING_TESTS"){
         console.log("Test have started running");

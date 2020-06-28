@@ -65,3 +65,15 @@ export function getGitBranchName() {
     });
   });
 }
+
+export function extractRepoFullName(remoteName){
+  return new Promise((resolve, reject)=>{
+    const rgx =  new RegExp(/https?:\/\/\w+\.\w+\/([\w-]+\/[\w-]+)/i);
+    const matches = remoteName.match(rgx);
+    if(matches && matches.length > 1){
+      resolve(matches[1].trim());
+    } else{
+      reject(new Error("Can't extract the full repo name"));
+    }
+  });
+}
