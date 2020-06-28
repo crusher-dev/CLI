@@ -19,7 +19,7 @@ export const getFrontendServerUrl = (): string => {
 
 
 export function getGitRepos(){
-  const rgx = new RegExp(/(^\w+)\s+([\w.@:\/\?]+\.git)\s+\((fetch|push)\)/i);
+  const rgx = new RegExp(/(^\w+)\s+([\w.@:\/\?]+)\s+\((fetch|push)\)/i);
   return new Promise((resolve, reject) => {
     exec('git remote -v', function(err, stdout) {
       if(err){reject(err); return;}

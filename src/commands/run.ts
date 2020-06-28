@@ -45,8 +45,9 @@ export default class Run extends Command {
     const gitSha = await getGitLastCommitSHA();
     const gitBranchName = await getGitBranchName();
     const gitRepos : any = await getGitRepos();
-    const firstRepoName = (Object.values(gitRepos)[0] as any).fetch;
+    console.log(gitRepos);
 
+    const firstRepoName = (Object.values(gitRepos)[0] as any).fetch;
     if(project_id && !test_ids) {
       //@ts-ignore
 
