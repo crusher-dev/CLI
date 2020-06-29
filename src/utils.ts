@@ -46,10 +46,10 @@ export function getGitRepos(){
 
 export function getGitLastCommitSHA() {
   return new Promise(async (resolve, reject) => {
-    exec(`git rev-parse refs/remotes/origin/${process.env.GITHUB_HEAD_REF}`, function(err, stdout){
+    exec(`git ls-remote origin ${process.env.GITHUB_HEAD_REF}`, function(err, stdout){
       if(err){reject(err); return;}
 
-      const sha = stdout.toString().trim();
+      const sha = stdout.toString().split(/\s+/)[0].trim();
       resolve(sha);
     })
   });
