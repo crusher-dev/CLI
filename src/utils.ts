@@ -57,7 +57,11 @@ export function getGitLastCommitSHA() {
 
 export function getGitBranchName() {
   return new Promise((resolve, reject) => {
-    resolve(process.env.GITHUB_REF);
+    const rgx = new RegExp(/^refs\/heads\/(.+)/i);
+    const matches = (process.env.GITHUB_REF as any).match(rgx);
+    if(matches && matches.length > 0) {
+      resolve(matches[1]);
+    }
     // exec(`git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$(git rev-parse HEAD)/ {print \\$2}"`, function(err, stdout){
     //   if(err){reject(err); return;}
     //
