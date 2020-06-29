@@ -46,8 +46,10 @@ export function getGitRepos(){
 
 export function getGitLastCommitSHA() {
   return new Promise(async (resolve, reject) => {
-
-    exec(`git rev-parse refs/heads/${process.env.GITHUB_HEAD_REF}`, function(err, stdout){
+    if(process.env.GITHUB_SHA){
+      return resolve(process.env.GITHUB_SHA);
+    }
+    exec(`git rev-parse @~`, function(err, stdout){
       if(err){reject(err); return;}
 
       const sha = stdout.toString().trim();
