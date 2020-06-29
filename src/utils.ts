@@ -59,9 +59,9 @@ export function getGitBranchName() {
   return new Promise((resolve, reject) => {
     const rgx = new RegExp(/^refs\/heads\/(.+)/i);
     const matches = process.env.GITHUB_REF ? (process.env.GITHUB_REF as any).match(rgx) : null;
-    resolve(process.env.GITHUB_REF);
+    console.log(process.env.GITHUB_REF, matches);
     if(matches && matches.length > 0) {
-      resolve(matches[1]);
+      resolve(matches[1].trim());
     } else {
       exec(`git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$(git rev-parse HEAD)/ {print \\$2}"`, function(err, stdout) {
         if (err) {
