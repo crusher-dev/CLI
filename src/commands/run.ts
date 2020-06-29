@@ -56,6 +56,7 @@ export default class Run extends Command {
           'Content-Type': 'application/json',},
         body: JSON.stringify({
           cliToken: crusher_token,
+          projectId: project_id,
           host: base_url,
           branchName: gitBranchName,
           commitId: gitSha,
