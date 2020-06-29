@@ -47,7 +47,7 @@ export function getGitRepos(){
 export function getGitLastCommitSHA() {
   return new Promise(async (resolve, reject) => {
 
-    exec(`git rev-parse ${process.env.GITHUB_REF}`, function(err, stdout){
+    exec(`git rev-parse ${process.env.GITHUB_HEAD_REF}`, function(err, stdout){
       if(err){reject(err); return;}
 
       const sha = stdout.toString().trim();
@@ -59,11 +59,11 @@ export function getGitLastCommitSHA() {
 export function getGitBranchName() {
   return new Promise((resolve, reject) => {
     const rgx = new RegExp(/^refs\/heads\/(.+)/i);
-    const matches = process.env.GITHUB_REF ? (process.env.GITHUB_REF as any).match(rgx) : null;
+    const matches = process.env.GITHUB_HEAD_REF ? (process.env.GITHUB_HEAD_REF as any).match(rgx) : null;
     if(matches && matches.length > 0) {
       resolve(matches[1].trim());
     } else {
-      exec(`git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$(git rev-parse HEAD)/ {print \\$2}"`, function(err, stdout) {
+      exec(`git for-each-ref --format='%(objectname) %(refname:short)' refs/heads | awk "/^$(git rev-parse ${process.env.GITHUB_HEAD_REF})/ {print \\$2}"`, function(err, stdout) {
         if (err) {
           reject(err);
           return;
