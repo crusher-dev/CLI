@@ -59,7 +59,6 @@ export function getGitBranchName() {
   return new Promise((resolve, reject) => {
     const rgx = new RegExp(/^refs\/heads\/(.+)/i);
     const matches = process.env.GITHUB_REF ? (process.env.GITHUB_REF as any).match(rgx) : null;
-    console.log(process.env.GITHUB_REF, matches);
     if(matches && matches.length > 0) {
       resolve(matches[1].trim());
     } else {
