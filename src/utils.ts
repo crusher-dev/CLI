@@ -46,7 +46,12 @@ export function getGitRepos(){
 
 export function getGitLastCommitSHA() {
   return new Promise((resolve, reject) => {
-    resolve(process.env.GITHUB_SHA);
+    exec('git rev-parse @~', function(err, stdout){
+      if(err){reject(err); return;}
+
+      const sha = stdout.toString().trim();
+      resolve(sha);
+    })
   });
 }
 
