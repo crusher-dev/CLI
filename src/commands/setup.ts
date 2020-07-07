@@ -1,8 +1,9 @@
 import {Command, flags} from '@oclif/command'
 import {getBackendServerUrl, getFrontendServerUrl, getUniqueString} from "../utils";
+import base = Mocha.reporters.base;
 const {cli} = require('cli-ux')
 const fetch = require('node-fetch');
-const { prompt,MultiSelect } = require('enquirer');
+const { prompt,MultiSelect,Confirm } = require('enquirer');
 
 export default class Setup extends Command {
   static description = 'Run visual diff'
@@ -70,9 +71,8 @@ export default class Setup extends Command {
 
     const selectedProjectId = selectedProjectOption[Object.keys(selectedProjectOption)[0]];
     const selectedProject = Setup.userData.projects.find((project) => project.id === selectedProjectId);
-    const runIndividualTest = await cli.confirm('Do you want to run individual test? [y/n]')
-
-    if (runIndividualTest) {
+    const {shouldRunIndividualTest} = await prompt({type: 'confirm', initial: 'N', name: 'shouldRunIndividualTest', message: 'Do you want to run individual test?'})
+    if (shouldRunIndividualTest) {
       const {projectTestList} = selectedProject;
 
       if(projectTestList.length<1){
@@ -107,11 +107,15 @@ export default class Setup extends Command {
   }
 
   async runLocally() {
-    const runLocal = await cli.confirm('Do you run test for locally hosted website? [y/n]')
+    const {shouldRunLocally} = await prompt({type: 'confirm', name: 'shouldRunLocally', message:'Do you run test for locally hosted website?'})
     // If not ask for base host
-    if (!runLocal) {
-      const baseHost = await cli.prompt('Base Host (https://google.com)');
-      return `--base_url=${baseHost}`
+    if (!shouldRunLocally) {
+      const {host} = await prompt({type: 'input', name: 'host', message: 'Override Host (Skip if No)'});
+      if(host.trim() != '') {
+        return `--base_url=${host}`
+      } else {
+        return '';
+      }
     }
     return ' -t'
   }

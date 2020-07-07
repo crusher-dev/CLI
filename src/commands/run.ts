@@ -1,8 +1,9 @@
 import {Command, flags} from '@oclif/command'
 import { extractRepoFullName, getBackendServerUrl, getGitBranchName, getGitLastCommitSHA, getGitRepos } from '../utils';
 import Setup from './setup';
-const {cli} = require('cli-ux')
-const fetch = require('node-fetch');
+import cli from "cli-ux";
+import fetch from "node-fetch";
+const url = require('url');
 
 export default class Run extends Command {
   static description = 'Run visual diff'
@@ -50,7 +51,7 @@ export default class Run extends Command {
     if(project_id && !test_ids) {
       //@ts-ignore
 
-      const response = await fetch(`${getBackendServerUrl()}/projects/runTests/${project_id}`, {
+      const response = await fetch(url.resolve(getBackendServerUrl(), `/projects/runTests/${project_id}`), {
         method: "POST",
         headers: {				Accept: 'application/json, text/plain, */*',
           'Content-Type': 'application/json',},
@@ -69,7 +70,7 @@ export default class Run extends Command {
       }
     } else if(project_id && test_ids){
       //@ts-ignore
-      const response = await fetch(`${getBackendServerUrl()}/projects/runTestWithIds`, {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
+      const response = await fetch(url.resolve(getBackendServerUrl(), `/projects/runTestWithIds`), {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
           'Content-Type': 'application/json'}, body: JSON.stringify({
             cliToken: crusher_token,
           host: base_url,
