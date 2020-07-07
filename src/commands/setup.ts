@@ -62,7 +62,7 @@ export default class Setup extends Command {
       type: 'select',
       name: 'selectedProject',
       initial: 'N',
-      message: 'Select Environment for the PR?',
+      message: 'Select the project to run test on?',
       choices,
       result(names:any) {
         return this.map(names);
