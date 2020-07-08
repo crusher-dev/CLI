@@ -46,11 +46,23 @@ export function getGitRepos(){
 
 export function getGitLastCommitSHA() {
   return new Promise(async (resolve, reject) => {
-    exec(`git ls-remote origin ${process.env.GITHUB_HEAD_REF}`, function(err, stdout){
+    const cmd = process.env.GITHUB_HEAD_REF ? `git ls-remote origin ${process.env.GITHUB_HEAD_REF}` : `git rev-parse HEAD`;
+    exec(cmd, function(err, stdout){
       if(err){reject(err); return;}
 
       const sha = stdout.toString().split(/\s+/)[0].trim();
       resolve(sha);
+    })
+  });
+}
+
+export function getLastCommitName(){
+  return new Promise((resolve, reject)=>{
+    exec(`git log -1 --pretty=%B`, function(err, stdout){
+      if(err){reject(err); return;}
+
+      const commitName = stdout.toString().trim();
+      resolve(commitName);
     })
   });
 }
@@ -82,7 +94,7 @@ export function extractRepoFullName(remoteName){
     if(matches && matches.length > 1){
       resolve(matches[1].trim());
     } else{
-      reject(new Error("Can't extract the full repo name"));
+      resolve("");
     }
   });
 }
