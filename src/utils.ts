@@ -1,5 +1,5 @@
 import {v1 as uuidv1} from 'uuid';
-import {BACKEND_SERVER_URLS, FRONTEND_SERVER_URLS} from "./constants";
+import {BACKEND_SERVER_URL, FRONTEND_SERVER_URL} from "./constants";
 const { exec } = require('child_process');
 
 export const getUniqueString = () : string =>{
@@ -7,13 +7,13 @@ export const getUniqueString = () : string =>{
 }
 
 export const getBackendServerUrl = (): string => {
-  const {PROD} = BACKEND_SERVER_URLS;
-  return PROD;
+  const {DEV, PROD} = BACKEND_SERVER_URL;
+  return process.env.NODE_ENV === "development" ? DEV : PROD;
 }
 
 export const getFrontendServerUrl = (): string => {
-  const {DEV,PROD} = FRONTEND_SERVER_URLS;
-  return PROD;
+  const {DEV,PROD} = FRONTEND_SERVER_URL;
+  return process.env.NODE_ENV === "development" ? DEV : PROD;
 }
 
 
