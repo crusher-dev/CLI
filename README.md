@@ -19,7 +19,7 @@ $ npm install -g crusher-cli
 $ crusher COMMAND
 running command...
 $ crusher (-v|--version|version)
-crusher-cli/1.3.24 darwin-x64 node-v10.21.0
+crusher-cli/1.3.24 linux-x64 node-v10.21.0
 $ crusher --help [COMMAND]
 USAGE
   $ crusher COMMAND

@@ -26,12 +26,13 @@ export default class Run extends Command {
     base_url: flags.string({description: 'base_url, Not required with tunnelling'}),
     test_ids: flags.string({description: 'IDs of test you want to run [Optional]'}),
     project_id: flags.string({description: 'Project ID'}),
+    endpoint: flags.string({description: 'Endpoint of the crusher server [Optional][Debugging]'}),
     tunnel: flags.boolean({char: 't', description: 'Enable tunneling for remote machine'}),
   }
 
   async run() {
     const { flags} = this.parse(Run);
-    const {base_url, test_ids, project_id, crusher_token, tunnel} = flags;
+    const {base_url, test_ids, project_id, crusher_token, tunnel, endpoint} = flags;
 
     if (typeof (test_ids) === 'undefined' && typeof (project_id) === 'undefined') {
       console.log('Either test ID or Test Group IDs are needed to run the test.')
@@ -59,7 +60,7 @@ export default class Run extends Command {
     if(project_id && !test_ids) {
       //@ts-ignore
 
-      const response = await fetch(url.resolve(getBackendServerUrl(), `/projects/runTests/${project_id}`), {
+      const response = await fetch(url.resolve(endpoint ? endpoint : getBackendServerUrl(), `/projects/runTests/${project_id}`), {
         method: "POST",
         headers: {				Accept: 'application/json, text/plain, */*',
           'Content-Type': 'application/json',},
@@ -79,7 +80,7 @@ export default class Run extends Command {
       }
     } else if(project_id && test_ids){
       //@ts-ignore
-      const response = await fetch(url.resolve(getBackendServerUrl(), `/projects/runTestWithIds`), {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
+      const response = await fetch(url.resolve(endpoint ? endpoint : getBackendServerUrl(), `/projects/runTestWithIds`), {method: "POST", headers: {				Accept: 'application/json, text/plain, */*',
           'Content-Type': 'application/json'}, body: JSON.stringify({
             cliToken: crusher_token,
           host: base_url,
