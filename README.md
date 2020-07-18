@@ -19,7 +19,7 @@ $ npm install -g crusher-cli
 $ crusher COMMAND
 running command...
 $ crusher (-v|--version|version)
-crusher-cli/1.3.24 linux-x64 node-v10.21.0
+crusher-cli/1.3.25 linux-x64 node-v10.21.0
 $ crusher --help [COMMAND]
 USAGE
   $ crusher COMMAND
@@ -62,6 +62,7 @@ OPTIONS
   -t, --tunnel                   Enable tunneling for remote machine
   --base_url=base_url            base_url, Not required with tunnelling
   --crusher_token=crusher_token  (required) Token from your crusher-cli-macos app
+  --endpoint=endpoint            Endpoint of the crusher server [Optional][Debugging]
   --project_id=project_id        Project ID
   --test_ids=test_ids            IDs of test you want to run [Optional]
 
@@ -70,7 +71,7 @@ EXAMPLE
   $  crusher run --crusher_token=123 --test_ids=32 --base_url=http://google.com
 ```
 
-_See code: [src/commands/run.ts](https://github.com/crusherdev/CLI/blob/v1.3.24/src/commands/run.ts)_
+_See code: [src/commands/run.ts](https://github.com/crusherdev/CLI/blob/v1.3.25/src/commands/run.ts)_
 
 ## `crusher setup`
 
@@ -87,5 +88,5 @@ EXAMPLE
   Generate config for running commands
 ```
 
-_See code: [src/commands/setup.ts](https://github.com/crusherdev/CLI/blob/v1.3.24/src/commands/setup.ts)_
+_See code: [src/commands/setup.ts](https://github.com/crusherdev/CLI/blob/v1.3.25/src/commands/setup.ts)_
 <!-- commandsstop -->
