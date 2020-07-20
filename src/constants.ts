@@ -1,5 +1,5 @@
 export const BACKEND_SERVER_URL: {DEV:string, PROD: string}  = {
-  DEV: 'https://backend.crusher-test.com',
+  DEV: 'http://backend.crusher-test.com',
   PROD: 'https://backend.crusher.dev'
 };
 
