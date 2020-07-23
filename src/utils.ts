@@ -92,10 +92,13 @@ export function getGitBranchName() {
 
 export function extractRepoFullName(remoteName){
   return new Promise((resolve, reject)=>{
-    const rgx =  new RegExp(/^(?:https|git)(?:\:\/\/|@)(?:[^\/:]+)[\/:]([^\/:]+)\/(.+).git/i);
+    const rgx =  new RegExp(/^(?:https|git)(?:\:\/\/|@)(?:[^\/:]+)[\/:]([^\/:]+)\/(.+)/i);
     const matches = remoteName.match(rgx);
     if (matches && matches.length === 3){
-      resolve(matches[1].trim()+"/"+matches[2].trim());
+      let repoName = matches[2].trim();
+      const finalRepoName = repoName.length > 4 && repoName.slice(-4) === ".git" ? repoName.slice(0,-4) : repoName;
+
+      resolve(matches[1].trim()+"/"+finalRepoName.trim());
     } else{
       resolve("");
     }
