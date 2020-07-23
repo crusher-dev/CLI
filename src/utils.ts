@@ -17,6 +17,9 @@ export const getFrontendServerUrl = (): string => {
 }
 
 
+export function isFromGithub() {
+  return !!process.env.GITHUB_ACTION;
+}
 
 export function getGitRepos(){
   const rgx = new RegExp(/(^\w+)\s+([\w.@:\/\?]+)\s+\((fetch|push)\)/i);
@@ -89,10 +92,10 @@ export function getGitBranchName() {
 
 export function extractRepoFullName(remoteName){
   return new Promise((resolve, reject)=>{
-    const rgx =  new RegExp(/https?:\/\/\w+\.\w+\/([\w-]+\/[\w-]+)/i);
+    const rgx =  new RegExp(/^(?:https|git)(?:\:\/\/|@)(?:[^\/:]+)[\/:]([^\/:]+)\/(.+).git/i);
     const matches = remoteName.match(rgx);
-    if(matches && matches.length > 1){
-      resolve(matches[1].trim());
+    if (matches && matches.length === 3){
+      resolve(matches[1].trim()+"/"+matches[2].trim());
     } else{
       resolve("");
     }

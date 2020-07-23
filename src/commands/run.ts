@@ -5,7 +5,7 @@ import {
   getGitBranchName,
   getGitLastCommitSHA,
   getGitRepos,
-  getLastCommitName
+  getLastCommitName, isFromGithub
 } from '../utils';
 import Setup from './setup';
 import cli from "cli-ux";
@@ -55,6 +55,7 @@ export default class Run extends Command {
     const gitBranchName = await getGitBranchName();
     const gitRepos : any = await getGitRepos();
     const gitCommitName = await getLastCommitName();
+    const isRunningFromGithub = await isFromGithub();
 
     const firstRepoName = (Object.values(gitRepos)[0] as any).fetch;
     if(project_id && !test_ids) {
@@ -71,8 +72,9 @@ export default class Run extends Command {
           branchName: gitBranchName,
           commitId: gitSha,
           commitName: gitCommitName,
+          isFromGithub: isRunningFromGithub,
           repoName: await extractRepoFullName(firstRepoName)
-        })}).then(res => res.json());
+        })}).then(res => {return res.json();});
       if(response && response.status === "RUNNING_TESTS"){
         console.log("Test have started running");
       } else {
@@ -89,7 +91,8 @@ export default class Run extends Command {
           branchName: gitBranchName,
           commitId: gitSha,
           repoName: firstRepoName,
-          commitName: gitCommitName
+          commitName: gitCommitName,
+          isFromGithub: isRunningFromGithub
           })}).then(res => res.json());
       if(response && response.status === "RUNNING_TESTS"){
         console.log("Test have started running");
