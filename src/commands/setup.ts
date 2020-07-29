@@ -43,7 +43,7 @@ export default class Setup extends Command {
   async userLogin() {
     await cli.action.start('Opening a browser to login. Please complete that process.')
     await Setup.registerToken()
-    await new Promise(r => setTimeout(r, 500))
+    await new Promise(r => setTimeout(r, 2000))
     await cli.open(`${getFrontendServerUrl()}?cli_token=${Setup.randomGeneratedToken}`)
     Setup.userData =  await Setup.waitForUserLogin();
     await cli.action.stop();
