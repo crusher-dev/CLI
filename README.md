@@ -1,7 +1,4 @@
-crusher
-=======
-
-
+# crusher
 
 [![oclif](https://img.shields.io/badge/cli-oclif-brightgreen.svg)](https://oclif.io)
 [![Version](https://img.shields.io/npm/v/crusher.svg)](https://npmjs.org/package/crusher)
@@ -9,11 +6,15 @@ crusher
 [![License](https://img.shields.io/npm/l/crusher.svg)](https://github.com/himanshu-dixit/crusher/blob/master/package.json)
 
 <!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
+
+- [Usage](#usage)
+- [Commands](#commands)
 <!-- tocstop -->
+
 # Usage
+
 <!-- usage -->
+
 ```sh-session
 $ npm install -g crusher-cli
 $ crusher COMMAND
@@ -25,12 +26,16 @@ USAGE
   $ crusher COMMAND
 ...
 ```
+
 <!-- usagestop -->
+
 # Commands
+
 <!-- commands -->
-* [`crusher help [COMMAND]`](#crusher-help-command)
-* [`crusher run`](#crusher-run)
-* [`crusher setup`](#crusher-setup)
+
+- [`crusher help [COMMAND]`](#crusher-help-command)
+- [`crusher run`](#crusher-run)
+- [`crusher setup`](#crusher-setup)
 
 ## `crusher help [COMMAND]`
 
@@ -89,4 +94,5 @@ EXAMPLE
 ```
 
 _See code: [src/commands/setup.ts](https://github.com/crusherdev/CLI/blob/v1.3.27/src/commands/setup.ts)_
+
 <!-- commandsstop -->
