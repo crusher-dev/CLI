@@ -7,10 +7,10 @@ import {
   getGitRepos,
   getLastCommitName, isFromGithub
 } from '../utils';
-import Setup from './setup';
 import cli from "cli-ux";
 import fetch from "node-fetch";
-const url = require('url');
+import url from "url";
+import localtunnel from "localtunnel";
 
 export default class Run extends Command {
   static description = 'Run visual diff'
@@ -28,27 +28,35 @@ export default class Run extends Command {
     project_id: flags.string({description: 'Project ID'}),
     endpoint: flags.string({description: 'Endpoint of the crusher server [Optional][Debugging]'}),
     tunnel: flags.boolean({char: 't', description: 'Enable tunneling for remote machine'}),
+    port: flags.string({description: 'Port for tunnelling to work'}),
   }
 
   async run() {
     const { flags} = this.parse(Run);
-    const {base_url, test_ids, project_id, crusher_token, tunnel, endpoint} = flags;
-
+    const {test_ids, project_id, crusher_token, tunnel, endpoint, port} = flags;
+    let {base_url} = flags;
     if (typeof (test_ids) === 'undefined' && typeof (project_id) === 'undefined') {
       console.log('Either test ID or Test Group IDs are needed to run the test.')
       return
     }
 
-    if (typeof (base_url) === 'undefined' && !tunnel) {
-      console.log('Please enter base url or use tunnelling')
+    if (typeof (base_url) === 'undefined' && !(tunnel && port)) {
+      console.log('Please enter base url or tunnelling/port')
     }
 
     await cli.action.start('Starting visual test')
     await new Promise(r => setTimeout(r, 1000))
 
     if (tunnel) {
-      await cli.action.start('Creating local tunnel')
-      await new Promise(r => setTimeout(r, 1000))
+      cli.action.start('Creating local tunnel')
+      const tunnel = await localtunnel({ port: port || 80 });
+      cli.action.start('Creating local tunnel')
+      base_url = tunnel.url;
+
+      tunnel.on('close', () => {
+        console.log("Tunnel connection close unexpectedly.")
+      });
+
     }
 
     const gitSha = await getGitLastCommitSHA();
@@ -59,12 +67,13 @@ export default class Run extends Command {
 
     const firstRepoName = (Object.values(gitRepos)[0] as any).fetch;
     if(project_id && !test_ids) {
-      //@ts-ignore
 
       const response = await fetch(url.resolve(endpoint ? endpoint : getBackendServerUrl(), `/projects/runTests/${project_id}`), {
         method: "POST",
-        headers: {				Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json',},
+        headers: {
+          Accept: 'application/json, text/plain, */*',
+          'Content-Type': 'application/json'
+          },
         body: JSON.stringify({
           cliToken: crusher_token,
           projectId: project_id,
@@ -75,6 +84,8 @@ export default class Run extends Command {
           isFromGithub: isRunningFromGithub,
           repoName: await extractRepoFullName(firstRepoName)
         })}).then(res => {return res.json();});
+
+
       if(response && response.status === "RUNNING_TESTS"){
         console.log("Test have started running");
       } else {

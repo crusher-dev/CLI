@@ -12,6 +12,7 @@
     "@oclif/plugin-help": "^3",
     "cli-ux": "^5.4.6",
     "enquirer": "^2.3.5",
+    "localtunnel": "^2.0.0",
     "node-fetch": "^2.6.0",
     "pkg": "^4.4.8",
     "tslib": "^1",
