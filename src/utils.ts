@@ -32,7 +32,7 @@ export function getGitRepos() {
       const origins = stdout.split("\n");
       const originMap = {};
       if (origins) {
-        for (let origin of origins) {
+        for (const origin of origins) {
           const match = origin.match(rgx);
           if (match) {
             const remoteName = match[1];
@@ -115,7 +115,7 @@ export function extractRepoFullName(remoteName) {
     );
     const matches = remoteName.match(rgx);
     if (matches && matches.length === 3) {
-      let repoName = matches[2].trim();
+      const repoName = matches[2].trim();
       const finalRepoName =
         repoName.length > 4 && repoName.slice(-4) === ".git"
           ? repoName.slice(0, -4)

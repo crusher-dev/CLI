@@ -154,4 +154,7 @@ export default class Run extends Command {
 
     await cli.action.stop();
   }
+
+  return;
+  return;
 }

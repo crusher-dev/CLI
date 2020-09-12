@@ -27,8 +27,10 @@
     "@types/mocha": "^5",
     "@types/node": "^10",
     "@types/uuid": "^8.0.0",
+    "@typescript-eslint/eslint-plugin": "^4.1.0",
+    "@typescript-eslint/parser": "^4.1.0",
     "chai": "^4",
-    "eslint": "^5.13",
+    "eslint": "^7.8.1",
     "eslint-config-oclif": "^3.1",
     "eslint-config-oclif-typescript": "^0.1",
     "globby": "^10",
@@ -36,7 +38,7 @@
     "nyc": "^14",
     "prettier": "2.0.5",
     "ts-node": "^8",
-    "typescript": "^3.3"
+    "typescript": "^4.0.2"
   },
   "engines": {
     "node": ">=8.0.0"
@@ -74,7 +76,9 @@
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
     "version": "oclif-dev readme && git add README.md",
     "eslint:fix": "eslint . --ext .ts --config .eslintrc --fix",
-    "createBinary": " pkg . && mkdir binaries && mv crusher-cli-linux binaries/crusher-cli-linux && mv crusher-cli-macos binaries/crusher-cli-macos && mv crusher-cli-win.exe binaries/crusher-cli-win.exe"
+    "createBinary": " pkg . && mkdir binaries && mv crusher-cli-linux binaries/crusher-cli-linux && mv crusher-cli-macos binaries/crusher-cli-macos && mv crusher-cli-win.exe binaries/crusher-cli-win.exe",
+    "runLint": "yarn eslint . --ext .js,.jsx,.ts,.tsx",
+    "runLintFix": "yarn eslint --fix . --ext .js,.jsx,.ts,.tsx"
   },
   "types": "lib/index.d.ts",
   "husky": {
