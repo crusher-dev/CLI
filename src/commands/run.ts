@@ -10,8 +10,8 @@ import {
 } from "../utils";
 import cli from "cli-ux";
 import fetch from "node-fetch";
-import url from "url";
-import localtunnel from "localtunnel";
+import * as url from "url";
+const localtunnel = require("localtunnel");
 
 export default class Run extends Command {
   static description = "Run visual diff";
@@ -110,7 +110,7 @@ export default class Run extends Command {
             repoName: await extractRepoFullName(firstRepoName),
           }),
         }
-      ).then((res) => {
+      ).then(async (res) => {
         return res.json();
       });
 
@@ -155,6 +155,5 @@ export default class Run extends Command {
     await cli.action.stop();
   }
 
-  return;
   return;
 }

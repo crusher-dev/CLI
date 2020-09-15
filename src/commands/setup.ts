@@ -167,7 +167,7 @@ export default class Setup extends Command {
     const crusherTokenFlag = await this.userLogin();
     const testIDsFlag = await this.selectTests();
     const hostParamFlag = await this.addHostInfo();
-    const generatedCommand = `./bin/run run ${testIDsFlag} ${hostParamFlag} ${crusherTokenFlag} `;
+    const generatedCommand = `./bin/crusher run ${testIDsFlag} ${hostParamFlag} ${crusherTokenFlag} `;
 
     console.log("\n\n 💁💁 Please use following command to run test\n\n");
     console.log(generatedCommand);
