@@ -1,6 +1,6 @@
 {
   "name": "crusher-cli",
-  "version": "1.3.29",
+  "version": "1.3.30",
   "author": "Himanshu @himanshu-dixit",
   "bin": {
     "crusher-cli": "./bin/run"
