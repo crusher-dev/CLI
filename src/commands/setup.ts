@@ -164,17 +164,10 @@ export default class Setup extends Command {
   }
 
   async run() {
-<<<<<<< HEAD
     const crusherTokenFlag = await this.userLogin()
     const testIDsFlag = await this.selectTests()
     const hostParamFlag = await this.runLocally()
     const generatedCommand = `npx crusher-cli run ${testIDsFlag} ${hostParamFlag} ${crusherTokenFlag} `
-=======
-    const crusherTokenFlag = await this.userLogin();
-    const testIDsFlag = await this.selectTests();
-    const hostParamFlag = await this.addHostInfo();
-    const generatedCommand = `./bin/crusher run ${testIDsFlag} ${hostParamFlag} ${crusherTokenFlag} `;
->>>>>>> 99a1593cb341d408d30a00b30df85d29faec7480
 
     console.log("\n\n 💁💁 Please use following command to run test\n\n");
     console.log(generatedCommand);

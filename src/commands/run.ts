@@ -72,7 +72,7 @@ export default class Run extends Command {
     if (tunnel) {
       cli.action.start("Creating local tunnel");
       const tunnel = await localtunnel({ port: port || 80 });
-      cli.action.start("Creating local tunnel");
+      cli.action.start("Created local tunnel");
       base_url = tunnel.url;
 
       tunnel.on("close", () => {
