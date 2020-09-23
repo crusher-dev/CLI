@@ -4,7 +4,6 @@
 /.idea
 /dist
 /lib
-/bin
 /package-lock.json
 /tmp
 node_modules

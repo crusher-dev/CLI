@@ -130,7 +130,7 @@ export default class Setup extends Command {
     return `--project_id=${selectedProjectId}`;
   }
 
-  async addHostInfo() {
+  async runLocally() {
     const { shouldRunLocally } = await prompt({
       type: "confirm",
       name: "shouldRunLocally",
