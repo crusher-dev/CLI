@@ -44,7 +44,7 @@ export default class Setup extends Command {
 
   async userLogin() {
     await cli.action.start(
-      "Opening a browser to login. Please complete that process."
+      "Please login/signup on crusher. Opening in browser"
     );
     await Setup.registerToken();
     await new Promise((r) => setTimeout(r, 2000));
@@ -73,7 +73,7 @@ export default class Setup extends Command {
         type: "select",
         name: "selectedProject",
         initial: "N",
-        message: "Select the project to run test on?",
+        message: "Select project",
         choices,
         result(names: any) {
           return this.map(names);
@@ -104,7 +104,7 @@ export default class Setup extends Command {
 
       const selectTestOptionPropmpt = new MultiSelect({
         name: "selectTestOption",
-        message: "Select Test Group Ids",
+        message: "Select Test Group IDs",
         choices: selectedProject.projectTestList.map((test) => ({
           name: test.name,
           value: test.id,
@@ -121,7 +121,7 @@ export default class Setup extends Command {
       });
 
       if (testIds.length < 1) {
-        console.log("Please select some tests");
+        console.log("Please select tests");
         return;
       }
       return `--test_ids=${testIds.join(",")}`;
@@ -134,7 +134,7 @@ export default class Setup extends Command {
     const { shouldRunLocally } = await prompt({
       type: "confirm",
       name: "shouldRunLocally",
-      message: "Do you run test for locally hosted website?",
+      message: "Do you to want to run test on port? (For CI/ Local Development)",
     });
 
     // If not ask for base host
@@ -142,7 +142,7 @@ export default class Setup extends Command {
       const { host } = await prompt({
         type: "input",
         name: "host",
-        message: "Override Host (Skip if No)",
+        message: "Change base Host (Skip if No)",
       });
       if (host.trim() != "") {
         return `--base_url=${host}`;
@@ -154,7 +154,7 @@ export default class Setup extends Command {
     const { port } = await prompt({
       type: "input",
       name: "port",
-      message: "Port exposed to run locally",
+      message: "Port on which service is exposed",
     });
     if (port.trim() != "") {
       return `-t --port=${port}`;

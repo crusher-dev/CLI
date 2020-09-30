@@ -63,22 +63,23 @@ export default class Run extends Command {
     }
 
     if (typeof base_url === "undefined" && !(tunnel && port)) {
-      console.log("Please enter base url or tunnelling/port");
+      console.log("Mussing base url or tunnelling/port");
     }
 
-    await cli.action.start("Starting visual test");
     await new Promise((r) => setTimeout(r, 1000));
 
     if (tunnel) {
-      cli.action.start("Creating local tunnel");
+      cli.action.start("Creating tunnel to local service");
       const tunnel = await localtunnel({ port: port || 80 });
-      cli.action.start("Created local tunnel");
+      cli.action.start("Created tunnel");
       base_url = tunnel.url;
 
       tunnel.on("close", () => {
         console.log("Tunnel connection close unexpectedly.");
       });
     }
+
+    await cli.action.start("Starting test");
 
     const gitSha = await getGitLastCommitSHA();
     const gitBranchName = await getGitBranchName();
@@ -146,7 +147,7 @@ export default class Run extends Command {
         }
       ).then((res) => res.json());
       if (response && response.status === "RUNNING_TESTS") {
-        console.log("Test have started running");
+        console.log("Running test");
       } else {
         console.error("Something went wrong while running tests");
       }
