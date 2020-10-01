@@ -4,12 +4,15 @@ import {
   getFrontendServerUrl,
   getUniqueString,
 } from "../utils";
-const { cli } = require("cli-ux");
-const fetch = require("node-fetch");
-const { prompt, MultiSelect } = require("enquirer");
+
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import { prompt, MultiSelect } from "enquirer";
+import { cli } from "cli-ux";
+import fetch = require("node-fetch");
 
 export default class Setup extends Command {
-  static description = "Run visual diff";
+  static description = "Generate command to run test";
   static userLoginCheckInterval: any = null;
   static examples = [
     `Generate config for running commands
@@ -102,7 +105,7 @@ export default class Setup extends Command {
         return;
       }
 
-      const selectTestOptionPropmpt = new MultiSelect({
+      const selectTestOptionPrompt = new MultiSelect({
         name: "selectTestOption",
         message: "Select Test Group IDs",
         choices: selectedProject.projectTestList.map((test) => ({
@@ -114,7 +117,7 @@ export default class Setup extends Command {
         },
       });
 
-      const selectTestOption = await selectTestOptionPropmpt.run();
+      const selectTestOption = await selectTestOptionPrompt.run();
 
       const testIds = Object.keys(selectTestOption).map((key) => {
         return selectTestOption[key];
@@ -159,7 +162,6 @@ export default class Setup extends Command {
     if (port.trim() != "") {
       return `-t --port=${port}`;
     }
-
     return "-t";
   }
 
@@ -169,7 +171,7 @@ export default class Setup extends Command {
     const hostParamFlag = await this.runLocally()
     const generatedCommand = `npx crusher-cli run ${testIDsFlag} ${hostParamFlag} ${crusherTokenFlag} `
 
-    console.log("\n\n 💁💁 Please use following command to run test\n\n");
+    console.log("\nPlease use following command to run test\n");
     console.log(generatedCommand);
   }
 }
