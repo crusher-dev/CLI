@@ -24,7 +24,7 @@ export default class Run extends Command {
   static flags = {
     help: flags.help({ char: "h" }),
     crusher_token: flags.string({
-      description: "Token from your crusher-cli-macos app",
+      description: "Token from your crusher-cli",
       required: true,
     }),
     base_url: flags.string({
