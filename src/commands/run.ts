@@ -11,7 +11,7 @@ import {
 import cli from "cli-ux";
 import fetch from "node-fetch";
 import * as url from "url";
-const localtunnel = require("localtunnel");
+import localtunnel from "localtunnel";
 
 export default class Run extends Command {
   static description = "Run visual diff";
@@ -55,106 +55,87 @@ export default class Run extends Command {
       port,
     } = flags;
     let { base_url } = flags;
+
     if (typeof test_ids === "undefined" && typeof project_id === "undefined") {
       console.log(
         "Either test ID or Test Group IDs are needed to run the test."
       );
       return;
     }
-
     if (typeof base_url === "undefined" && !(tunnel && port)) {
-      console.log("Mussing base url or tunnelling/port");
+      console.log("Missing base url or tunnelling/port");
     }
 
-    await new Promise((r) => setTimeout(r, 1000));
-
     if (tunnel) {
-      cli.action.start("Creating tunnel to local service");
-      const tunnel = await localtunnel({ port: port || 80 });
-      cli.action.start("Created tunnel");
-      base_url = tunnel.url;
-
-      tunnel.on("close", () => {
-        console.log("Tunnel connection close unexpectedly.");
-      });
+      base_url = await this.createTunnel(port, base_url);
     }
 
     await cli.action.start("Starting test");
+    await Run.makeAPICallToRunTest(project_id, endpoint, crusher_token, base_url, test_ids);
 
+    // @Note
+    // If test run locally with tunnelling, do polling and then move to next Statement
+    await cli.action.stop();
+  }
+
+  private async createTunnel(port: string|undefined, base_url: string|undefined ) {
+    cli.action.start("Creating tunnel to local service");
+    const tunnel = await localtunnel({ port: port || 80 });
+    cli.action.start("Created tunnel");
+    base_url = tunnel.url;
+
+    tunnel.on("close", () => {
+      console.log("Tunnel connection close unexpectedly.");
+    });
+    return base_url;
+  }
+
+  private static async makeAPICallToRunTest(project_id: string | undefined, endpoint: string | undefined, crusher_token: string, base_url: string | undefined, test_ids: string | undefined) {
     const gitSha = await getGitLastCommitSHA();
     const gitBranchName = await getGitBranchName();
     const gitRepos: any = await getGitRepos();
     const gitCommitName = await getLastCommitName();
     const isRunningFromGithub = await isFromGithub();
-
     const firstRepoName = (Object.values(gitRepos)[0] as any).fetch;
-    if (project_id && !test_ids) {
-      const response = await fetch(
-        url.resolve(
-          endpoint ? endpoint : getBackendServerUrl(),
-          `/projects/runTests/${project_id}`
-        ),
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json, text/plain, */*",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cliToken: crusher_token,
-            projectId: project_id,
-            host: base_url,
-            branchName: gitBranchName,
-            commitId: gitSha,
-            commitName: gitCommitName,
-            isFromGithub: isRunningFromGithub,
-            repoName: await extractRepoFullName(firstRepoName),
-          }),
-        }
-      ).then(async (res) => {
-        return res.json();
-      });
+    const repoName = await extractRepoFullName(firstRepoName);
 
-      if (response && response.status === "RUNNING_TESTS") {
-        console.log("Test have started running");
-      } else {
-        console.error("Something went wrong while running tests");
+    const runWholeProject = !!project_id;
+    const urlForAPI = runWholeProject ? url.resolve(
+      getBackendServerUrl(),
+      `/projects/runTests/${project_id}`
+    ) : url.resolve(
+      endpoint ? endpoint : getBackendServerUrl(),
+      `/projects/runTestWithIds`
+    );
+
+    const response = await fetch(
+      urlForAPI,
+      {
+        method: "POST",
+        headers: {
+          Accept: "application/json, text/plain, */*",
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          cliToken: crusher_token,
+          projectId: project_id,
+          host: base_url,
+          branchName: gitBranchName,
+          commitId: gitSha,
+          commitName: gitCommitName,
+          isFromGithub: isRunningFromGithub,
+          repoName: repoName,
+          test_ids
+        })
       }
-    } else if (project_id && test_ids) {
-      //@ts-ignore
-      const response = await fetch(
-        url.resolve(
-          endpoint ? endpoint : getBackendServerUrl(),
-          `/projects/runTestWithIds`
-        ),
-        {
-          method: "POST",
-          headers: {
-            Accept: "application/json, text/plain, */*",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            cliToken: crusher_token,
-            host: base_url,
-            projectId: project_id,
-            test_ids,
-            branchName: gitBranchName,
-            commitId: gitSha,
-            repoName: firstRepoName,
-            commitName: gitCommitName,
-            isFromGithub: isRunningFromGithub,
-          }),
-        }
-      ).then((res) => res.json());
-      if (response && response.status === "RUNNING_TESTS") {
-        console.log("Running test");
-      } else {
-        console.error("Something went wrong while running tests");
-      }
+    ).then(async (res) => {
+      return res.json();
+    });
+
+    if (response && response.status === "RUNNING_TESTS") {
+      console.log("Test have started running");
+    } else {
+      console.error("Something went wrong while running tests");
     }
-
-    await cli.action.stop();
   }
-
-  return;
 }
