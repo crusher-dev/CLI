@@ -1,4 +1,6 @@
+/* tslint:disable */ 
 import {Command, flags} from '@oclif/command'
+
 import {
   extractRepoFullName,
   getBackendServerUrl,
