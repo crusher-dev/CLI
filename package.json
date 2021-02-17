@@ -2,13 +2,15 @@
   "name": "crusher-cli",
   "version": "1.3.32",
   "author": "Himanshu @himanshu-dixit",
+  "repository": "crusherdev/CLI",
   "bin": {
     "crusher-cli": "./bin/run"
   },
   "bugs": "https://github.com/himanshu-dixit/crusher/issues",
   "dependencies": {
-    "@oclif/command": "^1",
+    "@oclif/command": "^1.8.0",
     "@oclif/config": "^1",
+    "@oclif/errors": "^1.3.4",
     "@oclif/plugin-help": "^3",
     "cli-ux": "^5.4.6",
     "enquirer": "^2.3.5",
@@ -24,8 +26,10 @@
     "@oclif/dev-cli": "^1",
     "@oclif/test": "^1",
     "@types/chai": "^4",
+    "@types/localtunnel": "^2.0.0",
     "@types/mocha": "^5",
     "@types/node": "^10",
+    "@types/node-fetch": "^2.5.8",
     "@types/uuid": "^8.0.0",
     "@typescript-eslint/eslint-plugin": "^4.1.0",
     "@typescript-eslint/parser": "^4.1.0",
@@ -65,7 +69,6 @@
   "pkg": {
     "scripts": "lib/**/*.js"
   },
-  "repository": "crusherdev/CLI",
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
     "posttest": "eslint . --ext .ts --config .eslintrc",
@@ -85,8 +88,5 @@
     "hooks": {
       "pre-commit": ""
     }
-  },
-  "lint-staged": {
-    "**/*": "prettier --write --ignore-unknown"
   }
 }
