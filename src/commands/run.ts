@@ -96,17 +96,14 @@ export default class Run extends Command {
     const isRunningFromGithub = await isFromGithub()
     const firstRepoName = (Object.values(gitRepos)[0] as any).fetch
     const repoName = await extractRepoFullName(firstRepoName)
-
     const runWholeProject = Boolean(project_id)
     const urlForAPI = runWholeProject ? url.resolve(
-      getBackendServerUrl(),
+      endpoint ? endpoint : getBackendServerUrl(),
       `/projects/runTests/${project_id}`,
     ) : url.resolve(
       endpoint ? endpoint : getBackendServerUrl(),
       '/projects/runTestWithIds',
     )
-
-    console.log(urlForAPI, "ss");
 
     const response = await fetch(
       urlForAPI,
