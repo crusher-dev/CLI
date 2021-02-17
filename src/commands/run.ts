@@ -1,4 +1,6 @@
+/* tslint:disable */ 
 import {Command, flags} from '@oclif/command'
+
 import {
   extractRepoFullName,
   getBackendServerUrl,
@@ -105,8 +107,6 @@ export default class Run extends Command {
       endpoint ? endpoint : getBackendServerUrl(),
       '/projects/runTestWithIds',
     )
-
-    console.log(urlForAPI, "ss");
 
     const response = await fetch(
       urlForAPI,

@@ -1,3 +1,4 @@
+/* tslint:disable */ 
 import {Command, flags} from '@oclif/command'
 import {
   getBackendServerUrl,
@@ -78,15 +79,18 @@ export default class Setup extends Command {
 
     const selectedProjectOption = (
       await prompt([{
+        // @ts-ignore
         type: 'select',
         name: 'selectedProject',
+        // @ts-ignore
         initial: 'N',
         message: 'Select project',
         choices,
         result(names: any) {
+          // @ts-ignore
           return this.map(names)
         },
-      }])
+      }])// @ts-ignore
     ).selectedProject
 
     const selectedProjectId =
@@ -95,7 +99,7 @@ export default class Setup extends Command {
       project => project.id === selectedProjectId,
     )
 
-    const {shouldRunIndividualTest} = await prompt({
+    const {shouldRunIndividualTest}:any = await prompt({
       type: 'confirm',
       initial: 'N',
       name: 'shouldRunIndividualTest',
@@ -119,10 +123,12 @@ export default class Setup extends Command {
           value: test.id,
         })),
         result(value: any) {
+          // @ts-ignore
           return this.map(value)
         },
       }])
 
+      // @ts-ignore
       const selectTestOption = selectTestOptionPromptResponse.selectTestOption
 
       const testIds = Object.keys(selectTestOption).map(key => {
@@ -140,7 +146,8 @@ export default class Setup extends Command {
   }
 
   async runLocally() {
-    const {shouldRunLocally} = await prompt({
+    
+    const {shouldRunLocally} :any = await prompt({
       type: 'confirm',
       name: 'shouldRunLocally',
       message: 'Do you to want to run test on port? (For CI/ Local Development)',
@@ -148,7 +155,7 @@ export default class Setup extends Command {
 
     // If not ask for base host
     if (!shouldRunLocally) {
-      const {host} = await prompt({
+      const {host} :any = await prompt({
         type: 'input',
         name: 'host',
         message: 'Change base Host (Skip if No)',
@@ -160,7 +167,7 @@ export default class Setup extends Command {
     }
 
     // Ask for port
-    const {port} = await prompt({
+    const {port} :any = await prompt({
       type: 'input',
       name: 'port',
       message: 'Port on which service is exposed',
