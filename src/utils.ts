@@ -19,7 +19,7 @@ export const getFrontendServerUrl = (): string => {
 export const isFromGithub = () => Boolean(process.env.GITHUB_ACTION)
 
 export const getGitRepos = () => {
-  const rgx = new RegExp(/(^\w+)\s+([\w.@:/?]+)\s+\((fetch|push)\)/i)
+  const rgx = new RegExp(/(^\w+)\s+([\w.@:/?-]+)\s+\((fetch|push)\)/i)
   return new Promise((resolve, reject) => {
     exec('git remote -v', function (err, stdout) {
       if (err) {
@@ -29,6 +29,7 @@ export const getGitRepos = () => {
 
       const origins = stdout.split('\n')
       const originMap = {}
+
       if (origins) {
         for (const origin of origins) {
           const match = origin.match(rgx)
@@ -42,6 +43,8 @@ export const getGitRepos = () => {
             }
           }
         }
+
+        console.log('THIS IS THE ORIGIN MAP', originMap)
         resolve(originMap)
       } else {
         reject(new Error('No remote origin found'))
