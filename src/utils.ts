@@ -44,7 +44,6 @@ export const getGitRepos = () => {
           }
         }
 
-        console.log('THIS IS THE ORIGIN MAP', originMap)
         resolve(originMap)
       } else {
         reject(new Error('No remote origin found'))
