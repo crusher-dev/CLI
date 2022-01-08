@@ -1,6 +1,7 @@
 import {v1 as uuidv1} from 'uuid'
 import {BACKEND_SERVER_URL, FRONTEND_SERVER_URL} from './constants'
 import {exec} from 'child_process'
+import * as fs from 'fs'
 
 export const getUniqueString = (): string => {
   return uuidv1()
@@ -119,3 +120,9 @@ export const extractRepoFullName = remoteName => new Promise(resolve => {
     resolve('')
   }
 })
+
+export const createDirIfNotExist = async (dirPath: string) => {
+  if (!fs.existsSync(dirPath)) {
+    await fs.mkdirSync(dirPath)
+  }
+}
