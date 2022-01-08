@@ -1,1 +1,1 @@
-{"backend":"http://localhost:8080"}
+{"backend":"http://crusher.dev"}

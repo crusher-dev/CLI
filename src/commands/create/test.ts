@@ -1,18 +1,11 @@
 /* tslint:disable */
 import {Command, flags} from '@oclif/command'
-import {
-  getBackendServerUrl,
-  getFrontendServerUrl,
-  getUniqueString,
-} from '../utils'
-
-import {prompt} from 'enquirer'
-import {cli} from 'cli-ux'
-import fetch  from 'node-fetch'
 import * as fs from 'fs'
+import {getUserInfoFromToken} from '../../common'
+import { getUserInfo } from '../../state/userInfo';
 import {createDirIfNotExist} from '../../utils'
 
-export default class Create extends Command {
+export default class CreateTest extends Command {
   static description = 'Generate command to run test';
 
   static examples = [
@@ -21,12 +14,21 @@ export default class Create extends Command {
   ];
 
   static flags = {
-    help: flags.help({char: 'h'}),
+    token: flags.string({char: 't', description: 'Crusher user token'}),
   };
 
-
   async run() {
-    console.log("df")
+    const {args, flags} = await this.parse(CreateTest)
+
+    let userInfo : any = null
+    if (flags.token) {
+      userInfo = await getUserInfoFromToken(flags.token)
+    } else {
+      const _userInfo = getUserInfo()
+      if (_userInfo)  userInfo = _userInfo
+    }
+
+    console.log('User info is', userInfo)
     // const crusherTokenFlag = await this.userLogin()
     // const testIDsFlag = await this.selectTests()
     // const hostParamFlag = await this.runLocally()
@@ -37,17 +39,17 @@ export default class Create extends Command {
     const data = await this.makeSureSetupIsCorrect()
   }
 
-  async createTest(){
+  async createTest() {
 
   }
 
-  async makeSureSetupIsCorrect(){
+  async makeSureSetupIsCorrect() {
     try {
-      fs.readFileSync(".crusherci/config.json");
+      fs.readFileSync('.crusherci/config.json')
     } catch (e) {
-      await createDirIfNotExist(".crusherci");
-      fs.writeFileSync(".crusherci/config.js", JSON.stringify({
-        "backend": "http://crusher.dev",
+      await createDirIfNotExist('.crusherci')
+      fs.writeFileSync('.crusherci/config.js', JSON.stringify({
+        backend: 'http://crusher.dev',
       }))
     }
 
