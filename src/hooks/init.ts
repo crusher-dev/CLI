@@ -6,6 +6,7 @@ import axios from 'axios'
 import cli from 'cli-ux'
 import fastify from 'fastify'
 import { getProjectConfig } from '../common/projectConfig'
+
 const fast = fastify({logger: false})
 
 const waitForUserLogin = async (): Promise<string> => {
@@ -13,9 +14,11 @@ const waitForUserLogin = async (): Promise<string> => {
     'Please login/signup on crusher. Opening in browser',
   )
 
+  cli.log(`${resolveFrontendServerUrl("?electron_login=true&electron_server=http://localhost:3009/")}`);
+
   await cli.open(
     `${resolveFrontendServerUrl("?electron_login=true&electron_server=http://localhost:3009/")}`,
-  )
+  ).catch((err) => { console.error(err);  })
 
   const token = await new Promise(resolve => {
     fast.get('/', async (request, reply, next) => {

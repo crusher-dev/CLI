@@ -13,6 +13,7 @@ import cli from 'cli-ux'
 import {getProjectConfig, setProjectConfig} from '../../common/projectConfig'
 const {execSync} = require('child_process')
 import * as inquirer from 'inquirer'
+import {getProjectsOfCurrentUser} from '../../common'
 export default class CreateTest extends Command {
   static description = 'Generate command to run test';
 
@@ -38,7 +39,7 @@ export default class CreateTest extends Command {
       const build = await axios.get(recorderBuild.url, {responseType: 'arraybuffer'})
       fs.writeFileSync(path.resolve(BIN_dIr, recorderBuild.name), build.data)
 
-      execSync('dpkg -i ' + path.resolve(BIN_dIr, recorderBuild.name))
+      execSync('sudo dpkg -i ' + path.resolve(BIN_dIr, recorderBuild.name))
       await cli.action.stop()
     }
   }
@@ -55,8 +56,10 @@ export default class CreateTest extends Command {
   }
 
   async createTest() {
-    execSync('electron-app --no-sandbox')
-    cli.log("Closing recorder now. Bye!!");
+    const projectConfig = getProjectConfig();
+    const userInfo = getUserInfo();
+    execSync(`electron-app --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
+    cli.log('Closing recorder now. Bye!!')
   }
 
   async makeSureSetupIsCorrect() {
@@ -64,19 +67,29 @@ export default class CreateTest extends Command {
     const projectConfig = getProjectConfig()
     if (!projectConfig) {
       const projectConfig: any = {backend: resolveBackendServerUrl(''), userInfo}
+      const projects = await getProjectsOfCurrentUser()
+      const projectRes = await inquirer.prompt([{
+        name: 'project',
+        message: 'Choose a crusher project for integration:',
+        type: 'list',
+        choices: projects.map(p => ({ name: p.name, value: p.id })),
+        default: projects[0].id,
+      }])
+
+      projectConfig.project = projectRes.project
 
       const res = await inquirer.prompt({
         name: 'hostEnvironment',
         message: 'Select your environment for running test against?',
         type: 'list',
-        choices: [{name: 'Local', value: 'local'}, {name: 'Custom host', value: 'customHost'}, {name: 'CI', value: 'ci'}],
+        choices: [{name: 'Local environment', value: 'local'}, {name: 'Custom host', value: 'customHost'}],
       })
       projectConfig.hostEnvironment = res.hostEnvironment
 
       if (res.hostEnvironment === 'local') {
         const res = await inquirer.prompt({
           name: 'port',
-          message: 'Enter port where your app will be served',
+          message: 'Enter port where your app will be served:',
           type: 'input',
         })
         projectConfig.port = res.port
@@ -88,8 +101,6 @@ export default class CreateTest extends Command {
         })
 
         projectConfig.host = res.customHost
-      } else {
-        cli.log('To enable tests for your instant environemnts created by your CI, simply pass --host=<instant_app_url> flag when running npx crusher run:test \nRead more at https://docs.crusher.dev/ci-integration')
       }
       setProjectConfig({
         ...projectConfig,

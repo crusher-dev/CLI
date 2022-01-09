@@ -1,6 +1,11 @@
 /* tslint:disable */
 import {Command, flags} from '@oclif/command'
+import { cli } from 'cli-ux';
 import * as fs from 'fs'
+import { runTests } from '../../common';
+import { getProjectConfig } from '../../common/projectConfig';
+import { initHook } from '../../hooks/init';
+import { getUserInfo } from '../../state/userInfo';
 import {createDirIfNotExist} from '../../utils'
 
 export default class RunTest extends Command {
@@ -12,43 +17,18 @@ export default class RunTest extends Command {
   ];
 
   static flags = {
-    help: flags.help({char: 'h'}),
+    token: flags.string({char: 't', description: 'Crusher user token'}),
   };
 
   async run() {
-    console.log('df')
-    // const crusherTokenFlag = await this.userLogin()
-    // const testIDsFlag = await this.selectTests()
-    // const hostParamFlag = await this.runLocally()
-    // const generatedCommand = `npx crusher-cli run ${testIDsFlag} ${hostParamFlag} ${crusherTokenFlag} `
-    //
-    // console.log('\nPlease use following command to run test\n')
-    // console.log(generatedCommand)
-    const data = await this.makeSureSetupIsCorrect()
+    const {args, flags} = await this.parse(RunTest)
+
+    await initHook({ token: flags.token });
+
+    await this.runTests();
   }
 
-  async createTest() {
-
-  }
-
-  async makeSureSetupIsCorrect() {
-    try {
-      fs.readFileSync('.crusherci/config.json')
-    } catch (e) {
-      await createDirIfNotExist('.crusherci')
-      fs.writeFileSync('.crusherci/config.js', JSON.stringify({
-        backend: 'http://crusher.dev',
-      }))
-    }
-
-    // Add commands to package.json
-
-    // Add commands to read CI config
-
-    return {
-      addedConfig: true,
-      addedPackageJson: true,
-      addedIntoCI: true,
-    }
+  async runTests() {
+    await runTests();
   }
 }

@@ -24,6 +24,7 @@
     "lint-staged": "^10.3.0",
     "localtunnel": "^2.0.0",
     "node-fetch": "^2.6.1",
+    "open": "^8.4.0",
     "pkg": "^4.4.8",
     "tslib": "^1",
     "uuid": "^8.1.0"
