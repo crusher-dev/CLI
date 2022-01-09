@@ -1,8 +1,5 @@
 import axios from 'axios'
-import {getUserInfo, setUserInfo} from '../state/userInfo'
 import {resolveBackendServerUrl} from '../utils'
-import * as fs from "fs";
-import { getAppConfig, setAppConfig } from './appConfig';
 
 const getUserInfoFromToken = async (token: string) => {
   // call axios request with token as cookie header

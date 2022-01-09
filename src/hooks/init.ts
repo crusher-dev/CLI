@@ -1,74 +1,78 @@
-import { getUserInfoFromToken } from "../common";
-import { getAppConfig, initializeAppConfig, setAppConfig } from "../common/appConfig";
-import { getUserInfo, setUserInfo } from "../state/userInfo";
-import { getBackendServerUrl, getFrontendServerUrl, getUniqueString, resolveBackendServerUrl, resolvePathToAppDirectory } from "../utils";
-import axios from 'axios';
+import {getUserInfoFromToken} from '../common'
+import {getAppConfig, initializeAppConfig, setAppConfig} from '../common/appConfig'
+import {getUserInfo, setUserInfo} from '../state/userInfo'
+import {getBackendServerUrl, getFrontendServerUrl, getUniqueString, resolveFrontendServerUrl} from '../utils'
+import axios from 'axios'
 import cli from 'cli-ux'
+import fastify from 'fastify'
+import { getProjectConfig } from '../common/projectConfig'
+const fast = fastify({logger: false})
 
-const waitForUserLogin = async(): Promise<string> => {
-  const randomGeneratedToken = getUniqueString();
+const waitForUserLogin = async (): Promise<string> => {
   await cli.action.start(
     'Please login/signup on crusher. Opening in browser',
   )
-  
-  await axios.get(`${getBackendServerUrl()}/cli/add_token/${randomGeneratedToken}`);
 
-  await new Promise(r => setTimeout(r, 2000))
   await cli.open(
-    `${getFrontendServerUrl()}?cli_token=${randomGeneratedToken}`,
+    `${resolveFrontendServerUrl("?electron_login=true&electron_server=http://localhost:3009/")}`,
   )
 
-  let userLoginCheckInterval: any = null;
-  const cliStatusInfo = await new Promise(resolve => {
-    const userLoginCheckIntervalHandler = async (): Promise<any> => {
-      const cliStatusResponse = await axios.get(`/cli/status/${randomGeneratedToken}`);
-      cliStatusResponse.data.status === 'Completed' && resolve(cliStatusResponse.data)
-    }
+  const token = await new Promise(resolve => {
+    fast.get('/', async (request, reply, next) => {
+      const {token} = request.query
+      setInterval(() => {
+        resolve(token)
+        fast.close()
+      })
+      return "Success"
+    })
+    fast.listen(3009)
+  })
 
-    userLoginCheckInterval = setInterval(userLoginCheckIntervalHandler, 2500)
-  }) as any;
-
-  // Clean-up
-  if(userLoginCheckInterval) {
-    clearInterval(userLoginCheckInterval);
-    userLoginCheckInterval = null;
-  }
-
-  await cli.action.stop();
-
-  return cliStatusInfo.requestToken;
-};
-
-const initHook = async function (options: { token?: string; }) {
-  initializeAppConfig();
-  if(options.token) {
-      // Verify the new token and save it if valid
-      try {
-        await getUserInfoFromToken(options.token).then((userInfo) => {
-            setUserInfo(userInfo);
-        });
-      } catch(e) {
-        const userToken = await waitForUserLogin();
-        await getUserInfoFromToken(userToken).then((userInfo) => {
-          setUserInfo(userInfo);
-      });    
-    } else {
-      const appConfig = getAppConfig();
-
-      // Login user to set default auth token
-      if(!appConfig.userData || !appConfig.userData.token) {
-        const userToken = await waitForUserLogin();
-        await getUserInfoFromToken(userToken).then((userInfo) => {
-          setUserInfo(userInfo);
-        });
-      }
-    }
-  }
-
-  setAppConfig({
-      ...getAppConfig(),
-      userInfo: getUserInfo(),
-  });
+  await cli.action.stop()
+  return token
 }
 
-export { initHook };
+const initHook = async function (options: { token?: string; }) {
+  initializeAppConfig()
+  const projectConfig = getProjectConfig();
+
+  if (projectConfig && projectConfig.userInfo) {
+    cli.log("Using the crusher config in the project");
+
+    setAppConfig({
+      ...getAppConfig(),
+      ...getProjectConfig(),
+    })
+  }
+
+  if (options.token) {
+    // Verify the new token and save it if valid
+    try {
+      await getUserInfoFromToken(options.token).then(userInfo => {
+        setUserInfo(userInfo)
+      })
+    } catch (e) {
+      const userToken = await waitForUserLogin()
+      await getUserInfoFromToken(userToken).then(userInfo => {
+        setUserInfo(userInfo)
+      })
+    }
+  } else {
+    const appConfig = getAppConfig()
+
+    // Login user to set default auth token
+    if (!appConfig.userInfo || !appConfig.userInfo.token) {
+      const userToken = await waitForUserLogin()
+      await getUserInfoFromToken(userToken).then(userInfo => {
+        setUserInfo(userInfo)
+        setAppConfig({
+          ...getAppConfig(),
+          userInfo: getUserInfo(),
+        })
+      })
+    }
+  }
+}
+
+export {initHook}

@@ -123,9 +123,9 @@ export const extractRepoFullName = remoteName => new Promise(resolve => {
   }
 })
 
-export const createDirIfNotExist = async (dirPath: string) => {
+export const createDirIfNotExist = (dirPath: string) => {
   if (!fs.existsSync(dirPath)) {
-    await fs.mkdirSync(dirPath)
+    fs.mkdirSync(dirPath)
   }
 }
 
@@ -137,6 +137,6 @@ export const resolveFrontendServerUrl = (endpoint): string => {
   return url.resolve(FRONTEND_SERVER_URL, endpoint);
 }
 
-export const resolvePathToAppDirectory = (path): string => {
-  return path.resolve(APP_DIRECTORY, path);
+export const resolvePathToAppDirectory = (relativePath): string => {
+  return path.resolve(APP_DIRECTORY, relativePath);
 }

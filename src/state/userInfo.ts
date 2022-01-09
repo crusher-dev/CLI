@@ -1,7 +1,4 @@
 // eslint-disable-next-line unicorn/filename-case
-
-import { getAppConfig } from "../utils";
-
 export interface IUserInfo {
   id: number;
   email: string;
@@ -9,9 +6,8 @@ export interface IUserInfo {
   token: string;
 }
 
-const appConfig = getAppConfig()
 
-let userInfo: IUserInfo | null = appConfig ? appConfig.userInfo : null
+let userInfo: IUserInfo | null = null
 
 const setUserInfo = (_userInfo: IUserInfo) => {
   userInfo = _userInfo
