@@ -1,7 +1,8 @@
 import axios from 'axios'
 import {getUserInfo, setUserInfo} from '../state/userInfo'
-import {getAppConfig, resolveBackendServerUrl, setAppConfig} from '../utils'
+import {resolveBackendServerUrl} from '../utils'
 import * as fs from "fs";
+import { getAppConfig, setAppConfig } from './appConfig';
 
 const getUserInfoFromToken = async (token: string) => {
   // call axios request with token as cookie header
@@ -14,20 +15,12 @@ const getUserInfoFromToken = async (token: string) => {
   const info = infoResponse.data
   if (!info.isUserLoggedIn) throw new Error('Invalid user authentication. Login again using `npx crusher login` to fix this')
 
-  setUserInfo({
+  return {
     id: info.userData.userId,
     name: info.userData.name,
     email: info.userData.email,
     token: token,
-  })
-
-  setAppConfig({
-    ...getAppConfig(),
-    userInfo: getUserInfo()
-  })
-
-
-  return getUserInfo()
+  };
 }
 
 export {getUserInfoFromToken}

@@ -1,8 +1,9 @@
 import {v1 as uuidv1} from 'uuid'
-import {BACKEND_SERVER_URL, FRONTEND_SERVER_URL} from './constants'
+import {APP_DIRECTORY, BACKEND_SERVER_URL, FRONTEND_SERVER_URL} from './constants'
 import {exec} from 'child_process'
 import * as fs from 'fs'
 import * as url from 'url';
+import * as path from 'path';
 
 export const getUniqueString = (): string => {
   return uuidv1()
@@ -136,20 +137,6 @@ export const resolveFrontendServerUrl = (endpoint): string => {
   return url.resolve(FRONTEND_SERVER_URL, endpoint);
 }
 
-const appDirectory = `${process.env.HOME}/.crusher`;
-
-export function initAppDirectory() {
-  if (!fs.existsSync(appDirectory)) {
-    fs.mkdirSync(appDirectory)
-    setAppConfig({})
-  }
-}
-
-
-export const getAppConfig = () => {
-  return JSON.parse(fs.readFileSync(`${appDirectory}/config.json`, 'utf8'))
-}
-
-export const setAppConfig = (config) => {
-  fs.writeFileSync(`${appDirectory}/config.json`, JSON.stringify(config))
+export const resolvePathToAppDirectory = (path): string => {
+  return path.resolve(APP_DIRECTORY, path);
 }

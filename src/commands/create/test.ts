@@ -2,6 +2,7 @@
 import {Command, flags} from '@oclif/command'
 import * as fs from 'fs'
 import {getUserInfoFromToken} from '../../common'
+import { initHook } from '../../hooks/init';
 import { getUserInfo } from '../../state/userInfo';
 import {createDirIfNotExist} from '../../utils'
 
@@ -20,13 +21,9 @@ export default class CreateTest extends Command {
   async run() {
     const {args, flags} = await this.parse(CreateTest)
 
-    let userInfo : any = null
-    if (flags.token) {
-      userInfo = await getUserInfoFromToken(flags.token)
-    } else {
-      const _userInfo = getUserInfo()
-      if (_userInfo)  userInfo = _userInfo
-    }
+    await initHook({ token: flags.token });
+
+    const userInfo = getUserInfo();
 
     console.log('User info is', userInfo)
     // const crusherTokenFlag = await this.userLogin()
