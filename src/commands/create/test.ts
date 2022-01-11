@@ -29,7 +29,15 @@ export default class CreateTest extends Command {
   async installDependencies() {
     const BIN_dIr = resolvePathToAppDirectory('bin')
 
-    if (!commandExists.sync('electron-app')) {
+    let isCrusherInstalled = false;
+    if(process.platform === "darwin") {
+      const app = execSync(`ls /Applications/ | grep -i "Crusher Recorder"`).toString();
+      isCrusherInstalled = app.includes("Crusher Recorder.app");
+    } else {
+      isCrusherInstalled = commandExists.sync('electron-app');
+    }
+  
+    if (!isCrusherInstalled) {
       this.warn('No crusher recorder found on the system')
 
       const recorderBuild = getRecorderBuildForPlatfrom()
@@ -58,7 +66,11 @@ export default class CreateTest extends Command {
   async createTest() {
     const projectConfig = getProjectConfig();
     const userInfo = getUserInfo();
-    execSync(`electron-app --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
+    if(process.platform === "darwin") {
+      execSync(`/Applications/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder" --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
+    } else {
+      execSync(`electron-app --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
+    }
     cli.log('Closing recorder now. Bye!!')
   }
 
