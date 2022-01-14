@@ -26,30 +26,60 @@ export default class CreateTest extends Command {
     token: flags.string({char: 't', description: 'Crusher user token'}),
   };
 
-  async installDependencies() {
-    const BIN_dIr = resolvePathToAppDirectory('bin')
-
-    let isCrusherInstalled = false;
-    if(process.platform === "darwin") {
-      const app = execSync(`ls /Applications/ | grep -i "Crusher Recorder"`).toString();
-      isCrusherInstalled = app.includes("Crusher Recorder.app");
-    } else {
-      isCrusherInstalled = commandExists.sync('electron-app');
-    }
+  private downloadAndSaveMacRecorder(): Promise<string> {
+    return new Promise((resolve, reject) => {
+      const packagesRecorderUrl = getRecorderBuildForPlatfrom();
+      const recorderZipPath = resolvePathToAppDirectory(`bin/${packagesRecorderUrl.name}`);
   
-    if (!isCrusherInstalled) {
-      this.warn('No crusher recorder found on the system')
+      const bar = cli.progress({
+        format: `Downloading latest version (${packagesRecorderUrl.version})\t[{bar}] {percentage}%`,
+      });
+      bar.start(100, 0, { speed: 'N/A' });
+  
+      axios.get(packagesRecorderUrl.url, { responseType: "stream" }).then(({data, headers})=>{
+        data.pipe(fs.createWriteStream(recorderZipPath));
+        let chunksCompleted = 0;
+    
+        data.on("data", (chunk) => {
+          chunksCompleted += chunk.length;
+          const percentage = Math.floor((chunksCompleted / parseInt(headers['content-length'])) * 100);
+          bar.update(percentage);
 
-      const recorderBuild = getRecorderBuildForPlatfrom()
-      await cli.action.start(
-        `Downloading and installing the latest version of the recorder(${recorderBuild.version}):`,
-      )
-      const build = await axios.get(recorderBuild.url, {responseType: 'arraybuffer'})
-      fs.writeFileSync(path.resolve(BIN_dIr, recorderBuild.name), build.data)
+          if(percentage === 100) {
+            bar.stop();
+            resolve(recorderZipPath);
+          }
+        });
+      }).catch((err) => { reject(err); });
+    });
 
-      execSync('sudo dpkg -i ' + path.resolve(BIN_dIr, recorderBuild.name))
-      await cli.action.stop()
+  }
+
+  async handleMacInstallation() {
+    cli.info("Crusher Recorder is not installed.\n");
+    const recorderZipPath = await this.downloadAndSaveMacRecorder();
+
+    await cli.action.start("Unzipping");
+    execSync(`cd ${path.dirname(recorderZipPath)} && ditto -xk ${path.basename(recorderZipPath)} . && rm -R ${path.basename(recorderZipPath)}`);
+
+    await new Promise((resolve, reject) => setTimeout(() => { resolve(true); }, 3000));
+    await cli.action.stop("done\n");
+  }
+
+  async installDependencies() {
+    const BIN_DIR = resolvePathToAppDirectory('bin')
+
+    const packagesRecorderUrl = getRecorderBuildForPlatfrom();
+
+    if(process.platform === "darwin") {
+      if(fs.existsSync(resolvePathToAppDirectory("bin/Crusher Recorder.app"))) {
+        return;
+      }
+
+      await this.handleMacInstallation();
     }
+
+
   }
 
   async run() {
@@ -67,11 +97,11 @@ export default class CreateTest extends Command {
     const projectConfig = getProjectConfig();
     const userInfo = getUserInfo();
     if(process.platform === "darwin") {
-      execSync(`/Applications/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder" --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
+      execSync(`${resolvePathToAppDirectory('bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"')} --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
     } else {
       execSync(`electron-app --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
     }
-    cli.log('Closing recorder now. Bye!!')
+    cli.log('Recorder closed!!!')
   }
 
   async makeSureSetupIsCorrect() {
@@ -82,7 +112,7 @@ export default class CreateTest extends Command {
       const projects = await getProjectsOfCurrentUser()
       const projectRes = await inquirer.prompt([{
         name: 'project',
-        message: 'Choose a crusher project for integration:',
+        message: 'Select your crusher project:',
         type: 'list',
         choices: projects.map(p => ({ name: p.name, value: p.id })),
         default: projects[0].id,

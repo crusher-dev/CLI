@@ -41,7 +41,7 @@ const initHook = async function (options: { token?: string; }) {
   const projectConfig = getProjectConfig();
 
   if (projectConfig && projectConfig.userInfo) {
-    cli.log("Using the crusher config in the project");
+    // cli.log("Using the crusher config in the project");
 
     setAppConfig({
       ...getAppConfig(),

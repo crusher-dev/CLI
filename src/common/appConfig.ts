@@ -3,6 +3,7 @@ import * as fs from 'fs'
 import {APP_DIRECTORY} from '../constants'
 import {getUserInfo, setUserInfo} from '../state/userInfo'
 import {resolvePathToAppDirectory} from '../utils'
+import * as path from "path";
 
 const CRUSHER_CONFIG_FILE = resolvePathToAppDirectory('crusher.json')
 
@@ -10,12 +11,16 @@ export const initializeAppConfig = () => {
   if (!fs.existsSync(APP_DIRECTORY)) {
     fs.mkdirSync(APP_DIRECTORY)
     fs.mkdirSync(resolvePathToAppDirectory("bin"));
-    setAppConfig({})
-  } else {
-    // Populate the app state
-    const config = getAppConfig()
-    setUserInfo(config.userInfo)
   }
+
+  console.log("Path is", path.resolve(APP_DIRECTORY, "crusher.json"));
+  if(!fs.existsSync(path.resolve(APP_DIRECTORY, "crusher.json"))) {
+    console.log("App there");
+    setAppConfig({})
+  }
+
+  const config = getAppConfig()
+  setUserInfo(config.userInfo)
 }
 
 export const setAppConfig = config => {
