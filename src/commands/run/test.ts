@@ -44,33 +44,11 @@ export default class RunTest extends Command {
     return tunnel;
   }
 
-  async createTest() {
-    const projectConfig = getProjectConfig();
-    const userInfo = getUserInfo();
-    execSync(`electron-app --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
-    cli.log('Closing recorder now. Bye!!')
-  }
-
   async makeSureSetupIsCorrect() {
     const userInfo = getUserInfo()
     const projectConfig = getProjectConfig()
 
     if (!projectConfig) return await cli.error("Crusher not installed in this directory");
-
-    if (!projectConfig.hostEnvironment) {
-      projectConfig.hostEnvironment = "local";
-
-      const res = await inquirer.prompt({
-        name: 'port',
-        message: 'Enter port where your app will be served:',
-        type: 'input',
-      })
-      projectConfig.port = res.port
-
-      setProjectConfig({
-        ...projectConfig,
-      })
-    }
   }
 
   async runTests() {

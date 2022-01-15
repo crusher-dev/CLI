@@ -13,7 +13,6 @@ export const initializeAppConfig = () => {
     fs.mkdirSync(resolvePathToAppDirectory("bin"));
   }
 
-  console.log("Path is", path.resolve(APP_DIRECTORY, "crusher.json"));
   if(!fs.existsSync(path.resolve(APP_DIRECTORY, "crusher.json"))) {
     console.log("App there");
     setAppConfig({})
