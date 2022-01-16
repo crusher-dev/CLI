@@ -1,6 +1,6 @@
 {
   "name": "crusher-cli",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "author": "Himanshu @himanshu-dixit",
   "repository": "crusherdev/CLI",
   "bin": {
