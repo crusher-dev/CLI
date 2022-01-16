@@ -10,13 +10,11 @@ export const getUniqueString = (): string => {
 }
 
 export const getBackendServerUrl = (): string => {
-  const {DEV, PROD} = BACKEND_SERVER_URL
-  return process.env.NODE_ENV === 'development' ? DEV : PROD
+  return BACKEND_SERVER_URL
 }
 
 export const getFrontendServerUrl = (): string => {
-  const {DEV, PROD} = FRONTEND_SERVER_URL
-  return process.env.NODE_ENV === 'development' ? DEV : PROD
+  return FRONTEND_SERVER_URL
 }
 
 export const isFromGithub = () => Boolean(process.env.GITHUB_ACTION)

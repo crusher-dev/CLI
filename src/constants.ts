@@ -1,7 +1,7 @@
 import * as path from "path";
 
-export const BACKEND_SERVER_URL = 'http://localhost:8000'
-export const FRONTEND_SERVER_URL = 'http://localhost:3000'
+export const BACKEND_SERVER_URL = 'htts://backend.crusher.dev'
+export const FRONTEND_SERVER_URL = 'https://app.crusher.dev'
 export const APP_DIRECTORY = `${process.env.HOME}/.crusher`;
 
 export const RECORDER_MAC_BUILD = "https://github.com/crusherdev/crusher-downloads/releases/download/v1.0.10/Crusher.Recorder-1.0.9-mac.zip";
