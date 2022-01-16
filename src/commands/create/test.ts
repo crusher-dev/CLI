@@ -26,20 +26,20 @@ export default class CreateTest extends Command {
     token: flags.string({char: 't', description: 'Crusher user token'}),
   };
 
-  private downloadAndSaveMacRecorder(): Promise<string> {
+  private downloadAndSaveRecorder(): Promise<string> {
     return new Promise((resolve, reject) => {
       const packagesRecorderUrl = getRecorderBuildForPlatfrom();
       const recorderZipPath = resolvePathToAppDirectory(`bin/${packagesRecorderUrl.name}`);
-  
+
       const bar = cli.progress({
         format: `Downloading latest version (${packagesRecorderUrl.version})\t[{bar}] {percentage}%`,
       });
       bar.start(100, 0, { speed: 'N/A' });
-  
+
       axios.get(packagesRecorderUrl.url, { responseType: "stream" }).then(({data, headers})=>{
         data.pipe(fs.createWriteStream(recorderZipPath));
         let chunksCompleted = 0;
-    
+
         data.on("data", (chunk) => {
           chunksCompleted += chunk.length;
           const percentage = Math.floor((chunksCompleted / parseInt(headers['content-length'])) * 100);
@@ -52,15 +52,25 @@ export default class CreateTest extends Command {
         });
       }).catch((err) => { reject(err); });
     });
-
   }
 
   async handleMacInstallation() {
     cli.info("Crusher Recorder is not installed.\n");
-    const recorderZipPath = await this.downloadAndSaveMacRecorder();
+    const recorderZipPath = await this.downloadAndSaveRecorder();
 
     await cli.action.start("Unzipping");
     execSync(`cd ${path.dirname(recorderZipPath)} && ditto -xk ${path.basename(recorderZipPath)} . && rm -R ${path.basename(recorderZipPath)}`);
+
+    await new Promise((resolve, reject) => setTimeout(() => { resolve(true); }, 3000));
+    await cli.action.stop("done\n");
+  }
+
+  async handleLinuxInstallation() {
+    cli.info("Crusher Recorder is not installed.\n");
+    const recorderZipPath = await this.downloadAndSaveRecorder();
+
+    await cli.action.start("Unzipping");
+    execSync(`cd ${path.dirname(recorderZipPath)} && unzip ${path.basename(recorderZipPath)} -d . && rm -R ${path.basename(recorderZipPath)}`);
 
     await new Promise((resolve, reject) => setTimeout(() => { resolve(true); }, 3000));
     await cli.action.stop("done\n");
@@ -77,15 +87,19 @@ export default class CreateTest extends Command {
       }
 
       await this.handleMacInstallation();
+    } else if (process.platform === "linux") {
+      if(fs.existsSync(resolvePathToAppDirectory("bin/electron-app"))) {
+        return;
+      }
+
+      await this.handleLinuxInstallation();
     }
-
-
   }
 
   async run() {
-    const {args, flags} = await this.parse(CreateTest)
-
+    const { args, flags } = await this.parse(CreateTest)
     await initHook({token: flags.token})
+
     await this.installDependencies()
 
     await this.makeSureSetupIsCorrect()
@@ -99,7 +113,7 @@ export default class CreateTest extends Command {
     if(process.platform === "darwin") {
       execSync(`${resolvePathToAppDirectory('bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"')} --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
     } else {
-      execSync(`electron-app --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
+      execSync(`${resolvePathToAppDirectory('bin/electron-app')} --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
     }
     cli.log('Recorder closed!!!')
   }
