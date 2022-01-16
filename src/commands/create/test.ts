@@ -1,6 +1,5 @@
 /* tslint:disable */
 import {Command, flags} from '@oclif/command'
-import * as fs from 'fs'
 import {initHook} from '../../hooks/init'
 import {getUserInfo} from '../../state/userInfo'
 import {createDirIfNotExist, resolveBackendServerUrl, resolvePathToAppDirectory} from '../../utils'
@@ -132,7 +131,7 @@ export default class CreateTest extends Command {
         default: projects[0].id,
       }])
 
-      projectConfig.project = projectRes.project
+      projectConfig.project = (projectRes as any).project
 
       // const res = await inquirer.prompt({
       //   name: 'hostEnvironment',

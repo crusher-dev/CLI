@@ -21,19 +21,11 @@ const waitForUserLogin = async (): Promise<string> => {
   ).catch((err) => { console.error(err);  })
 
   const token = await new Promise(resolve => {
-    fast.get('/', async (request, reply, next) => {
-      const {token} = request.query
-      setInterval(() => {
-        resolve(token)
-        fast.close()
-      })
-      return "Success"
-    })
-    fast.listen(3009)
+
   })
 
   await cli.action.stop()
-  return token
+  return token as string
 }
 
 const initHook = async function (options: { token?: string; }) {

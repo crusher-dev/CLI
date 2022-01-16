@@ -1,6 +1,6 @@
 import * as path from "path";
 
-export const BACKEND_SERVER_URL = 'htts://backend.crusher.dev'
+export const BACKEND_SERVER_URL = 'https://backend.crusher.dev'
 export const FRONTEND_SERVER_URL = 'https://app.crusher.dev'
 export const APP_DIRECTORY = `${process.env.HOME}/.crusher`;
 

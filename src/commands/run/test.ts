@@ -34,7 +34,7 @@ export default class RunTest extends Command {
   private async createTunnel(port: string): Promise<localTunnel.Tunnel> {
     await cli.action.start('Creating tunnel to local service')
     // eslint-disable-next-line radix
-    const tunnel = await localTunnel({ port: port })
+    const tunnel = await localTunnel({ port: port as any })
     await cli.action.stop();
 
     tunnel.on('close', () => {
@@ -66,7 +66,7 @@ export default class RunTest extends Command {
       await runTests(host);
     } catch (err) { } finally {
       if (tunnel!) {
-        tunnel.close();
+        tunnel!.close();
       }
     }
   }
