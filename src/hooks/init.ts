@@ -1,27 +1,38 @@
 import {getUserInfoFromToken} from '../common'
 import {getAppConfig, initializeAppConfig, setAppConfig} from '../common/appConfig'
 import {getUserInfo, setUserInfo} from '../state/userInfo'
-import {getBackendServerUrl, getFrontendServerUrl, getUniqueString, resolveFrontendServerUrl} from '../utils'
+import {getBackendServerUrl, getFrontendServerUrl, getUniqueString, resolveBackendServerUrl, resolveFrontendServerUrl} from '../utils'
 import axios from 'axios'
 import cli from 'cli-ux'
 import fastify from 'fastify'
-import { getProjectConfig } from '../common/projectConfig'
+import {getProjectConfig} from '../common/projectConfig'
 
 const fast = fastify({logger: false})
 
 const waitForUserLogin = async (): Promise<string> => {
+  const loginKey = await axios.get(resolveBackendServerUrl('/cli/get.key')).then(res => {
+    return res.data.loginKey
+  })
+  await cli.log('Please login/signup on crusher. Opening this link', resolveFrontendServerUrl(`/?loginKey=${loginKey}`))
+
   await cli.action.start(
-    'Please login/signup on crusher. Opening in browser',
+    'Waiting for login',
   )
 
-  cli.log(`${resolveFrontendServerUrl("?electron_login=true&electron_server=http://localhost:3009/")}`);
-
   await cli.open(
-    `${resolveFrontendServerUrl("?electron_login=true&electron_server=http://localhost:3009/")}`,
-  ).catch((err) => { console.error(err);  })
+    `${resolveFrontendServerUrl(`/?loginKey=${loginKey}`)}`,
+  ).catch(err => {
+    console.error(err)
+  })
 
   const token = await new Promise(resolve => {
-
+    const interval = setInterval(async () => {
+      const loginKeyStatus = await axios.get(resolveBackendServerUrl(`/cli/status.key?loginKey=${loginKey}`)).then(res => res.data)
+      if (loginKeyStatus.status === 'Validated') {
+        clearInterval(interval)
+        resolve(loginKeyStatus.userToken)
+      }
+    }, 5000)
   })
 
   await cli.action.stop()
@@ -30,7 +41,7 @@ const waitForUserLogin = async (): Promise<string> => {
 
 const initHook = async function (options: { token?: string; }) {
   initializeAppConfig()
-  const projectConfig = getProjectConfig();
+  const projectConfig = getProjectConfig()
 
   if (projectConfig && projectConfig.userInfo) {
     // cli.log("Using the crusher config in the project");
