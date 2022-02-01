@@ -19,7 +19,8 @@ export default class RunTest extends Command {
   ];
 
   static flags = {
-    token: flags.string({char: 't', description: 'Crusher user token'}),
+    token: flags.string({ char: 't', description: 'Crusher user token' }),
+    port: flags.integer({ char: 'p', description: 'Port to run local service on' }),
   };
 
   async run() {
@@ -28,7 +29,7 @@ export default class RunTest extends Command {
     await initHook({ token: flags.token });
 
     await this.makeSureSetupIsCorrect();
-    await this.runTests();
+    await this.runTests(flags);
   }
 
   private async createTunnel(port: string): Promise<localTunnel.Tunnel> {
@@ -38,7 +39,7 @@ export default class RunTest extends Command {
     await cli.action.stop();
 
     tunnel.on('close', () => {
-      cli.log(`Tunnel for http://localhost;${port} closed`);
+      cli.log(`Tunnel for http://localhost:${port} closed`);
       process.exit(0);
     })
     return tunnel;
@@ -51,12 +52,12 @@ export default class RunTest extends Command {
     if (!projectConfig) return await cli.error("Crusher not installed in this directory");
   }
 
-  async runTests() {
+  async runTests(flags) {
     const projectConfig = getProjectConfig();
     let host : string | undefined = undefined;
     let tunnel: localTunnel.Tunnel | undefined;
-    if (projectConfig.hostEnvironment === "local") {
-      const port = projectConfig.port;
+    if (projectConfig.hostEnvironment === "local" || flags.port) {
+      const port = flags.port ? flags.port : projectConfig.port;
       tunnel = await this.createTunnel(port);
       host = tunnel.url;
 

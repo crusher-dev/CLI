@@ -12,7 +12,9 @@ import cli from 'cli-ux'
 import {getProjectConfig, setProjectConfig} from '../../common/projectConfig'
 const {execSync} = require('child_process')
 import * as inquirer from 'inquirer'
-import {getProjectsOfCurrentUser} from '../../common'
+import { getProjectsOfCurrentUser } from '../../common'
+import * as localTunnel from 'localtunnel'
+
 export default class CreateTest extends Command {
   static description = 'Generate command to run test';
 
@@ -22,8 +24,24 @@ export default class CreateTest extends Command {
   ];
 
   static flags = {
-    token: flags.string({char: 't', description: 'Crusher user token'}),
+    token: flags.string({ char: 't', description: 'Crusher user token' }),
+    port: flags.integer({ char: 'p', description: 'Port to run local service on' }),
+
   };
+
+
+  private async createTunnel(port: string): Promise<localTunnel.Tunnel> {
+    await cli.action.start('Creating tunnel to local service')
+    // eslint-disable-next-line radix
+    const tunnel = await localTunnel({port: parseInt(port)})
+    await cli.action.stop();
+
+    tunnel.on('close', () => {
+      cli.log(`Tunnel for http://localhost:${port} closed`);
+      process.exit(0);
+    })
+    return tunnel;
+  }
 
   private downloadAndSaveRecorder(): Promise<string> {
     return new Promise((resolve, reject) => {
@@ -103,10 +121,19 @@ export default class CreateTest extends Command {
 
     await this.makeSureSetupIsCorrect()
 
-    await this.createTest()
+    await this.createTest(flags)
   }
 
-  async createTest() {
+  async createTest(flags) {
+    let tunnel: localTunnel.Tunnel | undefined;
+    if (flags.port) {
+      const port = flags.port;
+      tunnel = await this.createTunnel(port);
+      const host = tunnel.url;
+
+      await cli.log("\nServing at " + host + " now \n");
+    }
+
     const projectConfig = getProjectConfig();
     const userInfo = getUserInfo();
     if(process.platform === "darwin") {
@@ -173,3 +200,10 @@ export default class CreateTest extends Command {
     }
   }
 }
+
+process.on('unhandledRejection', (reason, p) => {
+});
+
+process.on('uncaughtException', (err) => {
+
+});

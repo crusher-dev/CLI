@@ -67,7 +67,7 @@ const runTests = async (host: string | undefined) => {
         });
 
         const buildInfo = res.data.list[0];
-        if (buildInfo.status === 'PASSED' || buildInfo.status === "FAILED") {
+        if (buildInfo.status === 'PASSED' || buildInfo.status === "FAILED" || buildInfo.status === "MANUAL_REVIEW_REQUIRED") {
           clearInterval(poll);
           await cli.action.stop(buildInfo.status === 'PASSED' ? `Build passed in ${parseInt(buildInfo.duration)}s` : `Build failed in ${parseInt(buildInfo.duration)}s`);
           await cli.log("View build report at " + resolveFrontendServerUrl(`/app/build/${buildId}`));

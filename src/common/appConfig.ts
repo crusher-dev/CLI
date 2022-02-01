@@ -14,7 +14,6 @@ export const initializeAppConfig = () => {
   }
 
   if(!fs.existsSync(path.resolve(APP_DIRECTORY, "crusher.json"))) {
-    console.log("App there");
     setAppConfig({})
   }
 
