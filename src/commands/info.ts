@@ -7,7 +7,7 @@ import { getLoggedInUser } from "../utils/index";
 export default class Info extends Command {
     static description = 'Shows current project info';
 
-    
+
     async run(): Promise<any> {
         const { args, flags } = await this.parse(Info)
         const projectConfig = getProjectConfig();

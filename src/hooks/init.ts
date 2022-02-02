@@ -28,7 +28,7 @@ const waitForUserLogin = async (): Promise<string> => {
 
   const token = await new Promise(resolve => {
     const interval = setInterval(async () => {
-      const loginKeyStatus = await axios.get(resolveBackendServerUrl(`/cli/status.key?loginKey=${loginKey}`)).then(res => res.data)
+      const loginKeyStatus = await axios.get(resolveBackendServerUrl(`/cli/status.key?lK=${loginKey}`)).then(res => res.data)
       if (loginKeyStatus.status === 'Validated') {
         clearInterval(interval)
         resolve(loginKeyStatus.userToken)
@@ -44,7 +44,7 @@ const waitForUserLogin = async (): Promise<string> => {
 
 const initHook = async function (options: { token?: string; }) {
   initializeAppConfig()
-  
+
   if (options.token) {
     // Verify the new token and save it if valid
     try {

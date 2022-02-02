@@ -48,6 +48,20 @@ const getTotalTestsInProject = async (projectId: number): Promise<number> => {
   return res.data.list.length;
 }
 
+const createProject = async (projectName: string) => {
+  const userInfo = getLoggedInUser();
+  console.log(resolveBackendServerUrl(`/projects/actions/create`));
+  const res = await axios.post(resolveBackendServerUrl(`/projects/actions/create`), {
+    name: projectName,
+  }, {
+    headers: {
+      Cookie: `isLoggedIn=true; token=${userInfo?.token}`,
+    },
+  });
+
+  return res.data;
+};
+
 const getProjectInfo = async (projectId: number): Promise<any> => {
   const projects = await getProjectsOfCurrentUser();
   return projects.find((project) => project.id === projectId);
@@ -99,4 +113,4 @@ const runTests = async (host: string | undefined) => {
   }
 };
 
-export {getUserInfoFromToken, getProjectsOfCurrentUser, runTests, getTotalTestsInProject, getProjectInfo}
+export {getUserInfoFromToken, getProjectsOfCurrentUser, runTests, getTotalTestsInProject, getProjectInfo, createProject}

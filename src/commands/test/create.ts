@@ -12,8 +12,9 @@ import cli from 'cli-ux'
 import {getProjectConfig, setProjectConfig} from '../../common/projectConfig'
 const {execSync} = require('child_process')
 import * as inquirer from 'inquirer'
-import { getProjectsOfCurrentUser } from '../../common'
+import { getProjectsOfCurrentUser, createProject } from '../../common'
 import * as localTunnel from 'localtunnel'
+import { getProjectNameFromGitInfo } from '../../utils/index'
 
 export default class CreateTest extends Command {
   static description = 'Generate command to run test';
@@ -149,20 +150,33 @@ export default class CreateTest extends Command {
     const projectConfig = getProjectConfig()
     if (!projectConfig) {
       const projectConfig: any = { backend: resolveBackendServerUrl('') }
-      const projects = await getProjectsOfCurrentUser()
-      const projectRes = await inquirer.prompt([{
-        name: 'project',
-        message: 'Select your crusher project:',
-        type: 'list',
-        choices: projects.map(p => ({ name: p.name, value: p.id })),
-        default: projects[0].id,
-      }])
+      const projects = await getProjectsOfCurrentUser();
+      const suggestedProjectName = await getProjectNameFromGitInfo();
 
-      projectConfig.project = (projectRes as any).project
+      if (!suggestedProjectName) {
+        const projectRes = await inquirer.prompt([{
+          name: 'project',
+          message: 'Select your crusher project:',
+          type: 'list',
+          choices: projects.map(p => ({ name: p.name, value: p.id })),
+          default: projects[0].id,
+        }])
 
-      setProjectConfig({
-        ...projectConfig,
-      })
+        projectConfig.project = (projectRes as any).project
+
+        setProjectConfig({
+          ...projectConfig,
+        })
+      } else {
+        const projectRecord = await createProject(suggestedProjectName);
+        this.log(`Selecting project ${projectRecord.name} by default`);
+        projectConfig.project = projectRecord.id;
+
+        setProjectConfig({
+          ...projectConfig,
+        })
+
+      }
     }
 
     // Add commands to package.json

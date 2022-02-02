@@ -5,13 +5,42 @@ import {getUserInfo, setUserInfo} from '../state/userInfo'
 import {createDirIfNotExist, resolvePathToAppDirectory} from '../utils'
 import * as path from "path";
 
-const PROJECT_CONFIG_FILE = path.resolve(process.cwd(), "./.crusher/config.json");
+function findCrusherProjectConfig(_start = null) {
+  let start: any = _start || process.cwd()
+  if (typeof start === 'string') {
+    if (start[start.length - 1] !== path.sep) {
+      start += path.sep
+    }
+    start = path.normalize(start)
+    start = start.split(path.sep)
+  }
+  if (!start.length) {
+    return null
+  }
+  start.pop()
+  const dir = start.join(path.sep)
+  const fullPath = path.join(dir, '.crusher')
+  if (fs.existsSync(fullPath) && path.resolve(fullPath) !== path.resolve(APP_DIRECTORY)) {
+
+    if (fs.lstatSync(fullPath).isDirectory()) {
+
+      return path.normalize(fullPath)
+    }
+  }
+  return findCrusherProjectConfig(start)
+}
+
+const PROJECT_CONFIG_PATH = path.resolve(process.cwd(), '.crusher');
 
 export const setProjectConfig = config => {
-  createDirIfNotExist('.crusher')
-  fs.writeFileSync(PROJECT_CONFIG_FILE, JSON.stringify(config))
+    createDirIfNotExist('.crusher')
+    fs.writeFileSync(path.resolve(PROJECT_CONFIG_PATH, "./config.json"), JSON.stringify(config))
 }
 
 export const getProjectConfig = () => {
-  return fs.existsSync(PROJECT_CONFIG_FILE) ? JSON.parse(fs.readFileSync(PROJECT_CONFIG_FILE, 'utf8')) : null;
+  const existingProjectConfig = findCrusherProjectConfig();
+
+  const configPath = existingProjectConfig || PROJECT_CONFIG_PATH;
+
+  return fs.existsSync(configPath) ? JSON.parse(fs.readFileSync(path.resolve(configPath, "./config.json"), 'utf8')) : null;
 }
