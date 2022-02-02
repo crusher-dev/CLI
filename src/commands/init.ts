@@ -121,11 +121,22 @@ export default class CrusherInit extends Command {
           name: 'project',
           message: 'Select your crusher project:',
           type: 'list',
-          choices: projects.map(p => ({ name: p.name, value: p.id })),
+          choices: [...projects.map(p => ({ name: p.name, value: p.id })), { name: 'Create new project', value: 'new' }],
           default: projects[0].id,
         }])
 
-        projectConfig.project = (projectRes as any).project
+        let projectId = (projectRes as any).project
+        if (projectId === 'new') {
+          const projectName = await inquirer.prompt([{
+            name: 'projectName',
+            message: 'Enter project name:',
+            type: 'input',
+          }])
+
+          const project = await createProject(projectName.projectName);
+          projectId = project.id
+        }
+        projectConfig.project = projectId
 
         setProjectConfig({
           ...projectConfig,

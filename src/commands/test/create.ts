@@ -142,7 +142,13 @@ export default class CreateTest extends Command {
     } else {
       execSync(`${resolvePathToAppDirectory('bin/electron-app')} --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
     }
-    cli.log('Recorder closed!!!')
+
+    cli.log("Voila! We have create a first test. Few command that will be helpful\n");
+    cli.log("1.) To auto generate common tests");
+    cli.log("crusher-cli test:generate\n")
+
+    cli.log("2.) Invite team members to the project");
+    cli.log("crusher-cli invite\n")
   }
 
   async makeSureSetupIsCorrect() {
@@ -158,11 +164,22 @@ export default class CreateTest extends Command {
           name: 'project',
           message: 'Select your crusher project:',
           type: 'list',
-          choices: projects.map(p => ({ name: p.name, value: p.id })),
+          choices: [{ name: 'Create new project', value: 'new' }, ...projects.map(p => ({ name: p.name, value: p.id }))],
           default: projects[0].id,
         }])
 
-        projectConfig.project = (projectRes as any).project
+        let projectId = (projectRes as any).project
+        if (projectId === 'new') {
+          const projectName = await inquirer.prompt([{
+            name: 'projectName',
+            message: 'Enter project name:',
+            type: 'input',
+          }])
+
+          const project = await createProject(projectName.projectName);
+          projectId = project.id
+        }
+        projectConfig.project = projectId
 
         setProjectConfig({
           ...projectConfig,
