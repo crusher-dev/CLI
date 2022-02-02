@@ -26,5 +26,9 @@ export const setAppConfig = config => {
 }
 
 export const getAppConfig = () => {
-  return JSON.parse(fs.readFileSync(CRUSHER_CONFIG_FILE, 'utf8'))
+  return isCrusherConfigured() ? JSON.parse(fs.readFileSync(CRUSHER_CONFIG_FILE, 'utf8')) : null;
 }
+
+export const isCrusherConfigured = () => {
+  return fs.existsSync(CRUSHER_CONFIG_FILE);
+};

@@ -13,7 +13,8 @@ const waitForUserLogin = async (): Promise<string> => {
   const loginKey = await axios.get(resolveBackendServerUrl('/cli/get.key')).then(res => {
     return res.data.loginKey
   })
-  await cli.log('Please login/signup on crusher. Opening this link', resolveFrontendServerUrl(`/?loginKey=${loginKey}`))
+  await cli.log("Login or create an account to create a test⚡⚡. Opening a browser for you.\nIf it doesn't open, open this link:");
+  await cli.log(resolveFrontendServerUrl(`/?loginKey=${loginKey}`))
 
   await cli.action.start(
     'Waiting for login',
@@ -36,22 +37,14 @@ const waitForUserLogin = async (): Promise<string> => {
   })
 
   await cli.action.stop()
+
+  await cli.log("\nLogin sucessfull~! Let's ship high quality software fast⚡⚡");
   return token as string
 }
 
 const initHook = async function (options: { token?: string; }) {
   initializeAppConfig()
-  const projectConfig = getProjectConfig()
-
-  if (projectConfig && projectConfig.userInfo) {
-    // cli.log("Using the crusher config in the project");
-
-    setAppConfig({
-      ...getAppConfig(),
-      ...getProjectConfig(),
-    })
-  }
-
+  
   if (options.token) {
     // Verify the new token and save it if valid
     try {
@@ -66,7 +59,6 @@ const initHook = async function (options: { token?: string; }) {
     }
   } else {
     const appConfig = getAppConfig()
-
     // Login user to set default auth token
     if (!appConfig.userInfo || !appConfig.userInfo.token) {
       const userToken = await waitForUserLogin()

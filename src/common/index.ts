@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { cli } from 'cli-ux'
 import { getUserInfo } from '../state/userInfo'
+import { getLoggedInUser } from '../utils/index'
 import {resolveBackendServerUrl, resolveFrontendServerUrl} from '../utils'
 import { getProjectConfig } from './projectConfig'
 
@@ -17,6 +18,7 @@ const getUserInfoFromToken = async (token: string) => {
 
   return {
     id: info.userData.userId,
+    teamName: info.team.name,
     name: info.userData.name,
     email: info.userData.email,
     token: token,
@@ -24,7 +26,7 @@ const getUserInfoFromToken = async (token: string) => {
 }
 
 const getProjectsOfCurrentUser = async (): Promise<Array<{ id: number;  name: string}>> => {
-  const currentUser = getUserInfo();
+  const currentUser = getLoggedInUser();
   const infoResponse = await axios.get(resolveBackendServerUrl('/users/actions/getUserAndSystemInfo'), {
     headers: {
       Cookie: `isLoggedIn=true; token=${currentUser?.token}`,
@@ -34,6 +36,23 @@ const getProjectsOfCurrentUser = async (): Promise<Array<{ id: number;  name: st
 
   return info.projects;
 }
+
+const getTotalTestsInProject = async (projectId: number): Promise<number> => {
+  const userInfo = getLoggedInUser();
+  const res = await axios.get(resolveBackendServerUrl(`/projects/${projectId}/tests`), {
+    headers: {
+      Cookie: `isLoggedIn=true; token=${userInfo?.token}`,
+    },
+  });
+
+  return res.data.list.length;
+}
+
+const getProjectInfo = async (projectId: number): Promise<any> => {
+  const projects = await getProjectsOfCurrentUser();
+  return projects.find((project) => project.id === projectId);
+}
+
 
 const runTests = async (host: string | undefined) => {
   const userInfo = getUserInfo();
@@ -80,4 +99,4 @@ const runTests = async (host: string | undefined) => {
   }
 };
 
-export {getUserInfoFromToken, getProjectsOfCurrentUser, runTests}
+export {getUserInfoFromToken, getProjectsOfCurrentUser, runTests, getTotalTestsInProject, getProjectInfo}

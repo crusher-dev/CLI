@@ -148,7 +148,7 @@ export default class CreateTest extends Command {
     const userInfo = getUserInfo()
     const projectConfig = getProjectConfig()
     if (!projectConfig) {
-      const projectConfig: any = {backend: resolveBackendServerUrl(''), userInfo}
+      const projectConfig: any = { backend: resolveBackendServerUrl('') }
       const projects = await getProjectsOfCurrentUser()
       const projectRes = await inquirer.prompt([{
         name: 'project',
@@ -160,30 +160,6 @@ export default class CreateTest extends Command {
 
       projectConfig.project = (projectRes as any).project
 
-      // const res = await inquirer.prompt({
-      //   name: 'hostEnvironment',
-      //   message: 'Select your environment for running test against?',
-      //   type: 'list',
-      //   choices: [{name: 'Local environment', value: 'local'}, {name: 'Custom host', value: 'customHost'}],
-      // })
-      // projectConfig.hostEnvironment = res.hostEnvironment
-
-      // if (res.hostEnvironment === 'local') {
-      //   const res = await inquirer.prompt({
-      //     name: 'port',
-      //     message: 'Enter port where your app will be served:',
-      //     type: 'input',
-      //   })
-      //   projectConfig.port = res.port
-      // } else if (res.hostEnvironment === 'customHost') {
-      //   const res = await inquirer.prompt({
-      //     name: 'customHost',
-      //     message: 'Enter custom host where your app would be served',
-      //     type: 'input',
-      //   })
-
-      //   projectConfig.host = res.customHost
-      // }
       setProjectConfig({
         ...projectConfig,
       })

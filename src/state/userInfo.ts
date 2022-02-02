@@ -1,6 +1,7 @@
 // eslint-disable-next-line unicorn/filename-case
 export interface IUserInfo {
   id: number;
+  teamName: string;
   email: string;
   name: string;
   token: string;

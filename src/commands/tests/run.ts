@@ -49,7 +49,7 @@ export default class RunTest extends Command {
     const userInfo = getUserInfo()
     const projectConfig = getProjectConfig()
 
-    if (!projectConfig) return await cli.error("Crusher not installed in this directory");
+    if (!projectConfig)  throw cli.error("Crusher not installed in this directory");
   }
 
   async runTests(flags) {
