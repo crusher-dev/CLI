@@ -9,8 +9,8 @@ import * as path from 'path'
 import * as commandExists from 'command-exists'
 import {getRecorderBuildForPlatfrom} from '../../constants'
 import cli from 'cli-ux'
-import {getProjectConfig, setProjectConfig} from '../../common/projectConfig'
-const {execSync} = require('child_process')
+import { getProjectConfig, setProjectConfig } from '../../common/projectConfig'
+import { execSync } from "child_process";
 import * as inquirer from 'inquirer'
 import { getProjectsOfCurrentUser, createProject } from '../../common'
 import * as localTunnel from 'localtunnel'
@@ -77,7 +77,7 @@ export default class CreateTest extends Command {
     const recorderZipPath = await this.downloadAndSaveRecorder();
 
     await cli.action.start("Unzipping");
-    execSync(`cd ${path.dirname(recorderZipPath)} && ditto -xk ${path.basename(recorderZipPath)} . && rm -R ${path.basename(recorderZipPath)}`);
+    execSync(`cd ${path.dirname(recorderZipPath)} && ditto -xk ${path.basename(recorderZipPath)} . && rm -R ${path.basename(recorderZipPath)}`, {stdio: "ignore"});
 
     await new Promise((resolve, reject) => setTimeout(() => { resolve(true); }, 3000));
     await cli.action.stop("done\n");
@@ -88,7 +88,7 @@ export default class CreateTest extends Command {
     const recorderZipPath = await this.downloadAndSaveRecorder();
 
     await cli.action.start("Unzipping");
-    execSync(`cd ${path.dirname(recorderZipPath)} && unzip ${path.basename(recorderZipPath)} -d . && rm -R ${path.basename(recorderZipPath)}`);
+    execSync(`cd ${path.dirname(recorderZipPath)} && unzip ${path.basename(recorderZipPath)} -d . && rm -R ${path.basename(recorderZipPath)}`, {stdio: "ignore"});
 
     await new Promise((resolve, reject) => setTimeout(() => { resolve(true); }, 3000));
     await cli.action.stop("done\n");
@@ -138,14 +138,14 @@ export default class CreateTest extends Command {
     const projectConfig = getProjectConfig();
     const userInfo = getUserInfo();
     if(process.platform === "darwin") {
-      execSync(`${resolvePathToAppDirectory('bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"')} --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
+      execSync(`${resolvePathToAppDirectory('bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"')} --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`, {stdio: "ignore"})
     } else {
-      execSync(`${resolvePathToAppDirectory('bin/electron-app')} --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`)
+      execSync(`${resolvePathToAppDirectory('bin/electron-app')} --no-sandbox --exit-on-save --projectId=${projectConfig.project} --token=${userInfo?.token}`, {stdio: "ignore"})
     }
 
     cli.log("Voila! We have create a first test. Few command that will be helpful\n");
-    cli.log("1.) To auto generate common tests");
-    cli.log("crusher-cli test:generate\n")
+    cli.log("1.) Run all tests in your project");
+    cli.log("crusher-cli test:run\n")
 
     cli.log("2.) Invite team members to the project");
     cli.log("crusher-cli invite\n")

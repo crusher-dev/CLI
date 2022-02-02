@@ -3,6 +3,7 @@ import { getProjectInfo, getTotalTestsInProject } from "../common";
 import { getProjectConfig } from "../common/projectConfig";
 import { initHook } from "../hooks/init";
 import { getLoggedInUser } from "../utils/index";
+import cli from "cli-ux";
 
 export default class Info extends Command {
     static description = 'Shows current project info';
@@ -11,6 +12,9 @@ export default class Info extends Command {
     async run(): Promise<any> {
         const { args, flags } = await this.parse(Info)
         const projectConfig = getProjectConfig();
+        if (!projectConfig || !projectConfig.project) {
+            throw cli.error('Crusher not initialized in this project. Run `crusher-cli init` to fix this.')
+        }
         const userAccount = getLoggedInUser();
         const projectInfo = await getProjectInfo(projectConfig.project);
         const testsCountInProject = await getTotalTestsInProject(projectConfig.project);

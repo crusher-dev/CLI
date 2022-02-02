@@ -10,7 +10,7 @@ export default class Invite extends Command {
       const projectConfig = getProjectConfig()
 
       if (!projectConfig || !projectConfig.project) {
-        throw cli.error('Crusher not initialized in this project. Run `crusher init` to fix this.')
+        throw cli.error('Crusher not initialized in this project. Run `crusher-cli init` to fix this.')
       }
       const res = await inquirer.prompt([{
         name: 'method',

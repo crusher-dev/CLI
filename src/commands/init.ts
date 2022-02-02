@@ -110,8 +110,6 @@ export default class CrusherInit extends Command {
 
   async makeSureSetupIsCorrect() {
     const userInfo = getUserInfo()
-    const projectConfig = getProjectConfig()
-    if (!projectConfig) {
       const projectConfig: any = { backend: resolveBackendServerUrl('') }
       const projects = await getProjectsOfCurrentUser();
       const suggestedProjectName = await getProjectNameFromGitInfo();
@@ -151,7 +149,6 @@ export default class CrusherInit extends Command {
         })
 
       }
-    }
 
     // Add commands to package.json
 

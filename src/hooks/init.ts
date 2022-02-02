@@ -14,21 +14,21 @@ const waitForUserLogin = async (): Promise<string> => {
     return res.data.loginKey
   })
   await cli.log("Login or create an account to create a test⚡⚡. Opening a browser for you.\nIf it doesn't open, open this link:");
-  await cli.log(resolveFrontendServerUrl(`/?loginKey=${loginKey}`))
+  await cli.log(resolveFrontendServerUrl(`/?lK=${loginKey}`))
 
   await cli.action.start(
     'Waiting for login',
   )
 
   await cli.open(
-    `${resolveFrontendServerUrl(`/?loginKey=${loginKey}`)}`,
+    `${resolveFrontendServerUrl(`/?lK=${loginKey}`)}`,
   ).catch(err => {
     console.error(err)
   })
 
   const token = await new Promise(resolve => {
     const interval = setInterval(async () => {
-      const loginKeyStatus = await axios.get(resolveBackendServerUrl(`/cli/status.key?lK=${loginKey}`)).then(res => res.data)
+      const loginKeyStatus = await axios.get(resolveBackendServerUrl(`/cli/status.key?loginKey=${loginKey}`)).then(res => res.data)
       if (loginKeyStatus.status === 'Validated') {
         clearInterval(interval)
         resolve(loginKeyStatus.userToken)
