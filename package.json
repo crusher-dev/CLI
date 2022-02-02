@@ -20,6 +20,7 @@
     "extract-zip": "^2.0.1",
     "fastify": "^3.25.3",
     "husky": "^4.3.0",
+    "ini": "^2.0.0",
     "inquirer": "^8.2.0",
     "lint-staged": "^10.3.0",
     "localtunnel": "^2.0.0",
