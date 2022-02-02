@@ -50,7 +50,6 @@ const getTotalTestsInProject = async (projectId: number): Promise<number> => {
 
 const createProject = async (projectName: string) => {
   const userInfo = getLoggedInUser();
-  console.log(resolveBackendServerUrl(`/projects/actions/create`));
   const res = await axios.post(resolveBackendServerUrl(`/projects/actions/create`), {
     name: projectName,
   }, {
@@ -62,6 +61,30 @@ const createProject = async (projectName: string) => {
   return res.data;
 };
 
+const getInviteLink = async (projectId: number) => {
+  const userInfo = getLoggedInUser();
+  const res = await axios.get(resolveBackendServerUrl(`/users/invite.link?projectId=${projectId}`), {
+    headers: {
+      Cookie: `isLoggedIn=true; token=${userInfo?.token}`,
+    },
+  });
+
+  return res.data;
+};
+
+const inviteProjectMembers = async (projectId: number, emails: Array<string>) => {
+  const userInfo = getLoggedInUser();
+  const res = await axios.post(resolveBackendServerUrl(`/users/actions/invite.project.members`), {
+    emails: emails,
+    projectId: projectId,
+  }, {
+    headers: {
+      Cookie: `isLoggedIn=true; token=${userInfo?.token}`,
+    },
+  });
+
+  return { success: res.data === "Successful" };
+}
 const getProjectInfo = async (projectId: number): Promise<any> => {
   const projects = await getProjectsOfCurrentUser();
   return projects.find((project) => project.id === projectId);
@@ -113,4 +136,4 @@ const runTests = async (host: string | undefined) => {
   }
 };
 
-export {getUserInfoFromToken, getProjectsOfCurrentUser, runTests, getTotalTestsInProject, getProjectInfo, createProject}
+export { inviteProjectMembers, getInviteLink, getUserInfoFromToken, getProjectsOfCurrentUser, runTests, getTotalTestsInProject, getProjectInfo, createProject}
