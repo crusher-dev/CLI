@@ -1,3 +1,6 @@
+/* tslint:disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import Command from "@oclif/command";
 import { getAppConfig, setAppConfig } from "../common/appConfig";
 

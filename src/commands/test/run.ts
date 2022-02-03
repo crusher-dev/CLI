@@ -1,4 +1,6 @@
 /* tslint:disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import {Command, flags} from '@oclif/command'
 import { cli } from 'cli-ux';
 import * as fs from 'fs'

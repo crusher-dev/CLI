@@ -1,3 +1,6 @@
+/* tslint:disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import Command from "@oclif/command";
 import { getProjectInfo, getTotalTestsInProject } from "../common";
 import { getProjectConfig } from "../common/projectConfig";
@@ -24,6 +27,6 @@ export default class Info extends Command {
         console.log("Name:", userAccount.name);
         console.log("Login:", userAccount.email);
         console.log("Project name: ", projectInfo.name);
-        console.log("Tests tests in this project:", testsCountInProject);
+        console.log("Total tests in this project:", testsCountInProject);
     }
 }

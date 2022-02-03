@@ -1,3 +1,6 @@
+/* tslint:disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import Command, { flags } from "@oclif/command";
 import { initHook } from "../hooks/init";
 import { getLoggedInUser } from "../utils/index";

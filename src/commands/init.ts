@@ -1,4 +1,6 @@
 /* tslint:disable */
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-nocheck
 import {Command, flags} from '@oclif/command'
 import {initHook} from '../hooks/init'
 import {getUserInfo} from '../state/userInfo'
@@ -131,7 +133,7 @@ export default class CrusherInit extends Command {
             type: 'input',
           }])
 
-          const project = await createProject(projectName.projectName);
+          const project = await createProject((projectName as any).projectName);
           projectId = project.id
         }
         projectConfig.project = projectId
