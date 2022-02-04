@@ -4,7 +4,7 @@
 import {Command, flags} from '@oclif/command'
 import { cli } from 'cli-ux';
 import * as fs from 'fs'
-import inquirer = require('inquirer');
+import inquirer from 'inquirer';
 import { getProjectsOfCurrentUser, runTests } from '../../common';
 import { getProjectConfig, setProjectConfig } from '../../common/projectConfig';
 import { initHook } from '../../hooks/init';

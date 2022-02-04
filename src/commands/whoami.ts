@@ -2,10 +2,7 @@
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-nocheck
 import Command from '@oclif/command'
-import {getUserInfo} from '../state/userInfo'
-import { findGitRoot, getLoggedInUser, getProjectNameFromGitInfo } from '../utils/index';
-import * as ini from 'ini'
-import * as fs from 'fs'
+import { getLoggedInUser, getProjectNameFromGitInfo } from '../utils/index';
 
 export default class WhoAmI extends Command {
     static description = 'Your account information';
