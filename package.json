@@ -85,12 +85,11 @@
   },
   "scripts": {
     "postpack": "rm -f oclif.manifest.json",
-    "posttest": "eslint . --ext .ts --config .eslintrc",
     "prepack": "rm -rf lib && tsc -b  && oclif-dev manifest && oclif-dev readme",
     "createTarBall": "NODE_ENV=production oclif-dev pack",
     "npxPublish": "NODE_ENV=production oclif-dev pack",
     "createInstallers": "NODE_ENV=production oclif-dev pack:win &&  oclif-dev pack:macos && oclif-dev pack:deb",
-    "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
+    "test": "jest",
     "version": "oclif-dev readme && git add README.md",
     "eslint:fix": "eslint . --ext .ts --config .eslintrc --fix",
     "createBinary": " pkg . && mkdir binaries && mv crusher-cli-linux binaries/crusher-cli-linux && mv crusher-cli-macos binaries/crusher-cli-macos && mv crusher-cli-win.exe binaries/crusher-cli-win.exe",
