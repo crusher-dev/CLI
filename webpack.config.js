@@ -8,10 +8,14 @@ console.log({
   }, {})
 });
 module.exports = {
+  mode: 'production',
   entry: glob.sync('./src/**/*.ts').reduce(function(obj, el){
     obj[el.replace(".ts","")] = el;
     return obj
- },{}),
+  }, {}),
+  node: {
+    __dirname: false,
+  },
   target: "node",
   module: {
     rules: [
@@ -33,7 +37,7 @@ module.exports = {
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),
     new webpack.DefinePlugin({
       "process.env": {
-        NODE_ENV: "production",
+        NODE_ENV: JSON.stringify("production"),
       }
     })
   ]

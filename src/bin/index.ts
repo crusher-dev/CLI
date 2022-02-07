@@ -67,12 +67,27 @@ class CommandBase {
         const options = program.opts();
         const { processedArgs } = program;
         const [type] = processedArgs;
-        if (fs.existsSync(path.resolve(__dirname, `${this.getPathForType(type)}.js`))) {
-            require(path.resolve(__dirname, `${this.getPathForType(type)}.js`));
-        } else if (fs.existsSync(path.resolve(__dirname, `${this.getPathForType(type)}.ts`))) {
-            require(path.resolve(__dirname, `${this.getPathForType(type)}.ts`));
+        if (fs.existsSync(path.resolve(__dirname, `${this.getPathForType(type)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`))) {
+            //@ts-ignore
+            const requireCommand = typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
+            try {
+                requireCommand(path.resolve(__dirname, `${this.getPathForType(type)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`));
+            } catch (err) {
+                if (err.message === 'SIGINT') process.exit(1)
+
+                console.log("Error:", err.message);
+                process.exit(1);
+            }
+        } else {
+            this.help();
         }
     }
 }
+
+process.on('uncaughtException', (err) => {
+    console.log("Error:", err.message);
+
+    process.exit(1);
+});
 
 new CommandBase();

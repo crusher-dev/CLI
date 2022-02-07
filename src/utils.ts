@@ -17,7 +17,7 @@ export const getFrontendServerUrl = (): string => {
   return FRONTEND_SERVER_URL
 }
 
-export const isFromGithub = () => Boolean(process.env.GITHUB_ACTION)
+export const isFromGithub = () => Boolean(getRuntimeEnv().GITHUB_ACTION)
 
 export const getGitRepos = () => {
   const rgx = new RegExp(/(^\w+)\s+([\w.@:/?-]+)\s+\((fetch|push)\)/i)
@@ -54,8 +54,8 @@ export const getGitRepos = () => {
 }
 
 export const getGitLastCommitSHA = () => new Promise((resolve, reject) => {
-  const cmd = process.env.GITHUB_HEAD_REF ?
-    `git ls-remote origin ${process.env.GITHUB_HEAD_REF}` :
+  const cmd = getRuntimeEnv().GITHUB_HEAD_REF ?
+    `git ls-remote origin ${getRuntimeEnv().GITHUB_HEAD_REF}` :
     'git rev-parse HEAD'
   exec(cmd, function (err, stdout) {
     if (err) {
@@ -82,8 +82,8 @@ export const getLastCommitName = () => new Promise((resolve, reject) => {
 
 export const getGitBranchName = () => new Promise((resolve, reject) => {
   const rgx = new RegExp(/^refs\/heads\/(.+)/i)
-  const headRef = process.env.GITHUB_HEAD_REF ?
-    (process.env.GITHUB_HEAD_REF as any) :
+  const headRef = getRuntimeEnv().GITHUB_HEAD_REF ?
+    (getRuntimeEnv().GITHUB_HEAD_REF as any) :
     null
   if (headRef) {
     resolve(headRef)
@@ -137,4 +137,8 @@ export const resolveFrontendServerUrl = (endpoint): string => {
 
 export const resolvePathToAppDirectory = (relativePath): string => {
   return path.resolve(APP_DIRECTORY, relativePath);
+}
+
+export function getRuntimeEnv() {
+  return eval("process.env");
 }

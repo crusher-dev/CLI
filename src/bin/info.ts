@@ -5,6 +5,7 @@ import { getProjectInfo, getTotalTestsInProject } from '../common';
 import { getProjectConfig } from '../common/projectConfig';
 
 import { getLoggedInUser, getProjectNameFromGitInfo } from '../utils/index';
+import cli from "cli-ux";
 
 const program = new Command();
 program.addHelpText(
@@ -43,7 +44,7 @@ class CommandBase {
     async run(): Promise<any> {
         const projectConfig = getProjectConfig();
         if (!projectConfig || !projectConfig.project) {
-            throw console.error(
+            throw new Error(
                 'Crusher not initialized in this project. Run `crusher-cli init` to fix this.'
             );
         }

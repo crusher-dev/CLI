@@ -7,11 +7,11 @@ import * as ini from 'ini'
 
 const getLoggedInUser = (): IUserInfo => {
   if (!isCrusherConfigured()) {
-    throw cli.error('No user logged in.  Try login with crusher-cli login.')
+    throw new Error('No user logged in.  Try login with crusher-cli login.');
   }
   const config = getAppConfig()
   if (!config.userInfo) {
-    throw cli.error('No user logged in.  Try login with crusher-cli login.')
+    throw new Error('No user logged in.  Try login with crusher-cli login.')
   }
   return config.userInfo
 }

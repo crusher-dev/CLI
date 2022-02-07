@@ -39,7 +39,6 @@ class CommandBase {
 
     async run() {
         const userAccount = getLoggedInUser();
-        console.log('Suggested project name:', getProjectNameFromGitInfo());
         console.log('-----------');
         console.log('Team:', userAccount.teamName);
         console.log('Name:', userAccount.name);

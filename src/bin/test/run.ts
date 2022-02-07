@@ -70,8 +70,8 @@ class CommandBase {
         const projectConfig = getProjectConfig();
 
         if (!projectConfig)
-            throw cli.error(
-                "Crusher not intialized in this repo. Run 'crusher-cli init' to initialize."
+            throw new Error(
+                "Crusher not intialized in this repo. Run 'crusher-cli init' to initialize.",
             );
     }
 

@@ -47,7 +47,7 @@ class CommandBase {
         const projectConfig = getProjectConfig();
 
         if (!projectConfig || !projectConfig.project) {
-            throw cli.error(
+            throw new Error(
                 'Crusher not initialized in this project. Run `crusher-cli init` to fix this.'
             );
         }
