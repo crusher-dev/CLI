@@ -11,29 +11,9 @@ program.addHelpText(
     Example call:
       $ custom-help --help`
 );
-program
-    .version(packgeJSON.version)
-    .argument('<string>', 'string to split')
-    .option('-h, --help', 'Show commands list')
-    .option('-v, --version', 'Version of CLI')
-    .parse(process.argv);
-
 
 export default class CommandBase {
     constructor() {
-        const options = program.opts();
-        const { help, version } = options;
-        if (help === true) {
-            this.help();
-            return;
-        }
-
-        if (version === true) {
-            this.printVersion();
-            return;
-        }
-
-        this.run();
     }
 
     printVersion() {
@@ -62,11 +42,17 @@ export default class CommandBase {
         return arr.join("/");
     }
 
-    run() {
+    run(optionsa: any = []) {
+        program
+            .version(packgeJSON.version)
+            .argument('<string>', 'string to split')
+            .option('-h, --help', 'Show commands list')
+            .option('-v, --version', 'Version of CLI')
+            .parse(optionsa && optionsa.length ? optionsa : process.argv);
         const options = program.opts();
         const { processedArgs } = program;
         const [type] = processedArgs;
-        if (fs.existsSync(path.resolve(__dirname , "../commands/", `${this.getPathForType(type)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`))) {
+        if (type && fs.existsSync(path.resolve(__dirname , "../commands/", `${this.getPathForType(type)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`))) {
             //@ts-ignore
             const requireCommand = typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
             try {

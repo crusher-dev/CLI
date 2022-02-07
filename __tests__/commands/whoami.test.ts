@@ -1,4 +1,5 @@
-import Whoami from "../../src/commands/whoami";
+import EntryPoint from "../../src/commands/index";
+import fs from "fs";
 
 describe('Test Command', () => {
   let result
@@ -6,7 +7,7 @@ describe('Test Command', () => {
   beforeEach(() => {
     result = []
     jest
-      .spyOn(process.stdout, 'write')
+      .spyOn(console, 'log')
     .mockImplementation(val =>
       result.push(val),
     )
@@ -16,8 +17,7 @@ describe('Test Command', () => {
 
   it('should print Test', async () => {
     try {
-      // @ts-ignore
-      await Whoami.run([])
+      await ((new EntryPoint())).run([process.argv[0], process.argv[1], 'whoami']);
     } catch (ex) {
       result.push(ex.message);
     }

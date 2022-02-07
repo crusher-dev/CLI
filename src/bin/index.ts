@@ -1,3 +1,3 @@
 import EntryCommand from "../commands/index";
 
-new EntryCommand();
+(new EntryCommand()).run();
