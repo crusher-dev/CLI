@@ -1,6 +1,6 @@
 {
   "name": "crusher-cli",
-  "version": "2.0.15",
+  "version": "2.0.16",
   "author": "Himanshu @himanshu-dixit",
   "repository": "crusherdev/CLI",
   "main": "index.js",

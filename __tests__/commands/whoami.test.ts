@@ -1,4 +1,4 @@
-import WhoAmI from "../src/commands/whoami";
+import Whoami from "../../src/commands/whoami";
 
 describe('Test Command', () => {
   let result
@@ -16,7 +16,8 @@ describe('Test Command', () => {
 
   it('should print Test', async () => {
     try {
-      await WhoAmI.run([])
+      // @ts-ignore
+      await Whoami.run([])
     } catch (ex) {
       result.push(ex.message);
     }
