@@ -1,15 +1,9 @@
 {
-  "name": "node-command-line-starter-1",
-  "version": "2.4.2",
+  "name": "crusher-cli",
+  "version": "2.0.11",
   "author": "Himanshu @himanshu-dixit",
   "repository": "crusherdev/CLI",
   "main": "index.js",
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
-    }
-  },
   "lint-staged": {
     "{src,__mocks__,bin}/**/*.ts": [
       "prettier --write",
@@ -41,14 +35,7 @@
     "webpack": "webpack && cp package.json dist"
   },
   "bin": {
-    "node-command-line-starter-1": "./src/bin/index.js",
-    "login": "./src/bin/login.js",
-    "logout": "./src/bin/logout.js",
-    "test": "./src/bin/test.js",
-    "whoami": "./src/bin/whoami.js",
-    "invite": "./src/bin/invite.js",
-    "init": "./src/bin/init.js",
-    "info": "./src/bin/info.js"
+    "crusher-cli": "./src/bin/index.js"
   },
   "keywords": [
     "CLI",

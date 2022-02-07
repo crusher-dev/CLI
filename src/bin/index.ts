@@ -1,6 +1,8 @@
 import { Command } from 'commander';
 import * as packgeJSON from '../../package.json';
 import chalk from 'chalk';
+import fs from 'fs';
+import path from 'path';
 
 const program = new Command();
 
@@ -12,9 +14,11 @@ program.addHelpText(
 );
 program
     .version(packgeJSON.version)
+    .argument('<string>', 'string to split')
     .option('-h, --help', 'Show commands list')
     .option('-v, --version', 'Version of CLI')
     .parse(process.argv);
+
 
 class CommandBase {
     constructor() {
@@ -54,15 +58,20 @@ class CommandBase {
     `);
     }
 
+    getPathForType(type: string) {
+        const arr = type.split(":");
+        return arr.join("/");
+    }
+
     run() {
-        console.log(`
-
-   ls                   Show all of your credit cards
-   add                  Add a new credit card
-   rm            [id]   Remove a credit card
-   set-default   [id]   Make a credit card your default one
-
-    `);
+        const options = program.opts();
+        const { processedArgs } = program;
+        const [type] = processedArgs;
+        if (fs.existsSync(path.resolve(__dirname, `${this.getPathForType(type)}.js`))) {
+            require(path.resolve(__dirname, `${this.getPathForType(type)}.js`));
+        } else if (fs.existsSync(path.resolve(__dirname, `${this.getPathForType(type)}.ts`))) {
+            require(path.resolve(__dirname, `${this.getPathForType(type)}.ts`));
+        }
     }
 }
 
