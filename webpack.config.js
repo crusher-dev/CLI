@@ -8,7 +8,7 @@ console.log({
   }, {})
 });
 module.exports = {
-  mode: 'production',
+  mode: "production",
   entry: glob.sync('./src/**/*.ts').reduce(function(obj, el){
     obj[el.replace(".ts","")] = el;
     return obj
@@ -32,6 +32,7 @@ module.exports = {
   output: {
     filename: '[name].js',
     path: path.resolve(__dirname, 'dist'),
+    libraryTarget: 'commonjs-module'
   },
   plugins: [
     new webpack.BannerPlugin({ banner: "#!/usr/bin/env node", raw: true }),

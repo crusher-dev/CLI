@@ -30,7 +30,7 @@ program.addHelpText(
 );
 program.parse(process.argv);
 
-class CommandBase {
+export default class CommandBase {
     constructor() {
         const options = program.opts();
         const { help, version } = options;
@@ -295,5 +295,3 @@ class CommandBase {
         }
     }
 }
-
-new CommandBase();

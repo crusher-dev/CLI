@@ -33,7 +33,7 @@ program.addHelpText(
 );
 program.option('-t, --token', 'Crusher user token').parse(process.argv);
 
-class CommandBase {
+export default class CommandBase {
     constructor() {
         const options = program.opts();
         const { help, version } = options;
@@ -228,5 +228,3 @@ class CommandBase {
         };
     }
 }
-
-new CommandBase();

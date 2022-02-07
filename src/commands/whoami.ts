@@ -1,10 +1,8 @@
 import { Command } from 'commander';
 import * as packgeJSON from '../../package.json';
 import { getAppConfig, setAppConfig } from '../common/appConfig';
-import { initHook } from '../hooks/init';
-import { getLoggedInUser } from '../utils/index';
-import { isUserLoggedIn } from '../utils/index';
 const program = new Command();
+import { getLoggedInUser, getProjectNameFromGitInfo } from '../utils/index';
 
 program.addHelpText(
     'after',
@@ -14,7 +12,7 @@ program.addHelpText(
 );
 program.parse(process.argv);
 
-class CommandBase {
+export default class CommandBase {
     constructor() {
         const options = program.opts();
         const { help, version } = options;
@@ -36,23 +34,14 @@ class CommandBase {
     }
 
     help() {
-        console.log(`Log in as a user.`);
+        console.log(`Logs user out from this machine`);
     }
 
     async run() {
-        const options = program.opts();
-        const { token } = options;
-
-        const loggedIn = isUserLoggedIn();
-        if (!loggedIn) {
-            await initHook({ token });
-        } else {
-            const loggedInUser = getLoggedInUser();
-            console.log(
-                `You're already logged in from ${loggedInUser.email}.\nTo login from different account, run crusher-cli logout and then crusher-cli login.`
-            );
-        }
+        const userAccount = getLoggedInUser();
+        console.log('-----------');
+        console.log('Team:', userAccount.teamName);
+        console.log('Name:', userAccount.name);
+        console.log('Login:', userAccount.email);
     }
 }
-
-new CommandBase();
