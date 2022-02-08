@@ -14,6 +14,17 @@ program.parse(process.argv);
 
 export default class CommandBase {
     constructor() {
+    }
+
+    printVersion() {
+        console.log(packgeJSON.version);
+    }
+
+    help() {
+        console.log(`Logs user out from this machine`);
+    }
+
+    async parse() {
         const options = program.opts();
         const { help, version } = options;
         if (help === true) {
@@ -25,19 +36,11 @@ export default class CommandBase {
             this.printVersion();
             return;
         }
-
-        this.run();
-    }
-
-    printVersion() {
-        console.log(packgeJSON.version);
-    }
-
-    help() {
-        console.log(`Logs user out from this machine`);
     }
 
     async run() {
+        await this.parse();
+
         const userAccount = getLoggedInUser();
         console.log('-----------');
         console.log('Team:', userAccount.teamName);

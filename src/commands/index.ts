@@ -47,7 +47,7 @@ export default class CommandBase {
         return arr.join("/");
     }
 
-    run(optionsa: any = []) {
+    async run(optionsa: any = []) {
         program
             .version(packgeJSON.version)
             .argument('<string>', 'string to split')
@@ -61,7 +61,8 @@ export default class CommandBase {
             //@ts-ignore
             const requireCommand = typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
             try {
-                new (requireCommand(path.resolve(__dirname, "../commands/", `${this.getPathForType(type)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`)).default)();
+                const commandInstance = new (requireCommand(path.resolve(__dirname, "../commands/", `${this.getPathForType(type)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`)).default)();
+                await commandInstance.run();
             } catch (err) {
                 if (err.message === 'SIGINT') process.exit(1)
 
