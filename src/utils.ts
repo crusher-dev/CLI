@@ -5,6 +5,11 @@ import * as fs from 'fs'
 import * as url from 'url';
 import * as path from 'path';
 
+export function getRuntimeEnv() {
+  return eval("process.env");
+}
+
+
 export const getUniqueString = (): string => {
   return uuidv1()
 }
@@ -139,6 +144,3 @@ export const resolvePathToAppDirectory = (relativePath): string => {
   return path.resolve(APP_DIRECTORY, relativePath);
 }
 
-export function getRuntimeEnv() {
-  return eval("process.env");
-}

@@ -2,6 +2,7 @@ import { Command } from 'commander';
 import * as packgeJSON from '../../package.json';
 import fs from 'fs';
 import path from 'path';
+import chalk from 'chalk';
 
 const program = new Command();
 
@@ -22,18 +23,22 @@ export default class CommandBase {
 
     help() {
         console.log(`
-  Commands
-    Basic
-      test create               Create a test for your project
-      test run                  Run all the test for your project
+  Run a command: ${chalk.hex('8AE234')(`npx crusher-cli [command]`)}
+  Example:       ${chalk.hex('8AE234')(`npx crusher-cli create:test`)}
 
-    Advanced
-      login               Create a test for your project
-      init
+  ${chalk.hex('C1C1C1')('Commands')}
+
+  Basic
+      ${chalk.hex('9A4AFF')(`test:create`)}               Create a new test
+      ${chalk.hex('9A4AFF')(`test:run`)}                  Run all the tests
+
+  Other commands
+      login
+      open                      Open crusher in browser
+      init                      Initialize project in the repo
       info
-      whoami                  Run all the test for your project
-      logout               Create a test for your project
-
+      whoami                    your info
+      logout
     `);
     }
 

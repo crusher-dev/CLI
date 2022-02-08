@@ -20,6 +20,7 @@ import * as inquirer from 'inquirer';
 import { getProjectsOfCurrentUser, createProject } from '../../common';
 import localTunnel from 'localtunnel';
 import { getProjectNameFromGitInfo } from '../../utils/index';
+import chalk from 'chalk';
 
 const program = new Command();
 program.addHelpText(
@@ -39,20 +40,10 @@ export default class CommandBase {
             return;
         }
 
-        if (version === true) {
-            this.printVersion();
-            return;
-        }
-
         this.run();
     }
-
-    printVersion() {
-        console.log(packgeJSON.version);
-    }
-
     help() {
-        console.log(`Logs user out from this machine`);
+        console.log(`Create a new test`);
     }
 
     async run(): Promise<any> {
@@ -101,13 +92,13 @@ export default class CommandBase {
         }
 
         cli.log(
-            'Voila! We have create a first test. Few command that will be helpful\n'
+            'Created your test. Few command that might be helpful\n'
         );
         cli.log('1.) Run all tests in your project');
-        cli.log('crusher-cli test:run\n');
+        cli.log(`${chalk.hex('9A4AFF')(`npx crusher-cli test:run`)}`);
 
         cli.log('2.) Invite team members to the project');
-        cli.log('crusher-cli invite\n');
+        cli.log(`${chalk.hex('9A4AFF')(`npx crusher-cli invite`)}`);
     }
 
     async makeSureSetupIsCorrect() {
@@ -180,7 +171,7 @@ export default class CommandBase {
     }
 
     private async createTunnel(port: string): Promise<localTunnel.Tunnel> {
-        await cli.action.start('Creating tunnel to local service');
+        await cli.action.start('Creating tunnel to local system');
         // eslint-disable-next-line radix
         const tunnel = await localTunnel({ port: parseInt(port) });
         await cli.action.stop();

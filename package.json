@@ -2,7 +2,7 @@
   "name": "crusher-cli",
   "version": "2.0.16",
   "author": "Himanshu @himanshu-dixit",
-  "repository": "crusherdev/CLI",
+  "repository": "https://github.com/crusherdev/CLI",
   "main": "index.js",
   "lint-staged": {
     "{src,__mocks__,bin}/**/*.ts": [
@@ -25,8 +25,7 @@
     "commit": "git-cz",
     "format:check": "prettier --list-different '{src,__mocks__,bin}/**/*.ts'",
     "format:write": "prettier --write '{src,__mocks__,bin}/**/*.ts'",
-    "start:help": "ts-node ./src/bin/order.ts -h",
-    "start:example": "ts-node ./src/bin/order.ts",
+    "start": "ts-node ./src/bin/index.ts",
     "test": "jest",
     "bump-version": "rjp package.json version $VERSION",
     "test:coverage": "jest --coverage",
@@ -37,13 +36,7 @@
   "bin": {
     "crusher-cli": "./src/bin/index.js"
   },
-  "keywords": [
-    "CLI",
-    "Replace",
-    "JSON",
-    "Buildtool",
-    "Starter"
-  ],
+  "keywords": [],
   "license": "MIT",
   "dependencies": {},
   "devDependencies": {
@@ -59,7 +52,7 @@
     "@types/node": "^16.9.4",
     "axios": "^0.25.0",
     "boxen": "^5.1.2",
-    "chalk": "^5.0.0",
+    "chalk": "^4.0.0",
     "cli-ux": "^6.0.9",
     "codecov": "^3.1.0",
     "command-exists": "^1.2.9",
