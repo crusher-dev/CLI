@@ -29,9 +29,15 @@ describe('Whoami command', () => {
     try {
       await ((new EntryPoint())).run([process.argv[0], process.argv[1], 'whoami']);
     } catch (ex) {
-      stdout.push(ex.message);
+      stderr.push(ex.message);
     }
     expect(mockExit).toHaveBeenCalledWith(1);
     expect(stdout.join(" ")).toContain("No user logged in.");
-  })
+  });
+  
+  it("should request user info", async () => {
+    try {
+      
+    } catch(ex){}
+  });
 })
