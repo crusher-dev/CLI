@@ -33,7 +33,7 @@ describe('Whoami command', () => {
   afterEach(() => {
     jest.restoreAllMocks();
     if (lastTempPath) {
-      fs.rmdirSync(lastTempPath, { recursive: true });
+      fs.rmSync(lastTempPath, { recursive: true });
     }
   })
 
