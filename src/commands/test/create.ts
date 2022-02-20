@@ -29,7 +29,14 @@ program.addHelpText(
     Example call:
       $ custom-help2 --help`
 );
-program.parse(process.argv);
+
+
+
+program
+    .option('-p, --port <number>', 'port number', "80")
+    .option('-t, --token <string>', 'Crusher user token')
+    .parse(process.argv);
+
 
 export default class CommandBase {
     options;

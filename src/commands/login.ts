@@ -12,8 +12,9 @@ program.addHelpText(
     Example call:
       $ custom-help --help`
 );
-program.parse(process.argv);
-
+program
+    .option('-t, --token <string>', 'Crusher user token')
+    .parse(process.argv);
 export default class CommandBase {
     constructor() {
     }

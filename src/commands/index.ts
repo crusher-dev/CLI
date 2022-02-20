@@ -53,6 +53,7 @@ export default class CommandBase {
             .argument('<string>', 'string to split')
             .option('-h, --help', 'Show commands list')
             .option('-v, --version', 'Version of CLI')
+            .allowUnknownOption()
             .parse(optionsa && optionsa.length ? optionsa : process.argv);
         const options = program.opts();
         const { processedArgs } = program;
