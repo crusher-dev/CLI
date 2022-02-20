@@ -24,7 +24,7 @@ export default class CommandBase {
         console.log(`Logs user out from this machine`);
     }
 
-    async parse() {
+    parse() {
         const options = program.opts();
         const { help, version } = options;
         if (help === true) {
@@ -39,7 +39,7 @@ export default class CommandBase {
     }
 
     async run() {
-        await this.parse();
+        this.parse();
 
         const userAccount = getLoggedInUser();
         console.log('-----------');

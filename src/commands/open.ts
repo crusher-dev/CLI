@@ -8,14 +8,6 @@ program.parse(process.argv);
 
 export default class CommandBase {
     constructor() {
-        const options = program.opts();
-        const { help, version } = options;
-        if (help === true) {
-            this.help();
-            return;
-        }
-
-        this.run();
     }
 
 
@@ -23,7 +15,17 @@ export default class CommandBase {
         console.log(`Logs user out from this machine`);
     }
 
+    init() {
+        const options = program.opts();
+        const { help, version } = options;
+        if (help === true) {
+            this.help();
+            return;
+        }
+    }
+
     async run(): Promise<any> {
+        this.init();
         await cli.open(
             `${FRONTEND_SERVER_URL}`,
           ).catch(err => {

@@ -16,6 +16,17 @@ program.parse(process.argv);
 
 export default class CommandBase {
     constructor() {
+    }
+
+    printVersion() {
+        console.log(packgeJSON.version);
+    }
+
+    help() {
+        console.log(`Log in as a user.`);
+    }
+
+    init() {
         const options = program.opts();
         const { help, version } = options;
         if (help === true) {
@@ -27,19 +38,10 @@ export default class CommandBase {
             this.printVersion();
             return;
         }
-
-        this.run();
-    }
-
-    printVersion() {
-        console.log(packgeJSON.version);
-    }
-
-    help() {
-        console.log(`Log in as a user.`);
     }
 
     async run() {
+        this.init();
         const options = program.opts();
         const { token } = options;
 

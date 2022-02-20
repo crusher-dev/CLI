@@ -35,6 +35,17 @@ program.option('-t, --token', 'Crusher user token').parse(process.argv);
 
 export default class CommandBase {
     constructor() {
+    }
+
+    printVersion() {
+        console.log(packgeJSON.version);
+    }
+
+    help() {
+        console.log(`Logs user out from this machine`);
+    }
+
+    init() {
         const options = program.opts();
         const { help, version } = options;
         if (help === true) {
@@ -46,19 +57,10 @@ export default class CommandBase {
             this.printVersion();
             return;
         }
-
-        this.run();
-    }
-
-    printVersion() {
-        console.log(packgeJSON.version);
-    }
-
-    help() {
-        console.log(`Logs user out from this machine`);
     }
 
     async run(): Promise<any> {
+        this.init();
         const options = program.opts();
         const { token } = options;
         await initHook({ token });

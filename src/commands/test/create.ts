@@ -32,23 +32,26 @@ program.addHelpText(
 program.parse(process.argv);
 
 export default class CommandBase {
+    options;
     constructor() {
-        const options = program.opts();
-        const { help, version } = options;
-        if (help === true) {
-            this.help();
-            return;
-        }
 
-        this.run();
     }
     help() {
         console.log(`Create a new test`);
     }
 
+    init() {
+        this.options = program.opts();
+        const { help, version } = this.options;
+        if (help === true) {
+            this.help();
+            return;
+        }
+    }
+
     async run(): Promise<any> {
-        const options = program.opts();
-        const { token } = options;
+        this.init();
+        const { token } = this.options;
 
         await initHook({ token: token });
 
@@ -56,7 +59,7 @@ export default class CommandBase {
 
         await this.makeSureSetupIsCorrect();
 
-        await this.createTest(options);
+        await this.createTest(this.options);
     }
 
     async createTest(flags) {

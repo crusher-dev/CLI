@@ -18,20 +18,10 @@ program.addHelpText(
 program.parse(process.argv);
 
 export default class CommandBase {
+    options;
+
     constructor() {
-        const options = program.opts();
-        const { help, version } = options;
-        if (help === true) {
-            this.help();
-            return;
-        }
 
-        if (version === true) {
-            this.printVersion();
-            return;
-        }
-
-        this.run();
     }
 
     printVersion() {
@@ -42,14 +32,28 @@ export default class CommandBase {
         console.log(`Logs user out from this machine`);
     }
 
+    init() {
+        this.options = program.opts();
+        const { help, version } = this.options;
+        if (help === true) {
+            this.help();
+            return;
+        }
+
+        if (version === true) {
+            this.printVersion();
+            return;
+        }
+    }
+
     async run(): Promise<any> {
-        const options = program.opts();
-        const { token } = options;
+        this.init();
+        const { token } = this.options;
 
         await initHook({ token });
 
         await this.makeSureSetupIsCorrect();
-        await this.runTests(options);
+        await this.runTests(this.options);
     }
 
     private async createTunnel(port: string): Promise<localTunnel.Tunnel> {
