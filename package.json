@@ -38,7 +38,10 @@
   },
   "keywords": [],
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "axios-mock-adapter": "^1.20.0",
+    "nock": "^13.2.4"
+  },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.16.8",
     "@babel/preset-env": "^7.16.11",
