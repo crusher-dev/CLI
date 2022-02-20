@@ -1,11 +1,12 @@
 import EntryPoint from "../../src/commands/index";
 import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-
+import { createTempGitRepo } from "../utils";
+import fs from "fs";
 var mock = new MockAdapter(axios);
 
 describe('Whoami command', () => {
-  let stdout, stderr, mockExit
+  let stdout, stderr, mockExit, lastTempPath;
 
   beforeEach(() => {
     stdout = []
@@ -24,10 +25,17 @@ describe('Whoami command', () => {
         stderr.push(...val);
       })
 
+      lastTempPath = createTempGitRepo();
+
     mockExit = jest.spyOn(process, 'exit').mockImplementation((number) => { throw new Error('process.exit: ' + number); });
   })
 
-  afterEach(() => jest.restoreAllMocks())
+  afterEach(() => {
+    jest.restoreAllMocks();
+    if (lastTempPath) {
+      fs.rmdirSync(lastTempPath, { recursive: true });
+    }
+  })
 
   it('should throw error if not logged in', async () => {
     try {
