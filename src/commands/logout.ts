@@ -1,6 +1,5 @@
 import { Command } from 'commander';
-import * as packgeJSON from '../../package.json';
-import { getAppConfig, setAppConfig } from '../common/appConfig';
+import { getAppConfig, setAppConfig } from '../utils/appConfig';
 const program = new Command();
 
 program.addHelpText(
@@ -13,17 +12,6 @@ program.parse(process.argv);
 
 export default class CommandBase {
     constructor() {
-    }
-
-    printVersion() {
-        console.log(packgeJSON.version);
-    }
-
-    help() {
-        console.log(`Logs user out from this machine`);
-    }
-
-    init() {
         const options = program.opts();
         const { help, version } = options;
         if (help === true) {
@@ -31,14 +19,15 @@ export default class CommandBase {
             return;
         }
 
-        if (version === true) {
-            this.printVersion();
-            return;
-        }
+        this.run();
+    }
+
+
+    help() {
+        console.log(`Logs user out from this machine`);
     }
 
     run() {
-        this.init();
         const appConfig = getAppConfig();
         if (appConfig['userInfo']) delete appConfig['userInfo'];
         setAppConfig(appConfig);

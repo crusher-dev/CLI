@@ -1,6 +1,5 @@
-import {getAppConfig, isCrusherConfigured} from '../common/appConfig'
+import {getAppConfig, isCrusherConfigured} from '../utils/appConfig'
 import {IUserInfo} from '../state/userInfo'
-import cli from 'cli-ux'
 import * as path from 'path'
 import * as fs from 'fs'
 import * as ini from 'ini'

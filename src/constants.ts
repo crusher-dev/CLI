@@ -1,5 +1,5 @@
 import * as path from "path";
-import { getRuntimeEnv } from "./utils";
+import { getRuntimeEnv } from "./utils/utils";
 
 export const BACKEND_SERVER_URL = 'https://backend.crusher.dev'
 export const FRONTEND_SERVER_URL = 'https://app.crusher.dev'

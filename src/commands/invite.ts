@@ -1,13 +1,10 @@
 import { Command } from 'commander';
 import * as packgeJSON from '../../package.json';
-import { getAppConfig, setAppConfig } from '../common/appConfig';
-
-import { getLoggedInUser, getProjectNameFromGitInfo } from '../utils/index';
 
 import * as inquirer from 'inquirer';
 import cli from 'cli-ux';
-import { getProjectConfig } from '../common/projectConfig';
-import { getInviteLink, inviteProjectMembers } from '../common';
+import { getProjectConfig } from '../utils/projectConfig';
+import { getInviteLink, inviteProjectMembers } from '../utils/apiUtils';
 
 const program = new Command();
 program.addHelpText(

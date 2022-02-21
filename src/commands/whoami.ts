@@ -1,8 +1,6 @@
 import { Command } from 'commander';
-import * as packgeJSON from '../../package.json';
-import { getAppConfig, setAppConfig } from '../common/appConfig';
 const program = new Command();
-import { getLoggedInUser, getProjectNameFromGitInfo } from '../utils/index';
+import { getLoggedInUser } from '../utils/index';
 
 program.addHelpText(
     'after',
@@ -14,17 +12,6 @@ program.parse(process.argv);
 
 export default class CommandBase {
     constructor() {
-    }
-
-    printVersion() {
-        console.log(packgeJSON.version);
-    }
-
-    help() {
-        console.log(`Logs user out from this machine`);
-    }
-
-    parse() {
         const options = program.opts();
         const { help, version } = options;
         if (help === true) {
@@ -32,15 +19,15 @@ export default class CommandBase {
             return;
         }
 
-        if (version === true) {
-            this.printVersion();
-            return;
-        }
+        this.run();
+    }
+
+
+    help() {
+        console.log(`Logs user out from this machine`);
     }
 
     async run() {
-        this.parse();
-
         const userAccount = getLoggedInUser();
         console.log('-----------');
         console.log('Team:', userAccount.teamName);

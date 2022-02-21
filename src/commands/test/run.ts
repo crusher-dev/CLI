@@ -1,12 +1,12 @@
 import { Command } from 'commander';
-import * as packgeJSON from '../../../package.json';
 
 import { cli } from 'cli-ux';
-import { runTests } from '../../common';
-import { getProjectConfig } from '../../common/projectConfig';
-import { initHook } from '../../hooks/init';
+import { runTests } from '../../utils';
+import { getProjectConfig } from '../../utils/projectConfig';
+import { loadUserInfoOnLoad } from '../../utils/hooks';
 import { getUserInfo } from '../../state/userInfo';
 import localTunnel from 'localtunnel';
+import { createTunnel } from '../../utils/setup';
 
 const program = new Command();
 program.addHelpText(
@@ -14,63 +14,35 @@ program.addHelpText(
     `
     Example call:
       $ custom-help --help`
-);
-
-program
-    .option('-p, --port <number>', 'port number')
-    .option('-t, --token <string>', 'Crusher user token')
-    .parse(process.argv);
+);utils/hooks
+program.parse(process.argv);
 
 export default class CommandBase {
-    options;
-
     constructor() {
-
-    }
-
-    printVersion() {
-        console.log(packgeJSON.version);
-    }
-
-    help() {
-        console.log(`Logs user out from this machine`);
-    }
-
-    init() {
-        this.options = program.opts();
-        const { help, version } = this.options;
+        const options = program.opts();
+        const { help, version } = options;
         if (help === true) {
             this.help();
             return;
         }
 
-        if (version === true) {
-            this.printVersion();
-            return;
-        }
+
+        this.run();
+    }
+
+
+    help() {
+        console.log(`Logs user out from this machine`);
     }
 
     async run(): Promise<any> {
-        this.init();
-        const { token } = this.options;
+        const options = program.opts();
+        const { token } = options;
 
-        await initHook({ token });
+        await loadUserInfoOnLoad({ token });
 
         await this.makeSureSetupIsCorrect();
-        await this.runTests(this.options);
-    }
-
-    private async createTunnel(port: string): Promise<localTunnel.Tunnel> {
-        await cli.action.start('Creating tunnel to local service');
-        // eslint-disable-next-line radix
-        const tunnel = await localTunnel({ port: port as any });
-        await cli.action.stop();
-
-        tunnel.on('close', () => {
-            cli.log(`Tunnel for http://localhost:${port} closed`);
-            process.exit(0);
-        });
-        return tunnel;
+        await this.runTests(options);
     }
 
     async makeSureSetupIsCorrect() {
@@ -89,7 +61,7 @@ export default class CommandBase {
         let tunnel: localTunnel.Tunnel | undefined;
         if (projectConfig.hostEnvironment === 'local' || flags.port) {
             const port = flags.port ? flags.port : projectConfig.port;
-            tunnel = await this.createTunnel(port);
+            tunnel = await createTunnel(port);
             host = tunnel.url;
 
             await cli.log('Serving at ' + host + ' now');

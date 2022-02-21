@@ -1,12 +1,12 @@
 import { Command } from 'commander';
 
-import { loadUserInfoOnLoad } from '../../hooks/init';
+import { loadUserInfoOnLoad } from '../../utils/hooks';
 import { getUserInfo } from '../../state/userInfo';
 import {
     resolvePathToAppDirectory
-} from '../../utils';
+} from '../../utils/utils';
 import cli from 'cli-ux';
-import { getProjectConfig } from '../../common/projectConfig';
+import { getProjectConfig } from '../../utils/projectConfig';
 import { execSync } from 'child_process';
 import localTunnel from 'localtunnel';
 import chalk from 'chalk';
@@ -17,7 +17,7 @@ program.addHelpText(
     'after',
     `
     Example call:
-      $ custom-help2 --help`
+      $ custom-help21 --help`
 );
 
 program
@@ -29,7 +29,7 @@ program
 export default class CommandBase {
     options;
     constructor() {
-
+        this.run()
     }
     help() {
         console.log(`Create a new test`);

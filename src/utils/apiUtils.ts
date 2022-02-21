@@ -2,7 +2,7 @@ import axios from 'axios'
 import { cli } from 'cli-ux'
 import { getUserInfo } from '../state/userInfo'
 import { getLoggedInUser } from '../utils/index'
-import {resolveBackendServerUrl, resolveFrontendServerUrl} from '../utils'
+import {resolveBackendServerUrl, resolveFrontendServerUrl} from '../utils/utils'
 import { getProjectConfig } from './projectConfig'
 
 const getUserInfoFromToken = async (token: string) => {

@@ -17,14 +17,11 @@ export default class CommandBase {
     constructor() {
     }
 
-    printVersion() {
-        console.log(packgeJSON.version);
-    }
 
     help() {
         console.log(`
-  Run a command: ${chalk.hex('8AE234')(`npx crusher-cli [command]`)}
-  Example:       ${chalk.hex('8AE234')(`npx crusher-cli create:test`)}
+  Run a command: ${chalk(`npx crusher-cli [command]`)}
+  Example:       ${chalk(`npx crusher-cli create:test`)}
 
   ${chalk.hex('C1C1C1')('Commands')}
 
@@ -47,13 +44,12 @@ export default class CommandBase {
         return arr.join("/");
     }
 
-    async run(optionsa: any = []) {
+    run(optionsa: any = []) {
         program
             .version(packgeJSON.version)
             .argument('<string>', 'string to split')
             .option('-h, --help', 'Show commands list')
             .option('-v, --version', 'Version of CLI')
-            .allowUnknownOption()
             .parse(optionsa && optionsa.length ? optionsa : process.argv);
         const options = program.opts();
         const { processedArgs } = program;
@@ -62,8 +58,7 @@ export default class CommandBase {
             //@ts-ignore
             const requireCommand = typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
             try {
-                const commandInstance = new (requireCommand(path.resolve(__dirname, "../commands/", `${this.getPathForType(type)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`)).default)();
-                await commandInstance.run();
+                new (requireCommand(path.resolve(__dirname, "../commands/", `${this.getPathForType(type)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`)).default)();
             } catch (err) {
                 if (err.message === 'SIGINT') process.exit(1)
 

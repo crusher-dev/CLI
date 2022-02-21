@@ -3,19 +3,19 @@ import {
 
     resolveBackendServerUrl,
     resolvePathToAppDirectory
-} from '../utils';
+} from '../utils/utils';
 import * as fs from 'fs';
 import axios from 'axios';
 import * as path from 'path';
 import { getRecorderBuildForPlatfrom, recorderVersion } from '../constants';
 import cli from 'cli-ux';
-import { getProjectConfig, setProjectConfig } from '../common/projectConfig';
+import { getProjectConfig, setProjectConfig } from '../utils/projectConfig';
 import { execSync } from 'child_process';
 import * as inquirer from 'inquirer';
-import { getProjectsOfCurrentUser, createProject } from '../common';
+import { getProjectsOfCurrentUser, createProject } from '../utils/apiUtils';
 import localTunnel from 'localtunnel';
-import { getProjectNameFromGitInfo } from '../utils/index';
-import { getAppConfig, setAppConfig } from '../common/appConfig';
+import { getProjectNameFromGitInfo } from './index';
+import { getAppConfig, setAppConfig } from '../utils/appConfig';
 
 export async function makeSureSetupIsCorrect() {
   const projectConfig = getProjectConfig();

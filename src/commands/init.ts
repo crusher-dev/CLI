@@ -1,8 +1,8 @@
 import { Command } from 'commander';
 
-import { loadUserInfoOnLoad } from '../hooks/init';
+import { loadUserInfoOnLoad } from '../utils/hooks';
 
-import { installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/installation';
+import { installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
 
 const program = new Command();
 program.addHelpText(

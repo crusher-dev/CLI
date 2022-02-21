@@ -1,8 +1,7 @@
 // eslint-disable-next-line unicorn/filename-case
 import * as fs from 'fs'
 import {APP_DIRECTORY} from '../constants'
-import {getUserInfo, setUserInfo} from '../state/userInfo'
-import {createDirIfNotExist, resolvePathToAppDirectory} from '../utils'
+import {createDirIfNotExist} from '../utils/utils'
 import * as path from "path";
 
 function findCrusherProjectConfig(_start = null) {

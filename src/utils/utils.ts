@@ -1,5 +1,5 @@
 import {v1 as uuidv1} from 'uuid'
-import {APP_DIRECTORY, BACKEND_SERVER_URL, FRONTEND_SERVER_URL} from './constants'
+import {APP_DIRECTORY, BACKEND_SERVER_URL, FRONTEND_SERVER_URL} from '../constants'
 import {exec} from 'child_process'
 import * as fs from 'fs'
 import * as url from 'url';

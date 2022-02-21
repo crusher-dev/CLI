@@ -1,11 +1,8 @@
 import { Command } from 'commander';
-import * as packgeJSON from '../../package.json';
+import { getProjectInfo, getTotalTestsInProject } from '../utils/apiUtils';
+import { getProjectConfig } from '../utils/projectConfig';
 
-import { getProjectInfo, getTotalTestsInProject } from '../common';
-import { getProjectConfig } from '../common/projectConfig';
-
-import { getLoggedInUser, getProjectNameFromGitInfo } from '../utils/index';
-import cli from "cli-ux";
+import { getLoggedInUser } from '../utils/index';";
 
 const program = new Command();
 program.addHelpText(
@@ -14,35 +11,25 @@ program.addHelpText(
     Example call:
       $ custom-help --help`
 );
-program
-    .option('-t, --token <string>', 'Crusher user token')
-    .parse(process.argv);
+program.parse(process.argv);
 
 export default class CommandBase {
-    printVersion() {
-        console.log(packgeJSON.version);
-    }
-
-    help() {
-        console.log(`Logs user out from this machine`);
-    }
-
-    init() {
+    constructor() {
         const options = program.opts();
         const { help, version } = options;
         if (help === true) {
             this.help();
             return;
         }
+        this.run();
+    }
 
-        if (version === true) {
-            this.printVersion();
-            return;
-        }
+
+    help() {
+        console.log(`Logs user out from this machine`);
     }
 
     async run(): Promise<any> {
-        this.init();
         const projectConfig = getProjectConfig();
         if (!projectConfig || !projectConfig.project) {
             throw new Error(
