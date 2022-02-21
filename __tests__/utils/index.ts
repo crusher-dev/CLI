@@ -15,5 +15,9 @@ function createTempGitRepo() {
   return tempDir;
 }
 
+function createTempCrusherGlobalDir() {
+  const tempDir = fs.mkdtempSync(path.join(__dirname, "..", "..", "tmp", ".crusher"));
+  return tempDir;
+}
 
-export { createTempGitRepo };
+export { createTempGitRepo, createTempCrusherGlobalDir };

@@ -41,7 +41,8 @@
   "dependencies": {
     "axios-mock-adapter": "^1.20.0",
     "fs-extra": "^10.0.0",
-    "nock": "^13.2.4"
+    "nock": "^13.2.4",
+    "strip-ansi": "^7.0.1"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.16.8",

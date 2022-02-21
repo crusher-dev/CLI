@@ -4,7 +4,7 @@ import { getRuntimeEnv } from "./utils";
 export const BACKEND_SERVER_URL = 'https://backend.crusher.dev'
 export const FRONTEND_SERVER_URL = 'https://app.crusher.dev'
 
-export const APP_DIRECTORY = `/${getRuntimeEnv().HOME}/.crusher`;
+export const APP_DIRECTORY = getRuntimeEnv().CRUSHER_GLOBAL_DIR || `/${getRuntimeEnv().HOME}/.crusher`;
 
 export const RECORDER_MAC_BUILD = "https://github.com/crusherdev/crusher-downloads/releases/download/v1.0.11/Crusher.Recorder-1.0.11-mac.zip";
 export const RECORDER_LINUX_BUILd = "https://github.com/crusherdev/crusher-downloads/releases/download/v1.0.11/Crusher.Recorder-1.0.11-linux.zip";

@@ -17,7 +17,7 @@ program.addHelpText(
 );
 
 program
-    .option('-p, --port <number>', 'port number', "80")
+    .option('-p, --port <number>', 'port number')
     .option('-t, --token <string>', 'Crusher user token')
     .parse(process.argv);
 

@@ -12,7 +12,7 @@ const fast = fastify({logger: false})
 const waitForUserLogin = async (): Promise<string> => {
   const loginKey = await axios.get(resolveBackendServerUrl('/cli/get.key')).then(res => {
     return res.data.loginKey
-  })
+  });
   await cli.log("Login or create an account to create a test⚡⚡. Opening a browser for you.\nIf it doesn't open, open this link:");
   await cli.log(resolveFrontendServerUrl(`/?lK=${loginKey}`))
 
@@ -44,7 +44,6 @@ const waitForUserLogin = async (): Promise<string> => {
 
 const initHook = async function (options: { token?: string; }) {
   initializeAppConfig()
-
   if (options.token) {
     // Verify the new token and save it if valid
     try {

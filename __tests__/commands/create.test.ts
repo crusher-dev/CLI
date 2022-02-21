@@ -3,9 +3,12 @@ import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
 import { createTempGitRepo, createTempCrusherGlobalDir } from "../utils";
 import fs from "fs";
-var mock = new MockAdapter(axios);
+import cli from "cli-ux";
+import { resolve } from "path";
 
-describe('Whoami command', () => {
+var mock = new MockAdapter(axios);
+jest.setTimeout(15000);
+describe('Test create command', () => {
   let stdout, stderr, mockExit, lastTempPath, globalAppDir;
 
   beforeAll(() => {
@@ -26,6 +29,23 @@ describe('Whoami command', () => {
         stdout.push("\n");
         stdout.push(...val);
       })
+    jest.spyOn(cli, 'open').mockImplementation(() => {
+      return Promise.resolve(true);
+    });
+
+    jest
+    .spyOn(cli.action, 'stop')
+    .mockImplementation((...val) => {
+      stdout.push("\n");
+      stdout.push(val[0] || "done");
+    })
+
+  jest
+    .spyOn(cli.action, 'start')
+    .mockImplementation((...val) => {
+      stdout.push("\n");
+      stdout.push(...val);
+  })
 
     jest
       .spyOn(console, 'error')
@@ -47,12 +67,19 @@ describe('Whoami command', () => {
   })
 
   it('should throw error if not logged in', async () => {
+    mock.onGet("https://backend.crusher.dev/cli/get.key")
+    .reply(200, { loginKey: "xyzyzyzyzyzy" });
+    mock.onGet("https://backend.crusher.dev/cli/status.key?loginKey=xyzyzyzyzyzy").reply(200, {
+      status: "Validated",
+      userToken: "blablablabla"
+    });
+
     try {
-      await ((new EntryPoint())).run([process.argv[0], process.argv[1], 'whoami']);
+      await ((new EntryPoint())).run([process.argv[0], process.argv[1], 'test:create']);
     } catch (ex) {
       stderr.push(ex.message);
     }
-    expect(mockExit).toHaveBeenCalledWith(1);
+
     expect(stdout.join(" ")).toContain("No user logged in.");
   });
 
