@@ -144,3 +144,7 @@ export const resolvePathToAppDirectory = (relativePath): string => {
   return path.resolve(APP_DIRECTORY, relativePath);
 }
 
+export const resolvePathToDownloadDirectory = (relativePath): string => {
+  return path.resolve(APP_DIRECTORY, relativePath);
+}
+

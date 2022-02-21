@@ -1,7 +1,7 @@
 // eslint-disable-next-line unicorn/filename-case
 import * as fs from 'fs'
-import {APP_DIRECTORY} from '../constants'
-import {getUserInfo, setUserInfo} from '../state/userInfo'
+import {APP_DIRECTORY, recorderVersion} from '../constants'
+import { setUserInfo} from '../state/userInfo'
 import {resolvePathToAppDirectory} from '../utils'
 import * as path from "path";
 
@@ -14,7 +14,7 @@ export const initializeAppConfig = () => {
   }
 
   if(!fs.existsSync(path.resolve(APP_DIRECTORY, "crusher.json"))) {
-    setAppConfig({})
+    setAppConfig({recorderVersion: recorderVersion})
   }
 
   const config = getAppConfig()
@@ -22,6 +22,7 @@ export const initializeAppConfig = () => {
 }
 
 export const setAppConfig = config => {
+  console.log("dsf",config)
   fs.writeFileSync(CRUSHER_CONFIG_FILE, JSON.stringify(config))
 }
 

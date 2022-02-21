@@ -6,8 +6,10 @@ export const FRONTEND_SERVER_URL = 'https://app.crusher.dev'
 
 export const APP_DIRECTORY = getRuntimeEnv().CRUSHER_GLOBAL_DIR || `/${getRuntimeEnv().HOME}/.crusher`;
 
-export const RECORDER_MAC_BUILD = "https://github.com/crusherdev/crusher-downloads/releases/download/v1.0.11/Crusher.Recorder-1.0.11-mac.zip";
-export const RECORDER_LINUX_BUILd = "https://github.com/crusherdev/crusher-downloads/releases/download/v1.0.11/Crusher.Recorder-1.0.11-linux.zip";
+export const recorderVersion = `1.0.11`
+
+export const RECORDER_MAC_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac.zip`;
+export const RECORDER_LINUX_BUILd = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-linux.zip`;
 
 export const getRecorderBuildForPlatfrom = () => {
   if (process.platform === "linux") return { url: RECORDER_LINUX_BUILd, name: path.basename(RECORDER_LINUX_BUILd), platform: "linux", version: RECORDER_LINUX_BUILd.split("/").reverse()[1] }

@@ -1,18 +1,17 @@
-import {getUserInfoFromToken} from '../common'
+import {getUserInfoFromToken} from '../common/api'
 import {getAppConfig, initializeAppConfig, setAppConfig} from '../common/appConfig'
 import {getUserInfo, setUserInfo} from '../state/userInfo'
-import {getBackendServerUrl, getFrontendServerUrl, getUniqueString, resolveBackendServerUrl, resolveFrontendServerUrl} from '../utils'
+import {resolveBackendServerUrl, resolveFrontendServerUrl} from '../utils'
 import axios from 'axios'
 import cli from 'cli-ux'
 import fastify from 'fastify'
-import {getProjectConfig} from '../common/projectConfig'
 
 const fast = fastify({logger: false})
 
 const waitForUserLogin = async (): Promise<string> => {
   const loginKey = await axios.get(resolveBackendServerUrl('/cli/get.key')).then(res => {
     return res.data.loginKey
-  });
+  })
   await cli.log("Login or create an account to create a test⚡⚡. Opening a browser for you.\nIf it doesn't open, open this link:");
   await cli.log(resolveFrontendServerUrl(`/?lK=${loginKey}`))
 
@@ -38,12 +37,13 @@ const waitForUserLogin = async (): Promise<string> => {
 
   await cli.action.stop()
 
-  await cli.log("\nLogin sucessfull~! Let's ship high quality software fast⚡⚡");
+  await cli.log("\nLogin completed! Let's ship high quality software fast⚡⚡");
   return token as string
 }
 
-const initHook = async function (options: { token?: string; }) {
+const loadUserInfoOnLoad = async function (options: { token?: string; }) {
   initializeAppConfig()
+
   if (options.token) {
     // Verify the new token and save it if valid
     try {
@@ -72,4 +72,4 @@ const initHook = async function (options: { token?: string; }) {
   }
 }
 
-export {initHook}
+export {loadUserInfoOnLoad}
