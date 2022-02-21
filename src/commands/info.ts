@@ -2,7 +2,7 @@ import { Command } from 'commander';
 import { getProjectInfo, getTotalTestsInProject } from '../utils/apiUtils';
 import { getProjectConfig } from '../utils/projectConfig';
 
-import { getLoggedInUser } from '../utils/index';";
+import { getLoggedInUser } from '../utils/index';
 
 const program = new Command();
 program.addHelpText(

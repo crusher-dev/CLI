@@ -1,7 +1,7 @@
 import { Command } from 'commander';
 
 import { cli } from 'cli-ux';
-import { runTests } from '../../utils';
+import { runTests } from '../../utils/apiUtils';
 import { getProjectConfig } from '../../utils/projectConfig';
 import { loadUserInfoOnLoad } from '../../utils/hooks';
 import { getUserInfo } from '../../state/userInfo';
@@ -14,7 +14,7 @@ program.addHelpText(
     `
     Example call:
       $ custom-help --help`
-);utils/hooks
+);
 program.parse(process.argv);
 
 export default class CommandBase {
