@@ -4,6 +4,10 @@
   "author": "Himanshu @himanshu-dixit",
   "repository": "https://github.com/crusherdev/CLI",
   "main": "index.js",
+  "engines" : {
+    "node" : ">=10.0.0"
+  },
+  "engineStrict": true,
   "lint-staged": {
     "{src,__mocks__,bin}/**/*.ts": [
       "prettier --write",
