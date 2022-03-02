@@ -13,22 +13,32 @@ import chalk from 'chalk';
 import { createTunnel, installCrusherRecorder, makeSureSetupIsCorrect } from '../../utils/setup';
 
 const program = new Command();
+
 program.addHelpText(
     'after',
     `
     Example call:
-      $ custom-help21 --help`
+      $ crusher-cli test:create --help`
 );
+
+// // If custom help write code here
+// if (process.argv.includes("-h")) {
+//     console.log("Custom help")
+//     process.exit()
+// }
+
 
 program
     .option('-p, --port <number>', 'port number')
     .option('-t, --token <string>', 'Crusher user token')
     .parse(process.argv);
 
-
 export default class CommandBase {
     options;
     constructor() {
+        this.options = program.opts();
+        const { help, version } = this.options;
+
         this.run()
     }
     help() {
@@ -38,6 +48,7 @@ export default class CommandBase {
     init() {
         this.options = program.opts();
         const { help, version } = this.options;
+
         if (help === true) {
             this.help();
             return;
@@ -45,13 +56,12 @@ export default class CommandBase {
     }
 
     async run(): Promise<any> {
+
         this.init();
         const { token } = this.options;
 
         await loadUserInfoOnLoad({ token: token });
-
         await installCrusherRecorder();
-
         await makeSureSetupIsCorrect();
 
         await this.createTest(this.options);

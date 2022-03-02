@@ -4,15 +4,6 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 
-const program = new Command();
-
-program.addHelpText(
-    'after',
-    `
-    Example call:
-      $ custom-help --help`
-);
-
 export default class CommandBase {
     constructor() {
     }
@@ -44,16 +35,8 @@ export default class CommandBase {
         return arr.join("/");
     }
 
-    run(optionsa: any = []) {
-        program
-            .version(packgeJSON.version)
-            .argument('<string>', 'string to split')
-            .option('-h, --help', 'Show commands list')
-            .option('-v, --version', 'Version of CLI')
-            .parse(optionsa && optionsa.length ? optionsa : process.argv);
-        const options = program.opts();
-        const { processedArgs } = program;
-        const [type] = processedArgs;
+    run() {
+      const type = process.argv[2];
         if (type && fs.existsSync(path.resolve(__dirname , "../commands/", `${this.getPathForType(type)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`))) {
             //@ts-ignore
             const requireCommand = typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;

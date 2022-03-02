@@ -1,1 +1,1 @@
-Hello, World!
+- Important, the whole file is evaluated when default is imported?
