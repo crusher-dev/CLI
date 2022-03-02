@@ -48,7 +48,6 @@ export default class CommandBase {
     init() {
         this.options = program.opts();
         const { help, version } = this.options;
-
         if (help === true) {
             this.help();
             return;

@@ -90,6 +90,18 @@ const getProjectInfo = async (projectId: number): Promise<any> => {
   return projects.find((project) => project.id === projectId);
 }
 
+const getContextEnvVariables = () => {
+  const env = eval("process.env");
+  const crusherContextEnvMap = Object.keys(env).reduce((acc, key) => {
+    if (key.startsWith("CRUSHER_")) {
+        return {...acc, [key.substr(8)]: env[key]};
+    }
+    return { ...acc };
+  }, {});
+
+  return crusherContextEnvMap;
+}
+
 
 const runTests = async (host: string | undefined) => {
   const userInfo = getUserInfo();
@@ -98,8 +110,11 @@ const runTests = async (host: string | undefined) => {
   await cli.action.start("Running tests now");
 
   try {
+    const context = getContextEnvVariables();
+
     const res = await axios.post(resolveBackendServerUrl(`/projects/${projectConifg.project}/tests/actions/run`), {
       host: host,
+      context: context,
     }, {
       headers: {
         Cookie: `isLoggedIn=true; token=${userInfo?.token}`,
