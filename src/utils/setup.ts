@@ -132,6 +132,9 @@ async function installMacBuild() {
   const recorderZipPath = await downloadUpstreamBuild();
 
   await cli.action.start('Unzipping');
+  if(fs.existsSync(resolvePathToAppDirectory('bin/Crusher Recorder.app'))) {
+    fs.unlinkSync(resolvePathToAppDirectory('bin/Crusher Recorder.app'));
+  }
   execSync(
       `cd ${path.dirname(recorderZipPath)} && ditto -xk ${path.basename(
           recorderZipPath
