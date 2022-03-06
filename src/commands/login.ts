@@ -1,45 +1,45 @@
-import { Command } from 'commander';
-import { loadUserInfoOnLoad } from '../utils/hooks';
-import { getLoggedInUser } from '../utils/index';
-import { isUserLoggedIn } from '../utils/index';
+import { Command } from "commander";
+import { loadUserInfoOnLoad } from "../utils/hooks";
+import { getLoggedInUser } from "../utils/index";
+import { isUserLoggedIn } from "../utils/index";
 const program = new Command();
 
 program.addHelpText(
-    'after',
-    `
+  "after",
+  `
     Example call:
       $ custom-help --help`
 );
 program.parse(process.argv);
 
 export default class CommandBase {
-    constructor() {
-        const options = program.opts();
-        const { help, version } = options;
-        if (help === true) {
-            this.help();
-            return;
-        }
-
-        this.run();
+  constructor() {
+    const options = program.opts();
+    const { help, version } = options;
+    if (help === true) {
+      this.help();
+      return;
     }
 
-    help() {
-        console.log(`Log in as a user.`);
-    }
+    this.run();
+  }
 
-    async run() {
-        const options = program.opts();
-        const { token } = options;
+  help() {
+    console.log(`Log in as a user.`);
+  }
 
-        const loggedIn = isUserLoggedIn();
-        if (!loggedIn) {
-            await loadUserInfoOnLoad({ token });
-        } else {
-            const loggedInUser = getLoggedInUser();
-            console.log(
-                `You're already logged in from ${loggedInUser.email}.\nTo login from different account, run crusher-cli logout and then crusher-cli login.`
-            );
-        }
+  async run() {
+    const options = program.opts();
+    const { token } = options;
+
+    const loggedIn = isUserLoggedIn();
+    if (!loggedIn) {
+      await loadUserInfoOnLoad({ token });
+    } else {
+      const loggedInUser = getLoggedInUser();
+      console.log(
+        `You're already logged in from ${loggedInUser.email}.\nTo login from different account, run crusher-cli logout and then crusher-cli login.`
+      );
     }
+  }
 }

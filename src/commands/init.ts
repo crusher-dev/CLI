@@ -1,42 +1,40 @@
-import { Command } from 'commander';
+import { Command } from "commander";
 
-import { loadUserInfoOnLoad } from '../utils/hooks';
+import { loadUserInfoOnLoad } from "../utils/hooks";
 
-import { installCrusherRecorder, makeSureSetupIsCorrect } from '../utils/setup';
+import { installCrusherRecorder, makeSureSetupIsCorrect } from "../utils/setup";
 
 const program = new Command();
 program.addHelpText(
-    'after',
-    `
+  "after",
+  `
     Example call:
       $ custom-help --help`
 );
-program.option('-t, --token', 'Crusher user token').parse(process.argv);
+program.option("-t, --token", "Crusher user token").parse(process.argv);
 
 export default class CommandBase {
-    constructor() {
-        const options = program.opts();
-        const { help, version } = options;
-        if (help === true) {
-            this.help();
-            return;
-        }
-
-        this.run();
+  constructor() {
+    const options = program.opts();
+    const { help, version } = options;
+    if (help === true) {
+      this.help();
+      return;
     }
 
+    this.run();
+  }
 
-    help() {
-        console.log(`Logs user out from this machine`);
-    }
+  help() {
+    console.log(`Logs user out from this machine`);
+  }
 
-    async run(): Promise<any> {
-        const options = program.opts();
-        const { token } = options;
-        await loadUserInfoOnLoad({ token });
+  async run(): Promise<any> {
+    const options = program.opts();
+    const { token } = options;
+    await loadUserInfoOnLoad({ token });
 
-        await installCrusherRecorder();
-        await makeSureSetupIsCorrect();
-    }
-
+    await installCrusherRecorder();
+    await makeSureSetupIsCorrect();
+  }
 }

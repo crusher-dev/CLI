@@ -1,1 +1,10 @@
-{"backend":"http://localhost:8000/","project":864}
+{
+  "recorderVersion": "",
+  "userInfo": {
+    "id": "489",
+    "teamName": "Himanshu Dixit's Workspace",
+    "name": "Himanshu Dixit",
+    "email": "hudixt@gmail.com",
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiNDg5IiwidGVhbV9pZCI6NDE0LCJpYXQiOjE2NDY1OTEzNTUsImV4cCI6MTY3ODEyNzM1NX0.kdNzQOh4GOVvqTpI9RJ2GxWx-IqfSmCdlcU-u58NRC8"
+  }
+}
