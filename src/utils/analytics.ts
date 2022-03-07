@@ -5,7 +5,9 @@ var osu = require('node-os-utils')
 
 var cpu = osu.cpu
 
-const client = new Analytics(process.env.ANALYTICS_ID || "IM0t0F7DFPxWwbDrd8WStLqOjJYLYuaq");
+const client = new Analytics(process.env.ANALYTICS_ID || "IM0t0F7DFPxWwbDrd8WStLqOjJYLYuaq", {
+  flushInterval: 5
+});
 
 export const telemetry = (data) => {
   client.track({    userId: getMachineUUID(),
