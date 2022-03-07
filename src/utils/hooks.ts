@@ -8,6 +8,7 @@ import {
 import axios from "axios";
 import cli from "cli-ux";
 import fastify from "fastify";
+import { alias } from "./analytics";
 
 const fast = fastify({ logger: false });
 
@@ -68,7 +69,12 @@ const loadUserInfoOnLoad = async function (options: { token?: string }) {
     // Login user to set default auth token
     if (!appConfig.userInfo || !appConfig.userInfo.token) {
       const userToken = await waitForUserLogin();
+
       await getUserInfoFromToken(userToken).then((userInfo) => {
+
+        const { email } = userInfo;
+        alias(email)
+
         setUserInfo(userInfo);
         setAppConfig({
           ...getAppConfig(),

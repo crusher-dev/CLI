@@ -34,3 +34,25 @@ export const getAppConfig = () => {
 export const isCrusherConfigured = () => {
   return fs.existsSync(CRUSHER_CONFIG_FILE);
 };
+
+const setMachineID = (machineId) => {
+  if (Object.keys(getAppConfig()).length < 1) {
+    setAppConfig({machineId})
+  }
+  else {
+    setAppConfig({
+      ...getAppConfig(),
+      machineId
+    })
+  }
+}
+
+export const getMachineUUID = () => {
+  const isMachineIDNotSet = getAppConfig() === null || getAppConfig()?.machineId === undefined;
+  if (isMachineIDNotSet) {
+    const uniqueMachineId = Date.now();
+    setMachineID(uniqueMachineId)
+  }
+
+  return getAppConfig().machineId
+}

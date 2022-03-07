@@ -2,9 +2,17 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+import { telemetry } from '../utils/analytics';
+import { getAppConfig, getMachineUUID } from '../utils/appConfig';
 
 export default class CommandBase {
     constructor() {
+        const command_name = process.argv[2];
+        telemetry({
+            event: 'RAN_COMMAND',
+            properties: {command_name, full_comand:process.argv},
+
+        })
     }
 
 
