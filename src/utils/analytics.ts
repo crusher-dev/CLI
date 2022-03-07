@@ -5,10 +5,12 @@ var osu = require('node-os-utils')
 
 var cpu = osu.cpu
 
-const client = new Analytics(process.env.ANALYTICS_ID || "IM0t0F7DFPxWwbDrd8WStLqOjJYLYuaq");
+const client = new Analytics(process.env.ANALYTICS_ID || "IM0t0F7DFPxWwbDrd8WStLqOjJYLYuaq", {
+  flushInterval: 5
+});
 
 export const telemetry = (data) => {
-  client.track({    userId: getMachineUUID(),
+  client.track({    anonymousId: getMachineUUID(),
     ...data
   });
 
@@ -16,10 +18,10 @@ export const telemetry = (data) => {
 
 }
 
-export const alias = (email) => {
-  client.alias({
-    "previousId": getMachineUUID(),
-    "userId": email
+export const alias = (id) => {
+  client.identify({
+    "anonymousId": getMachineUUID(),
+    "userId": id
   })
 }
 async function pingMachineBasicDetails() {
@@ -38,7 +40,7 @@ async function pingMachineBasicDetails() {
   const ip = osu.os.ip()
 
   client.track({
-    userId: getMachineUUID(),
+    anonymousId: getMachineUUID(),
     event: 'MACHINE_DETAILS',
     properties: {
       platform, cpu: cpu?.[0], totalmen, freemem,

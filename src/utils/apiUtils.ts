@@ -196,7 +196,7 @@ const runTests = async (host: string | undefined) => {
           );
           resolve(true);
         }
-      }, 5000);
+      }, 1000);
     });
   } catch (err: any) {
     await cli.action.stop(err.message);

@@ -40,7 +40,7 @@ const waitForUserLogin = async (): Promise<string> => {
         clearInterval(interval);
         resolve(loginKeyStatus.userToken);
       }
-    }, 5000);
+    }, 1000);
   });
 
   await cli.action.stop();
@@ -71,9 +71,8 @@ const loadUserInfoOnLoad = async function (options: { token?: string }) {
       const userToken = await waitForUserLogin();
 
       await getUserInfoFromToken(userToken).then((userInfo) => {
-
-        const { email } = userInfo;
-        alias(email)
+        const { id } = userInfo;
+        alias(id)
 
         setUserInfo(userInfo);
         setAppConfig({
