@@ -11,6 +11,8 @@ const CRUSHER_CONFIG_FILE = resolvePathToAppDirectory("crusher.json");
 export const initializeAppConfig = () => {
   if (!fs.existsSync(APP_DIRECTORY)) {
     fs.mkdirSync(APP_DIRECTORY);
+  }
+  if (!fs.existsSync(resolvePathToAppDirectory("bin"))) {
     fs.mkdirSync(resolvePathToAppDirectory("bin"));
   }
 

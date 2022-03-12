@@ -184,9 +184,6 @@ export async function installCrusherRecorder() {
 
   if (cliConfig["recorderVersion"] !== recorderVersion) {
     isInstallingBuild = true;
-    if (cliConfig["recorderVersion"].length > 1) {
-      isUpgrading = true;
-    }
   }
 
   if (process.platform === "darwin") {
