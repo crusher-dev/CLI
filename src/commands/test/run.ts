@@ -15,7 +15,10 @@ program.addHelpText(
     Example call:
       $ custom-help --help`
 );
-program.parse(process.argv);
+program
+  .option('-t, --token <string>', 'Use token to use')
+  .option('-h, --host <string>', "Host to use")
+  .parse(process.argv);
 
 export default class CommandBase {
   constructor() {
@@ -55,7 +58,7 @@ export default class CommandBase {
 
   async runTests(flags) {
     const projectConfig = getProjectConfig();
-    let host: string | undefined = undefined;
+    let host: string | undefined = flags.host ? flags.host : undefined;
     let tunnel: localTunnel.Tunnel | undefined;
     if (projectConfig.hostEnvironment === "local" || flags.port) {
       const port = flags.port ? flags.port : projectConfig.port;
