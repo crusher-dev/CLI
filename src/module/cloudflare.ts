@@ -105,5 +105,3 @@ export class Cloudflare {
     });
   }
 }
-
-// Cloudflare.runTunnel()
