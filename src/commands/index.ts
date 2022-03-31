@@ -2,7 +2,7 @@
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
-import { telemetry, telemetryWorker } from "../utils/analytics";
+import { exitGracefully, telemetry, telemetryWorker } from "../utils/analytics";
 import { getAppConfig, getMachineUUID } from "../utils/appConfig";
 
 export default class CommandBase {
@@ -84,19 +84,18 @@ export default class CommandBase {
       this.help();
     }
 
-    setTimeout(() => {
-      telemetryWorker.terminate()
-    },1200)
+    exitGracefully()
   }
 }
 
 process.on("uncaughtException", (err) => {
   console.log("Error:", err.message);
-
+  exitGracefully()
   process.exit(1);
 });
 
 process.on("unhandledRejection", (reason, p) => {
   console.log("Error:", (reason as Error).message);
+  exitGracefully()
   process.exit(1);
 });

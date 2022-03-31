@@ -14,6 +14,7 @@ export const telemetry = async (data) => {
   telemetryWorker.postMessage({ type: "track", data: telemetryData });
 };
 
+
 export const alias = async (id) => {
   const data = {
     anonymousId: getMachineUUID(),
@@ -53,3 +54,15 @@ async function pingMachineBasicDetails() {
 
   telemetryWorker.postMessage({ type: "track", data: telemetryData });
 }
+
+
+export const exitGracefully = async () => {
+  telemetryWorker.on("message",message => {
+    if (message === "done") {
+      setTimeout(() => {
+        telemetryWorker.terminate()
+      },1000)
+    }
+  });
+  telemetryWorker.postMessage({ type: "flush", data: {} });
+};

@@ -12,7 +12,7 @@ const client = new Analytics(
 );
 
 parentPort.on("message", (dataFromParent) => {
-  trackInWorker(dataFromParent);
+    trackInWorker(dataFromParent);
 });
 
 function trackInWorker(dataFromParent) {
@@ -23,6 +23,11 @@ function trackInWorker(dataFromParent) {
       break;
     case "track":
       client.track(data);
-      break;
+          break;
+      case "flush":
+          client.flush((err, batch) => {
+              console.log(err, batch)
+            parentPort.postMessage("done")
+       })
   }
 }
