@@ -72,7 +72,7 @@ const loadUserInfoOnLoad = async function (options: { token?: string }) {
 
       await getUserInfoFromToken(userToken).then((userInfo) => {
         const { id } = userInfo;
-        alias(id)
+        alias(id);
 
         setUserInfo(userInfo);
         setAppConfig({
