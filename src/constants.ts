@@ -5,7 +5,6 @@ export const BACKEND_SERVER_URL = "https://backend.crusher.dev";
 export const FRONTEND_SERVER_URL = "https://app.crusher.dev";
 
 export const APP_DIRECTORY =
-  "/home/himanshu/.crusher" ||
   getRuntimeEnv().CRUSHER_GLOBAL_DIR ||
   `/${getRuntimeEnv().HOME}/.crusher`;
 
