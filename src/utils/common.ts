@@ -21,8 +21,10 @@ export const downloadFile = (url, path, bar): Promise<string> => {
 
           if (percentage === 100) {
             bar.stop();
-            stream.end();
-            resolve(path);
+            stream.end(() => {
+              resolve(path);
+
+            });
           }
         });
       })

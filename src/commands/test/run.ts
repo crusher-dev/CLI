@@ -68,7 +68,7 @@ export default class CommandBase {
 
     // const projectConfig = getProjectConfig();
 
-    if (!!projectConfig.proxy && projectConfig.proxy.length > 1) {
+    if (!!projectConfig.proxy && projectConfig.proxy.length > 0) {
       await Cloudflare.runTunnel();
     }
 

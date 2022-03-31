@@ -38,13 +38,12 @@ async function installLinuxBuild() {
 
   bar.start(100, 0, { speed: "N/A" });
 
-  await downloadFile(CLOUDFLARED_URL.MAC, recorderZipPath, bar);
-
+  await downloadFile(CLOUDFLARED_URL.LINUX, recorderZipPath, bar);
   execSync(`cd ${path.dirname(recorderZipPath)}  `, { stdio: "ignore" });
 
-  await new Promise((res, rej) => {
-    setTimeout(res, 50);
-  });
+  // await new Promise((res, rej) => {
+  //   setTimeout(res, 50);
+  // });
 }
 
 async function setupCloudflare() {
@@ -74,8 +73,12 @@ export class Cloudflare {
           var spann;
           try {
             spann = spawn(resolvePathToAppDirectory(`bin/cloudflared`), [
-              `tunnel --url ${url}`,
+              `tunnel`,`--url`,`${url}`
             ]);
+
+            console.log("URL",resolvePathToAppDirectory(`bin/cloudflared`), [
+              `tunnel --url ${url}`,
+            ])
           } catch (e) {
             console.log("error", e);
           }
@@ -85,6 +88,7 @@ export class Cloudflare {
           });
           spann.stderr.on("data", function (msg) {
             const msgInString = msg.toString();
+             console.log(msgInString)
             if (msgInString.includes("trycloudflare")) {
               const regex = /https.*trycloudflare.com/g;
               const found = msgInString.match(regex);
@@ -101,7 +105,7 @@ export class Cloudflare {
 
       await Promise.all(tunnelPromises);
 
-      resolve("Tunnels live");
+       resolve("Tunnels live");
     });
   }
 }

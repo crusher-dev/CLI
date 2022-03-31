@@ -48,10 +48,7 @@ export default class CommandBase {
       )
     ) {
       //@ts-ignore
-      const requireCommand =
-        typeof __webpack_require__ === "function"
-          ? __non_webpack_require__
-          : require;
+      const requireCommand =typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
       try {
         new (requireCommand(
           path.resolve(
