@@ -87,7 +87,7 @@ export class Cloudflare {
           }
 
           spann.stdout.on("data", function (msg) {
-            console.log(msg.toString(), "sd");
+            console.log(msg.toString());
           });
           spann.stderr.on("data", function (msg) {
             const msgInString = msg.toString();
