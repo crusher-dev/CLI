@@ -1,10 +1,14 @@
-import path from "path";
+import path, { dirname } from "path";
 import { getMachineUUID } from "./appConfig";
 var osu = require("node-os-utils");
 
 const { Worker } = require("worker_threads");
 
-export const telemetryWorker = new Worker(path.resolve(__dirname, "./telemetry.js"));
+console.log(__dirname.split('src/')[0])
+
+const normalizedPath = __dirname.split('src/')[0] ;
+export const telemetryWorker = new Worker(path.resolve(normalizedPath, "src/utils/telemetry.js"));
+
 
 export const telemetry = async (data) => {
   const telemetryData = { anonymousId: getMachineUUID(), ...data };

@@ -26,7 +26,6 @@ function trackInWorker(dataFromParent) {
           break;
       case "flush":
           client.flush((err, batch) => {
-              console.log(err, batch)
             parentPort.postMessage("done")
        })
   }

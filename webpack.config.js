@@ -1,6 +1,9 @@
 const path = require("path");
 const glob = require("glob");
 const webpack = require("webpack");
+
+const CopyPlugin = require("copy-webpack-plugin");
+
 console.log({
   entry: glob.sync("./src/**/*.ts").reduce(function (obj, el) {
     obj[el.replace(".ts", "")] = el;
@@ -40,6 +43,11 @@ module.exports = {
       "process.env": {
         NODE_ENV: JSON.stringify("production"),
       },
+    }),
+    new CopyPlugin({
+      patterns: [
+        { from: "src/utils/telemetry.js", to: "src/utils/telemetry.js" },
+      ],
     }),
   ],
 };
