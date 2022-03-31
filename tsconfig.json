@@ -8,11 +8,9 @@
     "sourceMap": true,
     "outDir": "dist",
     "noEmitOnError": false,
-    "resolveJsonModule": true,
+    "resolveJsonModule": true
   },
   "include": ["src/**/*"],
-  "exclude": [ "**/*.spec.ts"],
-  "lib": [
-    "es2015"
-  ]
+  "exclude": ["**/*.spec.ts"],
+  "lib": ["es2015"]
 }
