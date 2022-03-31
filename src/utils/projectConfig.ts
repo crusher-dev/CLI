@@ -4,7 +4,7 @@ import {APP_DIRECTORY} from '../constants'
 import {createDirIfNotExist} from '../utils/utils'
 import * as path from "path";
 
-function findCrusherProjectConfig(_start = null) {
+export function findCrusherProjectConfig(_start = null) {
   let start: any = _start || process.cwd()
   if (typeof start === 'string') {
     if (start[start.length - 1] !== path.sep) {
@@ -33,13 +33,12 @@ const PROJECT_CONFIG_PATH = path.resolve(process.cwd(), '.crusher');
 
 export const setProjectConfig = config => {
     createDirIfNotExist('.crusher')
-    fs.writeFileSync(path.resolve(PROJECT_CONFIG_PATH, "./config.json"), JSON.stringify(config))
+    fs.writeFileSync(path.resolve(PROJECT_CONFIG_PATH, "./config.json"), JSON.stringify(config,null, 2))
 }
 
 export const getProjectConfig = () => {
+
   const existingProjectConfig = findCrusherProjectConfig();
-
   const configPath = existingProjectConfig || PROJECT_CONFIG_PATH;
-
   return fs.existsSync(configPath) ? JSON.parse(fs.readFileSync(path.resolve(configPath, "./config.json"), 'utf8')) : null;
 }

@@ -16,6 +16,7 @@ import { getProjectsOfCurrentUser, createProject } from '../utils/apiUtils';
 import localTunnel from 'localtunnel';
 import { getProjectNameFromGitInfo } from './index';
 import { getAppConfig, setAppConfig } from '../utils/appConfig';
+import { downloadFile } from './common';
 
 export async function makeSureSetupIsCorrect() {
   const projectConfig = getProjectConfig();
@@ -87,42 +88,18 @@ export async function makeSureSetupIsCorrect() {
 
 
 async function downloadUpstreamBuild(): Promise<string> {
-  return new Promise((resolve, reject) => {
-      const packagesRecorderUrl = getRecorderBuildForPlatfrom();
-      const recorderZipPath = resolvePathToAppDirectory(
-          `bin/${packagesRecorderUrl.name}`
-      );
+   const packagesRecorderUrl = getRecorderBuildForPlatfrom();
+   const recorderZipPath = resolvePathToAppDirectory(
+        `bin/${packagesRecorderUrl.name}`
+    );
 
-      const bar = cli.progress({
-          format: `Downloading latest version (${packagesRecorderUrl.version})\t[{bar}] {percentage}%`
-      });
-      bar.start(100, 0, { speed: 'N/A' });
+   const bar = cli.progress({
+        format: `Downloading latest version (${packagesRecorderUrl.version})\t[{bar}] {percentage}%`
+    });
+   bar.start(100, 0, { speed: 'N/A' });
 
-      axios
-          .get(packagesRecorderUrl.url, { responseType: 'stream' })
-          .then(({ data, headers }) => {
-              data.pipe(fs.createWriteStream(recorderZipPath));
-              let chunksCompleted = 0;
 
-              data.on('data', chunk => {
-                  chunksCompleted += chunk.length;
-                  const percentage = Math.floor(
-                      (chunksCompleted /
-                          parseInt(headers['content-length'])) *
-                          100
-                  );
-                  bar.update(percentage);
-
-                  if (percentage === 100) {
-                      bar.stop();
-                      resolve(recorderZipPath);
-                  }
-              });
-          })
-          .catch(err => {
-              reject(err);
-          });
-  });
+   return downloadFile(packagesRecorderUrl.url,recorderZipPath,bar)
 }
 
 async function installMacBuild() {

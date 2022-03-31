@@ -1,6 +1,6 @@
 import { Command } from 'commander';
 import { getProjectInfo, getTotalTestsInProject } from '../utils/apiUtils';
-import { getProjectConfig } from '../utils/projectConfig';
+import { findCrusherProjectConfig, getProjectConfig } from '../utils/projectConfig';
 
 import { getLoggedInUser } from '../utils/index';
 
@@ -46,7 +46,9 @@ export default class CommandBase {
         console.log('Team:', userAccount.teamName);
         console.log('Name:', userAccount.name);
         console.log('Login:', userAccount.email);
+        console.log('-----------');
         console.log('Project name: ', projectInfo.name);
-        console.log('Tests tests in this project:', testsCountInProject);
+        console.log('Tests in the project:', testsCountInProject);
+        console.log('Project config path: ', findCrusherProjectConfig());
     }
 }

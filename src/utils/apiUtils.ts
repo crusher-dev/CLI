@@ -121,6 +121,7 @@ const runTests = async (host: string | undefined) => {
       },
     });
 
+ 
     await cli.action.stop();
 
     const buildInfo = res.data.buildInfo;

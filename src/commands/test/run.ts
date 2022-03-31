@@ -7,6 +7,7 @@ import { loadUserInfoOnLoad } from '../../utils/hooks';
 import { getUserInfo } from '../../state/userInfo';
 import localTunnel from 'localtunnel';
 import { createTunnel } from '../../utils/setup';
+import { Cloudflare } from '../../module/cloudflare';
 
 const program = new Command();
 program.addHelpText(
@@ -58,21 +59,28 @@ export default class CommandBase {
     async runTests(flags) {
         const projectConfig = getProjectConfig();
         let host: string | undefined = undefined;
-        let tunnel: localTunnel.Tunnel | undefined;
-        if (projectConfig.hostEnvironment === 'local' || flags.port) {
-            const port = flags.port ? flags.port : projectConfig.port;
-            tunnel = await createTunnel(port);
-            host = tunnel.url;
+        // let tunnel: localTunnel.Tunnel | undefined;
+        // if (projectConfig.hostEnvironment === 'local' || flags.port) {
+        //     const port = flags.port ? flags.port : projectConfig.port;
+        //     tunnel = await createTunnel(port);
+        //     host = tunnel.url;
 
-            await cli.log('Serving at ' + host + ' now');
+        //     await cli.log('Serving at ' + host + ' now');
+        // }
+
+        // const projectConfig = getProjectConfig();
+
+        if(!!projectConfig.proxy && projectConfig.proxy.length>1){
+            await Cloudflare.runTunnel()
         }
+
         try {
             await runTests(host);
         } catch (err) {
         } finally {
-            if (tunnel!) {
-                tunnel!.close();
-            }
+            // if (tunnel!) {
+            //     tunnel!.close();
+            // }
         }
     }
 }
