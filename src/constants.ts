@@ -14,6 +14,11 @@ export const recorderVersion = `1.0.14`;
 export const RECORDER_MAC_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac.zip`;
 export const RECORDER_LINUX_BUILd = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-linux.zip`;
 
+
+export const CLOUDFLARED_URL = {
+  MAC: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz",
+  LINUX: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
+}
 export const getRecorderBuildForPlatfrom = () => {
   if (process.platform === "linux")
     return {

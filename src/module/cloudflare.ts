@@ -5,14 +5,12 @@ import { execSync } from "child_process";
 import path from "path";
 import { getProjectConfig } from "../utils/projectConfig";
 import { getAppConfig } from "../utils/appConfig";
+import { CLOUDFLARED_URL } from "../constants";
 
 var { spawn, exec } = require("child_process");
 const fs = require("fs");
 
 async function installNSetupOnMac() {
-  const macURL =
-    "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz";
-
   const recorderZipPath = resolvePathToAppDirectory(`cloudflare.tgz`);
   const bar = cli.progress({
     format: `Downloading cloudflare tunnel {percentage}%`,
@@ -20,7 +18,7 @@ async function installNSetupOnMac() {
 
   bar.start(100, 0, { speed: "N/A" });
 
-  await downloadFile(macURL, recorderZipPath, bar);
+  await downloadFile(CLOUDFLARED_URL.MAC, recorderZipPath, bar);
 
   execSync(
     `cd ${path.dirname(recorderZipPath)} && tar -xvzf ${path.basename(
@@ -33,9 +31,6 @@ async function installNSetupOnMac() {
 }
 
 async function installLinuxBuild() {
-  const linuxBinary =
-    "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64";
-
   const recorderZipPath = resolvePathToAppDirectory(`bin/cloudflared`);
   const bar = cli.progress({
     format: `Downloading cloudflare tunnel {percentage}%`,
@@ -43,10 +38,9 @@ async function installLinuxBuild() {
 
   bar.start(100, 0, { speed: "N/A" });
 
-  await downloadFile(linuxBinary, recorderZipPath, bar);
+  await downloadFile(CLOUDFLARED_URL.MAC, recorderZipPath, bar);
 
   execSync(`cd ${path.dirname(recorderZipPath)}  `, { stdio: "ignore" });
-  console.log("Downloaded");
 
   await new Promise((res, rej) => {
     setTimeout(res, 50);
