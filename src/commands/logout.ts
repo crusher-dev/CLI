@@ -29,6 +29,10 @@ export default class CommandBase {
   run() {
     const appConfig = getAppConfig();
     if (appConfig["userInfo"]) delete appConfig["userInfo"];
+<<<<<<< HEAD
+=======
+    delete appConfig["machineId"];
+>>>>>>> d7790a8d994b5cb3b69aaa1802d6c9f6cad4f3a6
     setAppConfig(appConfig);
     console.log("Logged out from this machine");
   }

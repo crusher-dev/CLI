@@ -2,16 +2,8 @@
 import * as fs from "fs";
 import { APP_DIRECTORY, recorderVersion } from "../constants";
 import { setUserInfo } from "../state/userInfo";
-<<<<<<< HEAD
 import { resolvePathToAppDirectory } from "../utils/utils";
-=======
-import {
-  ensureDirectoryExistence,
-  resolvePathToAppDirectory,
-} from "../utils/utils";
->>>>>>> d7790a8d994b5cb3b69aaa1802d6c9f6cad4f3a6
 import * as path from "path";
-var uuid = require("uuid");
 
 const CRUSHER_CONFIG_FILE = resolvePathToAppDirectory("crusher.json");
 
@@ -28,15 +20,8 @@ export const initializeAppConfig = () => {
   const config = getAppConfig();
   setUserInfo(config.userInfo);
 };
-<<<<<<< HEAD
 
 export const setAppConfig = (config) => {
-=======
-
-export const setAppConfig = (config) => {
-  ensureDirectoryExistence(CRUSHER_CONFIG_FILE);
-
->>>>>>> d7790a8d994b5cb3b69aaa1802d6c9f6cad4f3a6
   fs.writeFileSync(CRUSHER_CONFIG_FILE, JSON.stringify(config));
 };
 
@@ -48,31 +33,4 @@ export const getAppConfig = () => {
 
 export const isCrusherConfigured = () => {
   return fs.existsSync(CRUSHER_CONFIG_FILE);
-};
-
-const setMachineID = (machineId) => {
-  const appConfig = getAppConfig();
-  if (
-    appConfig == null ||
-    (typeof (appConfig === "object") && Object.keys(appConfig).length < 1)
-  ) {
-    setAppConfig({ machineId });
-  } else {
-    setAppConfig({
-      ...appConfig,
-      machineId,
-    });
-  }
-};
-
-export const getMachineUUID = () => {
-  const isMachineIDNotSet =
-    getAppConfig() === null || getAppConfig()?.machineId === undefined;
-
-  if (isMachineIDNotSet) {
-    const uniqueMachineId = uuid.v4();
-    setMachineID(uniqueMachineId);
-  }
-
-  return getAppConfig().machineId;
 };

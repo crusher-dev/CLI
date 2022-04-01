@@ -5,8 +5,12 @@ export const BACKEND_SERVER_URL = "https://backend.crusher.dev";
 export const FRONTEND_SERVER_URL = "https://app.crusher.dev";
 
 export const APP_DIRECTORY =
+<<<<<<< HEAD
   getRuntimeEnv().CRUSHER_GLOBAL_DIR ||
   `/${getRuntimeEnv().HOME}/.crusher`;
+=======
+  getRuntimeEnv().CRUSHER_GLOBAL_DIR || `/${getRuntimeEnv().HOME}/.crusher`;
+>>>>>>> d7790a8d994b5cb3b69aaa1802d6c9f6cad4f3a6
 
 export const recorderVersion = `1.0.14`;
 

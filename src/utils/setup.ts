@@ -95,8 +95,15 @@ async function downloadUpstreamBuild(): Promise<string> {
   return downloadFile(packagesRecorderUrl.url, recorderZipPath, bar);
 }
 
-async function installMacBuild() {
+async function installMacBuild(isUpgrading) {
   // handle when crusher is already installed
+  if (isUpgrading) {
+    cli.info("Upgrading recorder to latest version.\n");
+  } else {
+    cli.info(
+      "Crusher recorder not installed. Downloading and installing it.\n"
+    );
+  }
 
   cli.info("Crusher Recorder is not installed.\n");
   const recorderZipPath = await downloadUpstreamBuild();
@@ -122,18 +129,23 @@ async function installMacBuild() {
   await cli.action.stop("done\n");
 }
 
-async function installLinuxBuild() {
+async function installLinuxBuild(isUpgrading) {
   // handle when crusher is already installed
+  if (isUpgrading) {
+    cli.info("Upgrading recorder to latest version.\n");
+  } else {
+    cli.info(
+      "Crusher recorder not installed. Downloading and installing it.\n"
+    );
+  }
 
-  cli.info("Crusher Recorder is not installed.\n");
   const recorderZipPath = await downloadUpstreamBuild();
 
   await cli.action.start("Unzipping");
   execSync(
-    `cd ${path.dirname(recorderZipPath)} && unzip ${path.basename(
+    `cd ${path.dirname(recorderZipPath)} && unzip -o ${path.basename(
       recorderZipPath
-    )} -d . && rm -R ${path.basename(recorderZipPath)}`,
-    { stdio: "ignore" }
+    )} -d . && rm -R ${path.basename(recorderZipPath)}`
   );
 
   await new Promise((resolve, reject) =>
@@ -146,32 +158,34 @@ async function installLinuxBuild() {
 
 export async function installCrusherRecorder() {
   const cliConfig = getAppConfig();
-  let shouldReinstall = false;
+  let isInstallingBuild = false;
+  let isUpgrading = false;
 
   if (cliConfig["recorderVersion"] !== recorderVersion) {
-    shouldReinstall = true;
-    cliConfig["recorderVersion"] = "";
-    setProjectConfig(cliConfig);
+    isInstallingBuild = true;
+    if (cliConfig["recorderVersion"].length > 1) {
+      isUpgrading = true;
+    }
   }
 
   if (process.platform === "darwin") {
     if (
       fs.existsSync(resolvePathToAppDirectory("bin/Crusher Recorder.app")) &&
-      shouldReinstall == false
+      isInstallingBuild == false
     ) {
       return;
     }
 
-    await installMacBuild();
+    await installMacBuild(isUpgrading);
   } else if (process.platform === "linux") {
     if (
       fs.existsSync(resolvePathToAppDirectory("bin/electron-app")) &&
-      shouldReinstall == false
+      isInstallingBuild == false
     ) {
       return;
     }
 
-    await installLinuxBuild();
+    await installLinuxBuild(isUpgrading);
   }
 
   // Set config after succesfull installation
