@@ -5,41 +5,41 @@ import { isUserLoggedIn } from "../utils/index";
 const program = new Command();
 
 program.addHelpText(
-  "after",
-  `
+	"after",
+	`
     Example call:
-      $ custom-help --help`
+      $ custom-help --help`,
 );
 program.parse(process.argv);
 
 export default class CommandBase {
-  constructor() {
-    const options = program.opts();
-    const { help, version } = options;
-    if (help === true) {
-      this.help();
-      return;
-    }
+	constructor() {
+		const options = program.opts();
+		const { help, version } = options;
+		if (help === true) {
+			this.help();
+			return;
+		}
 
-    this.run();
-  }
+		this.run();
+	}
 
-  help() {
-    console.log(`Log in as a user.`);
-  }
+	help() {
+		console.log(`Log in as a user.`);
+	}
 
-  async run() {
-    const options = program.opts();
-    const { token } = options;
+	async run() {
+		const options = program.opts();
+		const { token } = options;
 
-    const loggedIn = isUserLoggedIn();
-    if (!loggedIn) {
-      await loadUserInfoOnLoad({ token });
-    } else {
-      const loggedInUser = getLoggedInUser();
-      console.log(
-        `You're already logged in from ${loggedInUser.email}.\nTo login from different account, run crusher-cli logout and then crusher-cli login.`
-      );
-    }
-  }
+		const loggedIn = isUserLoggedIn();
+		if (!loggedIn) {
+			await loadUserInfoOnLoad({ token });
+		} else {
+			const loggedInUser = getLoggedInUser();
+			console.log(
+				`You're already logged in from ${loggedInUser.email}.\nTo login from different account, run crusher-cli logout and then crusher-cli login.`,
+			);
+		}
+	}
 }

@@ -6,65 +6,60 @@ import { getUserInfo } from "../../state/userInfo";
 
 import { Cloudflare } from "../../module/cloudflare";
 
-
 const program = new Command();
 program.addHelpText(
-  "after",
-  `
+	"after",
+	`
     Example call:
-      $ custom-help --help`
+      $ custom-help --help`,
 );
 program.parse(process.argv);
 
 export default class CommandBase {
-  constructor() {
-    const options = program.opts();
-    const { help, version } = options;
-    if (help === true) {
-      this.help();
-      return;
-    }
+	constructor() {
+		const options = program.opts();
+		const { help, version } = options;
+		if (help === true) {
+			this.help();
+			return;
+		}
 
-    this.run();
-  }
+		this.run();
+	}
 
-  help() {
-    console.log(`Logs user out from this machine`);
-  }
+	help() {
+		console.log(`Logs user out from this machine`);
+	}
 
-  async run(): Promise<any> {
-    const options = program.opts();
-    const { token } = options;
+	async run(): Promise<any> {
+		const options = program.opts();
+		const { token } = options;
 
-    await loadUserInfoOnLoad({ token });
+		await loadUserInfoOnLoad({ token });
 
-    await this.makeSureSetupIsCorrect();
-    await this.runTests(options);
-  }
+		await this.makeSureSetupIsCorrect();
+		await this.runTests(options);
+	}
 
-  async makeSureSetupIsCorrect() {
-    const userInfo = getUserInfo();
-    const projectConfig = getProjectConfig();
+	async makeSureSetupIsCorrect() {
+		const userInfo = getUserInfo();
+		const projectConfig = getProjectConfig();
 
-    if (!projectConfig)
-      throw new Error(
-        "Crusher not intialized in this repo. Run 'crusher-cli init' to initialize."
-      );
-  }
+		if (!projectConfig) throw new Error("Crusher not intialized in this repo. Run 'crusher-cli init' to initialize.");
+	}
 
-  async runTests(flags) {
-    const projectConfig = getProjectConfig();
-    let host: string | undefined = undefined;
+	async runTests(flags) {
+		const projectConfig = getProjectConfig();
+		let host: string | undefined = undefined;
 
+		if (!!projectConfig.proxy && projectConfig.proxy.length > 0) {
+			await Cloudflare.runTunnel();
+		}
 
-    if (!!projectConfig.proxy && projectConfig.proxy.length > 0) {
-      await Cloudflare.runTunnel();
-    }
-
-    try {
-      await runTests(host);
-    } catch (err) {
-    } finally {
-    }
-  }
+		try {
+			await runTests(host);
+		} catch (err) {
+		} finally {
+		}
+	}
 }

@@ -1,15 +1,13 @@
-1;
 import fs from "fs";
 import path from "path";
 import chalk from "chalk";
-import { exitGracefully, telemetry, telemetryWorker } from "../utils/analytics";
-import { getAppConfig, getMachineUUID } from "../utils/appConfig";
+import { exitGracefully, telemetry } from "../utils/analytics";
 
 export default class CommandBase {
-  constructor() {}
+	constructor() {}
 
-  help() {
-    console.log(`
+	help() {
+		console.log(`
   Run a command: ${chalk(`npx crusher-cli [command]`)}
   Example:       ${chalk(`npx crusher-cli create:test`)}
 
@@ -27,68 +25,56 @@ export default class CommandBase {
       whoami                    your info
       logout
     `);
-  }
+	}
 
-  getPathForType(type: string) {
-    const arr = type.split(":");
-    return arr.join("/");
-  }
+	getPathForType(type: string) {
+		const arr = type.split(":");
+		return arr.join("/");
+	}
 
-  async run() {
-    const command_name = process.argv[2];
+	async run() {
+		const command_name = process.argv[2];
 
-    await telemetry({
-      event: "RAN_COMMAND",
-      properties: { command_name, full_comand: process.argv },
-    });
+		await telemetry({
+			event: "RAN_COMMAND",
+			properties: { command_name, full_comand: process.argv },
+		});
 
-    if (
-      command_name &&
-      fs.existsSync(
-        path.resolve(
-          __dirname,
-          "../commands/",
-          `${this.getPathForType(command_name)}.${
-            process.env.NODE_ENV === "production" ? "js" : "ts"
-          }`
-        )
-      )
-    ) {
-      //@ts-ignore
-      const requireCommand =typeof __webpack_require__ === "function"? __non_webpack_require__: require;
-      try {
-        //@ts-ignore
-        new (requireCommand(
-          path.resolve(
-            __dirname,
-            "../commands/",
-            `${this.getPathForType(command_name)}.${
-              process.env.NODE_ENV === "production" ? "js" : "ts"
-            }`
-          )
-        ).default)();
-      } catch (err) {
-        if (err.message === "SIGINT") process.exit(1);
+		if (
+			command_name &&
+			fs.existsSync(
+				path.resolve(__dirname, "../commands/", `${this.getPathForType(command_name)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`),
+			)
+		) {
+			//@ts-ignore
+			const requireCommand = typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
+			try {
+				//@ts-ignore
+				new (requireCommand(
+					path.resolve(__dirname, "../commands/", `${this.getPathForType(command_name)}.${process.env.NODE_ENV === "production" ? "js" : "ts"}`),
+				).default)();
+			} catch (err) {
+				if (err.message === "SIGINT") process.exit(1);
 
-        console.log("Error:", err.message);
-        process.exit(1);
-      }
-    } else {
-      this.help();
-    }
+				console.log("Error:", err.message);
+				process.exit(1);
+			}
+		} else {
+			this.help();
+		}
 
-    exitGracefully()
-  }
+		exitGracefully();
+	}
 }
 
 process.on("uncaughtException", (err) => {
-  console.log("Error:", err.message);
-  exitGracefully()
-  process.exit(1);
+	console.log("Error:", err.message);
+	exitGracefully();
+	process.exit(1);
 });
 
 process.on("unhandledRejection", (reason, p) => {
-  console.log("Error:", (reason as Error).message);
-  exitGracefully()
-  process.exit(1);
+	console.log("Error:", (reason as Error).message);
+	exitGracefully();
+	process.exit(1);
 });
