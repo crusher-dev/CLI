@@ -1,13 +1,16 @@
 {
-  "compilerOptions": {
-    "declaration": true,
-    "importHelpers": true,
-    "module": "commonjs",
-    "outDir": "lib",
-    "rootDir": "src",
-    "strict": true,
-    "target": "es2017",
-    "noImplicitAny": false
-  },
-  "include": ["src/**/*"]
+	"compilerOptions": {
+		"module": "commonjs",
+		"esModuleInterop": true,
+		"target": "es6",
+		"moduleResolution": "node",
+		"declaration": true,
+		"sourceMap": true,
+		"outDir": "dist",
+		"noEmitOnError": false,
+		"resolveJsonModule": true
+	},
+	"include": ["src/**/*"],
+	"exclude": ["**/*.spec.ts"],
+	"lib": ["es2015"]
 }
