@@ -1,10 +1,8 @@
-import path, { dirname } from "path";
+import path from "path";
 import { getMachineUUID } from "./appConfig";
 var osu = require("node-os-utils");
 
 const { Worker } = require("worker_threads");
-
-console.log(__dirname.split('src/')[0])
 
 const normalizedPath = __dirname.split('src/')[0] ;
 export const telemetryWorker = new Worker(path.resolve(normalizedPath, "src/utils/telemetry.js"));

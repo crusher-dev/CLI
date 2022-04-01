@@ -6,7 +6,7 @@ import { resolvePathToAppDirectory } from "../../utils/utils";
 import cli from "cli-ux";
 import { getProjectConfig } from "../../utils/projectConfig";
 import { execSync } from "child_process";
-import localTunnel from "localtunnel";
+
 import chalk from "chalk";
 import {
   createTunnel,
@@ -22,12 +22,6 @@ program.addHelpText(
     Example call:
       $ crusher-cli test:create --help`
 );
-
-// // If custom help write code here
-// if (process.argv.includes("-h")) {
-//     console.log("Custom help")
-//     process.exit()
-// }
 
 program
   .option("-p, --port <number>", "port number")
@@ -67,14 +61,14 @@ export default class CommandBase {
   }
 
   async createTest(flags) {
-    let tunnel: localTunnel.Tunnel | undefined;
-    if (flags.port) {
-      const port = flags.port;
-      tunnel = await createTunnel(port);
-      const host = tunnel.url;
-
-      await cli.log("\nServing at " + host + " now \n");
-    }
+    let tunnel:  undefined;
+    // if (flags.port) {
+    //   const port = flags.port;
+    //   tunnel = await createTunnel(port);
+    //   const host = tunnel.url;
+    //
+    //   await cli.log("\nServing at " + host + " now \n");
+    // }
 
     const projectConfig = getProjectConfig();
     const userInfo = getUserInfo();

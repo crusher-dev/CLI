@@ -154,8 +154,7 @@ export const resolvePathToAppDirectory = (relativePath): string => {
 export const resolvePathToDownloadDirectory = (relativePath): string => {
   return path.resolve(APP_DIRECTORY, relativePath);
 };
-<<<<<<< HEAD
-=======
+
 export function ensureDirectoryExistence(filePath) {
   var dirname = path.dirname(filePath);
   if (fs.existsSync(dirname)) {
@@ -164,4 +163,4 @@ export function ensureDirectoryExistence(filePath) {
   ensureDirectoryExistence(dirname);
   fs.mkdirSync(dirname);
 }
->>>>>>> d7790a8d994b5cb3b69aaa1802d6c9f6cad4f3a6
+

@@ -7,13 +7,8 @@ import {
 } from "../utils/utils";
 import axios from "axios";
 import cli from "cli-ux";
-import fastify from "fastify";
-<<<<<<< HEAD
-=======
 import { alias } from "./analytics";
->>>>>>> d7790a8d994b5cb3b69aaa1802d6c9f6cad4f3a6
 
-const fast = fastify({ logger: false });
 
 const waitForUserLogin = async (): Promise<string> => {
   const loginKey = await axios
@@ -43,11 +38,7 @@ const waitForUserLogin = async (): Promise<string> => {
         clearInterval(interval);
         resolve(loginKeyStatus.userToken);
       }
-<<<<<<< HEAD
-    }, 5000);
-=======
     }, 1000);
->>>>>>> d7790a8d994b5cb3b69aaa1802d6c9f6cad4f3a6
   });
 
   await cli.action.stop();
@@ -76,15 +67,11 @@ const loadUserInfoOnLoad = async function (options: { token?: string }) {
     // Login user to set default auth token
     if (!appConfig.userInfo || !appConfig.userInfo.token) {
       const userToken = await waitForUserLogin();
-<<<<<<< HEAD
-      await getUserInfoFromToken(userToken).then((userInfo) => {
-=======
 
       await getUserInfoFromToken(userToken).then((userInfo) => {
         const { id } = userInfo;
         alias(id);
 
->>>>>>> d7790a8d994b5cb3b69aaa1802d6c9f6cad4f3a6
         setUserInfo(userInfo);
         setAppConfig({
           ...getAppConfig(),

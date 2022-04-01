@@ -1,7 +1,7 @@
 // The event loop stop when creating test, this is wrapper on top of worker
 // Segment relies on event loop to flush data, We're bypassing it.
 
-const { workerData, parentPort } = require("worker_threads");
+const {  parentPort } = require("worker_threads");
 const Analytics = require("analytics-node");
 
 const client = new Analytics(

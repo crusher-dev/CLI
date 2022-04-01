@@ -3,7 +3,6 @@ import {
   resolvePathToAppDirectory,
 } from "../utils/utils";
 import * as fs from "fs";
-import axios from "axios";
 import * as path from "path";
 import { getRecorderBuildForPlatfrom, recorderVersion } from "../constants";
 import cli from "cli-ux";

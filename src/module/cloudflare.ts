@@ -4,10 +4,9 @@ import { resolvePathToAppDirectory } from "../utils/utils";
 import { execSync } from "child_process";
 import path from "path";
 import { getProjectConfig } from "../utils/projectConfig";
-import { getAppConfig } from "../utils/appConfig";
 import { CLOUDFLARED_URL } from "../constants";
 
-var { spawn, exec } = require("child_process");
+var { spawn } = require("child_process");
 const fs = require("fs");
 
 async function installNSetupOnMac() {
@@ -37,13 +36,8 @@ async function installLinuxBuild() {
   });
 
   bar.start(100, 0, { speed: "N/A" });
-
   await downloadFile(CLOUDFLARED_URL.LINUX, recorderZipPath, bar);
   execSync(`cd ${path.dirname(recorderZipPath)}  `, { stdio: "ignore" });
-
-  // await new Promise((res, rej) => {
-  //   setTimeout(res, 50);
-  // });
 }
 
 async function setupCloudflare() {
