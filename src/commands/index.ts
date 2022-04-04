@@ -25,6 +25,7 @@ export default class CommandBase {
       info
       whoami                    your info
       logout
+      token                     your token
     `);
   }
 
