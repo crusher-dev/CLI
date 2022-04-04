@@ -57,28 +57,19 @@ export default class CommandBase {
   async runTests(flags) {
     const projectConfig = getProjectConfig();
     let host: string | undefined = undefined;
-    // let tunnel: localTunnel.Tunnel | undefined;
-    // if (projectConfig.hostEnvironment === 'local' || flags.port) {
-    //     const port = flags.port ? flags.port : projectConfig.port;
-    //     tunnel = await createTunnel(port);
-    //     host = tunnel.url;
 
-    //     await cli.log('Serving at ' + host + ' now');
-    // }
-
-    // const projectConfig = getProjectConfig();
 
     if (!!projectConfig.proxy && projectConfig.proxy.length > 0) {
       await Cloudflare.runTunnel();
     }
 
+    const { testId, testGroup } = flags;
+
     try {
-      await runTests(host);
+      await runTests(host, testId, testGroup);
     } catch (err) {
     } finally {
-      // if (tunnel!) {
-      //     tunnel!.close();
-      // }
+
     }
   }
 }

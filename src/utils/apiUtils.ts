@@ -133,10 +133,23 @@ const getContextEnvVariables = () => {
   return crusherContextEnvMap;
 };
 
-const runTests = async (host: string | undefined) => {
+const getTestIdsArr = (testIds?: string) => {
+  if(!testIds) return null;
+
+  return testIds.split(",");
+}
+const getTestGroupArr = (testGroups?: string) => {
+  if(!testGroups) return null;
+  return testGroups.split(",");
+}
+
+const runTests = async (host: string | undefined, testIds?: string, testGroups?: string) => {
   const userInfo = getUserInfo();
   const projectConifg = getProjectConfig();
 
+  const testIdsArr = getTestIdsArr(testIds);
+  const testGroupsArr = getTestGroupArr(testGroups);
+  
   await cli.action.start("Running tests now");
 
   try {
