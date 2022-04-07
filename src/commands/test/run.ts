@@ -8,6 +8,7 @@ import { getUserInfo } from "../../state/userInfo";
 import localTunnel from "localtunnel";
 import { createTunnel } from "../../utils/setup";
 import { Cloudflare } from "../../module/cloudflare";
+import { BROWSERS_MAP, BROWSER_ARR } from "../../constants";
 
 const program = new Command();
 program.addHelpText(
@@ -63,10 +64,14 @@ export default class CommandBase {
       await Cloudflare.runTunnel();
     }
 
-    const { testId, testGroup } = flags;
+    const { testId, testGroup, browser } = flags;
+    let _browsers = undefined;
+    if(browser){
+      _browsers = browser.split(",").map(b => b.trim().toUpperCase()).filter(b => !!BROWSERS_MAP[b]);
+    }
 
     try {
-      await runTests(host, testId, testGroup);
+      await runTests(host, _browsers, testId, testGroup);
     } catch (err) {
     } finally {
 

@@ -143,7 +143,7 @@ const getTestGroupArr = (testGroups?: string) => {
   return testGroups.split(",");
 }
 
-const runTests = async (host: string | undefined, testIds?: string, testGroups?: string) => {
+const runTests = async (host: string | undefined, browsers: Array<"CHROME" | "FIREFOX" | "SAFARI"> = ["CHROME"], testIds?: string, testGroups?: string) => {
   const userInfo = getUserInfo();
   const projectConifg = getProjectConfig();
 
@@ -158,6 +158,7 @@ const runTests = async (host: string | undefined, testIds?: string, testGroups?:
       ),
       {
         host: host,
+        browsers: browsers,
         context: context,
         testIds: testIds,
         testGroups: testGroups,

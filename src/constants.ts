@@ -36,3 +36,5 @@ export const getRecorderBuildForPlatfrom = () => {
 
   throw new Error("Recorder not available for your platfrom yet");
 };
+
+export const BROWSERS_MAP = {"CHROME": 1, "FIREFOX": 1, "SAFARI": 1};
