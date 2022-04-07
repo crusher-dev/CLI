@@ -147,9 +147,6 @@ const runTests = async (host: string | undefined, testIds?: string, testGroups?:
   const userInfo = getUserInfo();
   const projectConifg = getProjectConfig();
 
-  const testIdsArr = getTestIdsArr(testIds);
-  const testGroupsArr = getTestGroupArr(testGroups);
-  
   await cli.action.start("Running tests now");
 
   try {
@@ -162,6 +159,8 @@ const runTests = async (host: string | undefined, testIds?: string, testGroups?:
       {
         host: host,
         context: context,
+        testIds: testIds,
+        testGroups: testGroups,
       },
       {
         headers: {
