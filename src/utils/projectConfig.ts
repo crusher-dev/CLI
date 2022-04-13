@@ -36,7 +36,7 @@ export const setProjectConfig = (config) => {
   createDirIfNotExist(".crusher");
   fs.writeFileSync(
     path.resolve(PROJECT_CONFIG_PATH, "./config.js"),
-    `module.exports = {\n ${JSON.stringify(config, null, 2)} \n}`
+    `module.exports = ${JSON.stringify(config, null, 2)}`
   );
 };
 
