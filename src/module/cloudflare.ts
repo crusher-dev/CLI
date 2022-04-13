@@ -5,6 +5,8 @@ import { execSync } from "child_process";
 import path from "path";
 import { getProjectConfig } from "../utils/projectConfig";
 import { getAppConfig } from "../utils/appConfig";
+import axios from "axios";
+
 import { CLOUDFLARED_URL } from "../constants";
 
 var { spawn, exec } = require("child_process");
@@ -67,8 +69,9 @@ export class Cloudflare {
       }
 
       var data = getProjectConfig().proxy;
-      const status = {};
-      const tunnelPromises = data.map(({ name, url }) => {
+
+      const resultTunnelMap = {};
+      const tunnelPromises = data.map(({ name, url, intercept }) => {
         return new Promise((res, rej) => {
           var spann;
           try {
@@ -84,19 +87,23 @@ export class Cloudflare {
           }
 
           spann.stdout.on("data", function (msg) {
-            console.log(msg.toString());
           });
           spann.stderr.on("data", function (msg) {
             const msgInString = msg.toString();
-             console.log(msgInString)
             if (msgInString.includes("trycloudflare")) {
               const regex = /https.*trycloudflare.com/g;
               const found = msgInString.match(regex);
               if (!!found) {
-                status[name] = { url: found };
+                resultTunnelMap[name] = {
+                  tunnel: found[0],
+                  intercept: null
+                }; 
+                if(intercept) {
+                  if(intercept instanceof RegExp) resultTunnelMap[name].intercept =  { regex: (intercept as RegExp).toString()};
+                  else resultTunnelMap[name].intercept = intercept;
+                }
 
-                res("One tunnel created");
-                console.log(`${name} - ${url} is ${found}`);
+                res("Found tunnel");
               }
             }
           });
@@ -104,8 +111,37 @@ export class Cloudflare {
       });
 
       await Promise.all(tunnelPromises);
+      const proxyKeys = Object.keys(resultTunnelMap);
 
-       resolve("Tunnels live");
+      // Wait until tunnel is reachable using axios
+      await Promise.all(proxyKeys.map((proxyKey)=> {
+        const tunnel = resultTunnelMap[proxyKey].tunnel;
+        console.log("Tunnel is", `"${tunnel}"`);
+
+        return new Promise((res, rej) => {
+          const interval = setInterval(async () => {
+            try {
+              const tunnelUrl = new URL(tunnel);
+              tunnelUrl.searchParams.append("random_blabla", Date.now().toString());
+              const response = await axios.get(`https://dev--test.crusherdev.autocode.gg/tech/?url=${tunnelUrl.toString()}`);
+              if(response && response.data && response.data.status < 500) {
+                res("Tunnel is reachable");
+                clearInterval(interval);
+              }
+            } catch (e) {
+             if(e.response.status < 500) {
+              clearInterval(interval);
+              res("Tunnel is reachable");
+             } else {
+               console.log(`[${proxyKey}]: Error `, e.message);
+             }
+            }
+          }, 5000);
+        });
+      }))
+      
+      console.log("results tunnel", resultTunnelMap);
+      resolve(resultTunnelMap);
     });
   }
 }

@@ -35,17 +35,22 @@ const PROJECT_CONFIG_PATH = path.resolve(process.cwd(), ".crusher");
 export const setProjectConfig = (config) => {
   createDirIfNotExist(".crusher");
   fs.writeFileSync(
-    path.resolve(PROJECT_CONFIG_PATH, "./config.json"),
-    JSON.stringify(config, null, 2)
+    path.resolve(PROJECT_CONFIG_PATH, "./config.js"),
+    `module.exports = {\n ${JSON.stringify(config, null, 2)} \n}`
   );
 };
 
 export const getProjectConfig = () => {
   const existingProjectConfig = findCrusherProjectConfig();
   const configPath = existingProjectConfig || PROJECT_CONFIG_PATH;
-  return fs.existsSync(configPath)
-    ? JSON.parse(
-        fs.readFileSync(path.resolve(configPath, "./config.json"), "utf8")
-      )
-    : null;
+  if(!fs.existsSync(configPath)) return null;
+
+  if(fs.existsSync(path.resolve(configPath, "./config.js"))) {
+    return require(path.resolve(configPath, "./config.js"));
+  } else {
+    // Legacy
+    return JSON.parse(fs.readFileSync(path.resolve(configPath, "./config.json"), "utf8"));
+  }
+ 
+  return null;
 };

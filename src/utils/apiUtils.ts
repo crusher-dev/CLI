@@ -143,7 +143,7 @@ const getTestGroupArr = (testGroups?: string) => {
   return testGroups.split(",");
 }
 
-const runTests = async (host: string | undefined, browsers: Array<"CHROME" | "FIREFOX" | "SAFARI"> = ["CHROME"], testIds?: string, testGroups?: string) => {
+const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string] : {tunnel: string; intercept: any} } = {}, browsers: Array<"CHROME" | "FIREFOX" | "SAFARI"> = ["CHROME"], testIds?: string, testGroups?: string) => {
   const userInfo = getUserInfo();
   const projectConifg = getProjectConfig();
 
@@ -158,6 +158,7 @@ const runTests = async (host: string | undefined, browsers: Array<"CHROME" | "FI
       ),
       {
         host: host,
+        proxyUrlsMap: proxyUrlsMap,
         browsers: browsers,
         context: context,
         testIds: testIds,
@@ -212,6 +213,7 @@ const runTests = async (host: string | undefined, browsers: Array<"CHROME" | "FI
       }, 5000);
     });
   } catch (err: any) {
+    console.error(err);
     await cli.action.stop(err.message);
   }
 };

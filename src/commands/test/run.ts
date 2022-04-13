@@ -8,7 +8,7 @@ import { getUserInfo } from "../../state/userInfo";
 import localTunnel from "localtunnel";
 import { createTunnel } from "../../utils/setup";
 import { Cloudflare } from "../../module/cloudflare";
-import { BROWSERS_MAP, BROWSER_ARR } from "../../constants";
+import { BROWSERS_MAP } from "../../constants";
 
 const program = new Command();
 program.addHelpText(
@@ -59,9 +59,9 @@ export default class CommandBase {
     const projectConfig = getProjectConfig();
     let host: string | undefined = undefined;
 
-
+    let proxyUrls = null;
     if (!!projectConfig.proxy && projectConfig.proxy.length > 0) {
-      await Cloudflare.runTunnel();
+      proxyUrls = await Cloudflare.runTunnel();
     }
 
     const { testId, testGroup, browser } = flags;
@@ -71,8 +71,9 @@ export default class CommandBase {
     }
 
     try {
-      await runTests(host, _browsers, testId, testGroup);
+      await runTests(host, proxyUrls, _browsers, testId, testGroup);
     } catch (err) {
+      console.error("Error is", err);
     } finally {
 
     }
