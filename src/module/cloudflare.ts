@@ -87,9 +87,11 @@ export class Cloudflare {
           }
 
           spann.stdout.on("data", function (msg) {
+            console.log(`[${name}]: `, msg);
           });
           spann.stderr.on("data", function (msg) {
             const msgInString = msg.toString();
+            console.log(`[${name}]: `, msgInString);
             if (msgInString.includes("trycloudflare")) {
               const regex = /https.*trycloudflare.com/g;
               const found = msgInString.match(regex);
@@ -97,7 +99,7 @@ export class Cloudflare {
                 resultTunnelMap[name] = {
                   tunnel: found[0],
                   intercept: null
-                }; 
+                };
                 if(intercept) {
                   if(intercept instanceof RegExp) resultTunnelMap[name].intercept =  { regex: (intercept as RegExp).toString()};
                   else resultTunnelMap[name].intercept = intercept;
@@ -124,7 +126,7 @@ export class Cloudflare {
               const tunnelUrl = new URL(tunnel);
               tunnelUrl.searchParams.append("random_blabla", Date.now().toString());
               const response = await axios.get(`https://dev--test.crusherdev.autocode.gg/tech/?url=${tunnelUrl.toString()}`);
-              if(response && response.data && response.data.status < 500) {
+              if(response && response.data && response.data.status && response.data.status < 500) {
                 res("Tunnel is reachable");
                 clearInterval(interval);
               }
@@ -139,7 +141,7 @@ export class Cloudflare {
           }, 5000);
         });
       }))
-      
+
       console.log("results tunnel", resultTunnelMap);
       resolve(resultTunnelMap);
     });
