@@ -131,12 +131,7 @@ export class Cloudflare {
                 clearInterval(interval);
               }
             } catch (e) {
-             if(e.response.status < 500) {
-              clearInterval(interval);
-              res("Tunnel is reachable");
-             } else {
-               console.log(`[${proxyKey}]: Error `, e.message);
-             }
+              console.log(e.message);
             }
           }, 5000);
         });
