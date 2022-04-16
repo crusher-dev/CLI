@@ -189,7 +189,7 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
       const poll = setInterval(async () => {
         const res = await axios.get(
           resolveBackendServerUrl(
-            `/projects/${projectConifg.project}/builds?buildId=${buildId}`
+            `/projects/${_projectId}/builds?buildId=${buildId}`
           ),
           {
             headers: {
