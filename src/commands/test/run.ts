@@ -45,15 +45,15 @@ export default class CommandBase {
 
     await loadUserInfoOnLoad({ token });
 
-    await this.makeSureSetupIsCorrect();
+    await this.makeSureSetupIsCorrect(options);
     await this.runTests(options);
   }
 
-  async makeSureSetupIsCorrect() {
+  async makeSureSetupIsCorrect(options) {
     const userInfo = getUserInfo();
     const projectConfig = getProjectConfig();
 
-    if (!projectConfig)
+    if (!projectConfig && !(options.token && options.projectID))
       throw new Error(
         "Crusher not intialized in this repo. Run 'crusher-cli init' to initialize."
       );
