@@ -82,7 +82,7 @@ export default class CommandBase {
     }
 
     try {
-      await runTests(host, proxyUrls, _browsers, testId, testGroup);
+      await runTests(host, proxyUrls, _browsers, testId, testGroup, flags.projectID || null );
     } catch (err) {
       console.error("Error is", err);
     } finally {
