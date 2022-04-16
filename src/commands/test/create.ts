@@ -32,6 +32,7 @@ program.addHelpText(
 program
   .option("-p, --port <number>", "port number")
   .option("-t, --token <string>", "Crusher user token")
+  .option("-pID, --projectID <string>", "Crusher project ID")
   .parse(process.argv);
 
 export default class CommandBase {
@@ -61,7 +62,7 @@ export default class CommandBase {
 
     await loadUserInfoOnLoad({ token: token });
     await installCrusherRecorder();
-    await makeSureSetupIsCorrect();
+    await makeSureSetupIsCorrect(this.options.projectID);
 
     await this.createTest(this.options);
   }
@@ -83,8 +84,8 @@ export default class CommandBase {
         `${resolvePathToAppDirectory(
           'bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"'
         )} --no-sandbox --exit-on-save --projectId=${
-          projectConfig.project
-        } --token=${userInfo?.token}`,
+          flags.projectID ? flags.projectID : projectConfig.project
+        } --token=${ flags.token ? flags.token : userInfo?.token}`,
         { stdio: "ignore" }
       );
     } else {
@@ -92,8 +93,8 @@ export default class CommandBase {
         `${resolvePathToAppDirectory(
           "bin/electron-app"
         )} --no-sandbox --exit-on-save --projectId=${
-          projectConfig.project
-        } --token=${userInfo?.token}`,
+          flags.projectID ? flags.projectID : projectConfig.project
+        } --token=${flags.token ? flags.token : userInfo?.token}`,
         { stdio: "ignore" }
       );
     }

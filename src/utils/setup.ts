@@ -16,57 +16,64 @@ import { getProjectNameFromGitInfo } from "./index";
 import { getAppConfig, setAppConfig } from "../utils/appConfig";
 import { downloadFile } from "./common";
 
-export async function makeSureSetupIsCorrect() {
+export async function makeSureSetupIsCorrect(projectId: string | null = null) {
   const projectConfig = getProjectConfig();
 
   if (!projectConfig) {
     const projectConfig: any = { backend: resolveBackendServerUrl("") };
-    const projects = await getProjectsOfCurrentUser();
-    const suggestedProjectName = await getProjectNameFromGitInfo();
-
-    if (!suggestedProjectName) {
-      const projectRes = await inquirer.prompt([
-        {
-          name: "project",
-          message: "Select your crusher project:",
-          type: "list",
-          choices: [
-            { name: "Create new project", value: "new" },
-            ...projects.map((p) => ({
-              name: p.name,
-              value: p.id,
-            })),
-          ],
-          default: projects[0].id,
-        },
-      ]);
-
-      let projectId = (projectRes as any).project;
-      if (projectId === "new") {
-        const projectName = await inquirer.prompt([
-          {
-            name: "projectName",
-            message: "Enter project name:",
-            type: "input",
-          },
-        ]);
-
-        const project = await createProject(projectName.projectName);
-        projectId = project.id;
-      }
+    if (projectId) {
       projectConfig.project = projectId;
-
       setProjectConfig({
         ...projectConfig,
       });
     } else {
-      const projectRecord = await createProject(suggestedProjectName);
-      console.log(`Selecting project ${projectRecord.name} by default`);
-      projectConfig.project = projectRecord.id;
+      const projects = await getProjectsOfCurrentUser();
+      const suggestedProjectName = await getProjectNameFromGitInfo();
 
-      setProjectConfig({
-        ...projectConfig,
-      });
+      if (!suggestedProjectName) {
+        const projectRes = await inquirer.prompt([
+          {
+            name: "project",
+            message: "Select your crusher project:",
+            type: "list",
+            choices: [
+              { name: "Create new project", value: "new" },
+              ...projects.map((p) => ({
+                name: p.name,
+                value: p.id,
+              })),
+            ],
+            default: projects[0].id,
+          },
+        ]);
+
+        let projectId = (projectRes as any).project;
+        if (projectId === "new") {
+          const projectName = await inquirer.prompt([
+            {
+              name: "projectName",
+              message: "Enter project name:",
+              type: "input",
+            },
+          ]);
+
+          const project = await createProject(projectName.projectName);
+          projectId = project.id;
+        }
+        projectConfig.project = projectId;
+
+        setProjectConfig({
+          ...projectConfig,
+        });
+      } else {
+        const projectRecord = await createProject(suggestedProjectName);
+        console.log(`Selecting project ${projectRecord.name} by default`);
+        projectConfig.project = projectRecord.id;
+
+        setProjectConfig({
+          ...projectConfig,
+        });
+      }
     }
   }
 
