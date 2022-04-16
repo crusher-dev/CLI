@@ -143,10 +143,16 @@ const getTestGroupArr = (testGroups?: string) => {
   return testGroups.split(",");
 }
 
-const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string] : {tunnel: string; intercept: any} } = {}, browsers: Array<"CHROME" | "FIREFOX" | "SAFARI"> = ["CHROME"], testIds?: string, testGroups?: string) => {
+const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string] : {tunnel: string; intercept: any} } = {}, browsers: Array<"CHROME" | "FIREFOX" | "SAFARI"> = ["CHROME"], testIds?: string, testGroups?: string, projectId?: any) => {
   const userInfo = getUserInfo();
-  const projectConifg = getProjectConfig();
+  let _projectId = null;
 
+  if (projectId) {
+    _projectId = projectId;
+  } else {
+    const projectConfig = getProjectConfig();
+    _projectId = projectConfig.project;
+  }
   await cli.action.start("Running tests now");
 
   try {
@@ -154,7 +160,7 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
 
     const res = await axios.post(
       resolveBackendServerUrl(
-        `/projects/${projectConifg.project}/tests/actions/run`
+        `/projects/${_projectId}/tests/actions/run`
       ),
       {
         host: host,

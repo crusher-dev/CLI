@@ -17,7 +17,11 @@ program.addHelpText(
     Example call:
       $ custom-help --help`
 );
-program.parse(process.argv);
+program
+  .option("-t, --token <string>", "Crusher user token")
+  .option("-pID, --projectID <string>", "Crusher project ID")
+  .option("-b, --browsers <string>", "Browsers to run test on")
+  .parse(process.argv);
 
 export default class CommandBase {
   constructor() {
@@ -60,11 +64,18 @@ export default class CommandBase {
     let host: string | undefined = undefined;
 
     let proxyUrls = null;
-    if (!!projectConfig.proxy && projectConfig.proxy.length > 0) {
+    if (projectConfig && !!projectConfig.proxy && projectConfig.proxy.length > 0) {
       proxyUrls = await Cloudflare.runTunnel();
     }
 
-    const { testId, testGroup, browser } = flags;
+    const { testId, testGroup, browser, token } = flags;
+    if (token) {
+      try {
+        await loadUserInfoOnLoad({ token });
+      } catch (ex) {
+        throw new Error("Invalid token");
+      }
+    }
     let _browsers = undefined;
     if(browser){
       _browsers = browser.split(",").map(b => b.trim().toUpperCase()).filter(b => !!BROWSERS_MAP[b]);
