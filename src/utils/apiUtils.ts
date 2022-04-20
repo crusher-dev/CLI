@@ -158,12 +158,21 @@ const runTests = async (host: string | undefined, proxyUrlsMap: { [name: string]
   try {
     const context = getContextEnvVariables();
 
+    let gitPayload:any = { host: null };
+    if (process.env.VERCEL_ENV) {
+      gitPayload = {
+        githubRepoName: `${process.env.VERCEL_GIT_REPO_OWNER}/${process.env.VERCEL_GIT_REPO_SLUG}`,
+        githubCommitId: process.env.VERCEL_GIT_COMMIT_SHA,
+        host: process.env.VERCEL_URL,
+      }
+    }
     const res = await axios.post(
       resolveBackendServerUrl(
         `/projects/${_projectId}/tests/actions/run`
       ),
       {
-        host: host,
+        ...gitPayload,
+        host: host ? host : gitPayload.host,
         proxyUrlsMap: proxyUrlsMap,
         browsers: browsers,
         context: context,
