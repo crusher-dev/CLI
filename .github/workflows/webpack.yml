@@ -1,0 +1,44 @@
+name: NodeJS with Webpack
+
+on:
+  push:
+    branches: [ master ]
+    
+jobs:
+  build:
+    if: contains(github.event.head_commit.message, '(release)')
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Use Node.js 14.17.0
+      uses: actions/setup-node@v3
+      with:
+        node-version: 14.17.0
+        registry-url: 'https://registry.npmjs.org'
+
+    - name: Install yarn
+      run: npm install -g yarn
+
+    - name: Use cache for yarn if available
+      uses: c-hive/gha-yarn-cache@v1
+
+    - name: Install crusher modules
+      run: yarn
+      
+    - name: Update to new version
+      run: npm version patch
+
+    - name: Build crusher-cli
+      run: yarn webpack
+      
+    - name: Publish the npm package
+      run: npm publish
+      env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+    - name: Update upgrade commit
+      run: git push
+      
+          
