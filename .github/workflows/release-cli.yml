@@ -36,7 +36,7 @@ jobs:
       run: yarn webpack
 
     - name: Publish the npm package
-      run: npm publish
+      run: cd dist && npm publish
       env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
