@@ -1,0 +1,27 @@
+name: Build CLI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v2.1.4
+        with:
+          node-version: 14.15.4
+
+      - name: Install yarn
+        run: npm install -g yarn
+
+      - name: Use cache for yarn if available
+        uses: c-hive/gha-yarn-cache@v1
+
+      - name: Install crusher modules
+        run: yarn
+
+      - name: Build crusher-cli
+        run: yarn webpack
