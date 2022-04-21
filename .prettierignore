@@ -1,6 +1,0 @@
-binaries/
-lib/
-node_modules/
-yarn.lock
-.prettierignore
-.gitignore
