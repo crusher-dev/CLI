@@ -42,9 +42,9 @@ export const setProjectConfig = (config) => {
 
 export const getProjectConfig = () => {
   const existingProjectConfig = findCrusherProjectConfig();
-  const configPath = existingProjectConfig || PROJECT_CONFIG_PATH;
+  const configPath = path.resolve(existingProjectConfig || PROJECT_CONFIG_PATH, "./config.json");
   if(!fs.existsSync(configPath)) return null;
 
 
-  return JSON.parse(fs.readFileSync(path.resolve(configPath, "./config.json"), "utf8"));
+  return JSON.parse(fs.readFileSync(configPath, "utf8"));
 };
