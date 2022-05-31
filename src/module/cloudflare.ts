@@ -127,8 +127,11 @@ export class Cloudflare {
               tunnelUrl.searchParams.append("random_blabla", Date.now().toString());
               const response = await axios.get(`https://dev--test.crusherdev.autocode.gg/tech/?url=${tunnelUrl.toString()}`);
               if(response && response.data && response.data.status && response.data.status < 500) {
+                // console.log("Tunnel is reachable", response.data.status);
                 res("Tunnel is reachable");
                 clearInterval(interval);
+              } else {
+                // console.log("Tunnel is not reachable", response.data.status);
               }
             } catch (e) {
               console.log(e.message);
