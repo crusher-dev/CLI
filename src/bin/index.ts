@@ -1,4 +1,8 @@
+import { execSync } from "child_process";
 import EntryCommand from "../commands/index";
+import { loadUserInfoOnLoad } from "../utils/hooks";
+import { installCrusherRecorder } from "../utils/setup";
+import { resolvePathToAppDirectory } from "../utils/utils";
 
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
 
@@ -7,8 +11,32 @@ if (parseFloat(nodeVersion) >= 10.0) {
   const helpArgs = ["-h", "--h", "help", "--help", "-help"];
 
   if (args.length === 0 || helpArgs.includes(args[0])) {
-    console.log("Choose a command to run");
-    new EntryCommand().help();
+    // console.log("Choose a command to run");
+    // new EntryCommand().help();
+
+    new Promise(async() => {
+      // @Todo: Add support for flag token here
+      await loadUserInfoOnLoad({token: undefined});
+      await installCrusherRecorder();
+
+      if (process.platform === "darwin") {
+        execSync(
+          `${resolvePathToAppDirectory(
+            'bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"'
+          )} --no-sandbox --exit-on-save`,
+          { stdio: "ignore" }
+        );
+      } else {
+        execSync(
+          `${resolvePathToAppDirectory(
+            "bin/electron-app"
+          )} --open-recorder --no-sandbox --exit-on-save`,
+          { stdio: "ignore" }
+        );
+      }
+      
+    })
+
   } else {
     new EntryCommand().run();
   }
