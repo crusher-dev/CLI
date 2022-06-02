@@ -23,14 +23,14 @@ if (parseFloat(nodeVersion) >= 10.0) {
         execSync(
           `${resolvePathToAppDirectory(
             'bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"'
-          )} --no-sandbox --exit-on-save`,
+          )} --no-sandbox`,
           { stdio: "ignore" }
         );
       } else {
         execSync(
           `${resolvePathToAppDirectory(
             "bin/electron-app"
-          )} --open-recorder --no-sandbox --exit-on-save`,
+          )} --no-sandbox`,
           { stdio: "ignore" }
         );
       }
