@@ -83,7 +83,7 @@ export default class CommandBase {
       execSync(
         `${resolvePathToAppDirectory(
           'bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"'
-        )} --no-sandbox --exit-on-save --projectId=${
+        )} --open-recorder --no-sandbox --exit-on-save --projectId=${
           flags.projectID ? flags.projectID : projectConfig.project
         } --token=${ flags.token ? flags.token : userInfo?.token}`,
         { stdio: "ignore" }
@@ -92,7 +92,7 @@ export default class CommandBase {
       execSync(
         `${resolvePathToAppDirectory(
           "bin/electron-app"
-        )} --no-sandbox --exit-on-save --projectId=${
+        )} --open-recorder --no-sandbox --exit-on-save --projectId=${
           flags.projectID ? flags.projectID : projectConfig.project
         } --token=${flags.token ? flags.token : userInfo?.token}`,
         { stdio: "ignore" }
