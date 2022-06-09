@@ -4,7 +4,7 @@ import {
   BACKEND_SERVER_URL,
   FRONTEND_SERVER_URL,
 } from "../constants";
-import { exec } from "child_process";
+import { exec, execSync } from "child_process";
 import * as fs from "fs";
 import * as url from "url";
 import * as path from "path";
@@ -153,4 +153,18 @@ export const resolvePathToAppDirectory = (relativePath): string => {
 
 export const resolvePathToDownloadDirectory = (relativePath): string => {
   return path.resolve(APP_DIRECTORY, relativePath);
+};
+
+
+// See https://developer.apple.com/documentation/apple-silicon/about-the-rosetta-translation-environment.
+export const getIsArm = () => {
+  try {
+    const isCurrentlyTranslated = execSync('sysctl sysctl.proc_translated', { stdio: 'pipe' });
+
+    return true;
+  } catch (e) {
+    // On non-ARM macs `sysctl sysctl.proc_translated` throws with
+    // sysctl: unknown oid 'sysctl.proc_translated'
+    return false;
+  }
 };

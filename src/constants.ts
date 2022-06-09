@@ -1,5 +1,6 @@
 import * as path from "path";
-import { getRuntimeEnv } from "./utils/utils";
+import { execSync } from "child_process";
+import { getIsArm, getRuntimeEnv } from "./utils/utils";
 
 export const BACKEND_SERVER_URL = "https://backend.crusher.dev";
 export const FRONTEND_SERVER_URL = "https://app.crusher.dev";
@@ -10,7 +11,8 @@ export const APP_DIRECTORY =
 
 export const recorderVersion = `1.0.30`;
 
-export const RECORDER_MAC_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac.zip`;
+export const RECORDER_MAC_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-x64.zip`;
+export const RECORDER_MAC_ARM64_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-arm64.zip`;
 export const RECORDER_LINUX_BUILd = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-linux.zip`;
 
 
@@ -26,13 +28,16 @@ export const getRecorderBuildForPlatfrom = () => {
       platform: "linux",
       version: RECORDER_LINUX_BUILd.split("/").reverse()[1],
     };
-  if (process.platform === "darwin")
+  if (process.platform === "darwin") {
+    const buildUrl = getIsArm() ? RECORDER_MAC_ARM64_BUILD : RECORDER_MAC_BUILD;
     return {
-      url: RECORDER_MAC_BUILD,
+      url: buildUrl,
       name: path.basename(RECORDER_MAC_BUILD),
       platform: "mac",
       version: RECORDER_MAC_BUILD.split("/").reverse()[1],
     };
+
+  }
 
   throw new Error("Recorder not available for your platfrom yet");
 };
