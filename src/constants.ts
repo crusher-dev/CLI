@@ -15,7 +15,6 @@ export const RECORDER_MAC_BUILD = `https://github.com/crusherdev/crusher-downloa
 export const RECORDER_MAC_ARM64_BUILD = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-mac-arm64.zip`;
 export const RECORDER_LINUX_BUILd = `https://github.com/crusherdev/crusher-downloads/releases/download/v${recorderVersion}/Crusher.Recorder-${recorderVersion}-linux.zip`;
 
-
 export const CLOUDFLARED_URL = {
   MAC: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-darwin-amd64.tgz",
   LINUX: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
