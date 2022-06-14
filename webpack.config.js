@@ -1,18 +1,22 @@
 const path = require("path");
 const glob = require("glob");
 const webpack = require("webpack");
-console.log({
-  entry: glob.sync("./src/**/*.ts").reduce(function (obj, el) {
-    obj[el.replace(".ts", "")] = el;
-    return obj;
-  }, {}),
-});
+console.log( glob.sync("./src/**/*.ts").reduce(function (obj, el) {
+  obj[el.replace(".ts", "")] = {
+    import: el,
+    dependOn: "shared",
+  };
+  return obj;
+}, {shared: "cli-ux"}));
 module.exports = {
   mode: "production",
   entry: glob.sync("./src/**/*.ts").reduce(function (obj, el) {
-    obj[el.replace(".ts", "")] = el;
+    obj[el.replace(".ts", "")] = {
+      import: el,
+      dependOn: "./src/shared",
+    };
     return obj;
-  }, {}),
+  }, {"./src/shared": "cli-ux"}),
   node: {
     __dirname: false,
   },
@@ -42,4 +46,5 @@ module.exports = {
       },
     }),
   ],
+  externals: ["iconv-lite"]
 };

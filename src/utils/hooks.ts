@@ -7,9 +7,6 @@ import {
 } from "../utils/utils";
 import axios from "axios";
 import cli from "cli-ux";
-import fastify from "fastify";
-
-const fast = fastify({ logger: false });
 
 const waitForUserLogin = async (): Promise<string> => {
   const loginKey = await axios

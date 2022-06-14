@@ -1,6 +1,7 @@
 import { execSync } from "child_process";
 import EntryCommand from "../commands/index";
 import { loadUserInfoOnLoad } from "../utils/hooks";
+import { getProjectConfig, getProjectConfigPath } from "../utils/projectConfig";
 import { installCrusherRecorder } from "../utils/setup";
 import { resolvePathToAppDirectory } from "../utils/utils";
 
@@ -18,19 +19,27 @@ if (parseFloat(nodeVersion) >= 10.0) {
       // @Todo: Add support for flag token here
       await loadUserInfoOnLoad({token: undefined});
       await installCrusherRecorder();
+      const projectConfigPath = getProjectConfigPath();
+      const projectConfig = getProjectConfig();
+      
+      const customFlags = projectConfig && projectConfig.project ? `--project-config-file=${projectConfigPath} --projectId=${projectConfig.project}` : "";
 
       if (process.platform === "darwin") {
+        // `/Users/utkarsh/Desktop/crusher/new-crusher/packages/electron-app/bin/darwin-x64/Electron.app/Contents/MacOS/Electron /Users/utkarsh/Desktop/crusher/new-crusher/output/crusher-electron-app` ||
+        const binPath = resolvePathToAppDirectory(
+          'bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"'
+        );
+
+        console.log("Custom flags are", customFlags);
         execSync(
-          `${resolvePathToAppDirectory(
-            'bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"'
-          )} --no-sandbox`,
+          `${binPath} ${customFlags} --no-sandbox`,
           { stdio: "ignore" }
         );
       } else {
         execSync(
           `${resolvePathToAppDirectory(
             "bin/electron-app"
-          )} --no-sandbox`,
+          )} ${customFlags} --no-sandbox`,
           { stdio: "ignore" }
         );
       }

@@ -4,7 +4,7 @@ import { loadUserInfoOnLoad } from "../../utils/hooks";
 import { getUserInfo } from "../../state/userInfo";
 import { resolvePathToAppDirectory } from "../../utils/utils";
 import cli from "cli-ux";
-import { getProjectConfig } from "../../utils/projectConfig";
+import { getProjectConfig, getProjectConfigPath } from "../../utils/projectConfig";
 import { execSync } from "child_process";
 import localTunnel from "localtunnel";
 import chalk from "chalk";
@@ -79,11 +79,15 @@ export default class CommandBase {
 
     const projectConfig = getProjectConfig();
     const userInfo = getUserInfo();
+    const projectConfigPath = getProjectConfigPath();
+    
+    const customFlags = projectConfig && projectConfig.project ? `--project-config-file=${projectConfigPath}` : "";
+
     if (process.platform === "darwin") {
       execSync(
         `${resolvePathToAppDirectory(
           'bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"'
-        )} --open-recorder --no-sandbox --exit-on-save --projectId=${
+        )} --open-recorder ${customFlags} --no-sandbox --exit-on-save --projectId=${
           flags.projectID ? flags.projectID : projectConfig.project
         } --token=${ flags.token ? flags.token : userInfo?.token}`,
         { stdio: "ignore" }
@@ -92,7 +96,7 @@ export default class CommandBase {
       execSync(
         `${resolvePathToAppDirectory(
           "bin/electron-app"
-        )} --open-recorder --no-sandbox --exit-on-save --projectId=${
+        )} --open-recorder ${customFlags} --no-sandbox --exit-on-save --projectId=${
           flags.projectID ? flags.projectID : projectConfig.project
         } --token=${flags.token ? flags.token : userInfo?.token}`,
         { stdio: "ignore" }

@@ -60,7 +60,7 @@ export class Cloudflare {
     await setupCloudflare();
   }
 
-  static runTunnel() {
+  static runTunnel(config: any | null = null) {
     return new Promise(async (resolve, rej) => {
       const cloudflareDFile = resolvePathToAppDirectory("bin/cloudflared");
       if (!fs.existsSync(cloudflareDFile)) {
@@ -68,7 +68,8 @@ export class Cloudflare {
         await Cloudflare.install();
       }
 
-      var data = getProjectConfig().proxy;
+      const projectConfig = config || getProjectConfig();
+      var data = projectConfig.proxy;
 
       const resultTunnelMap = {};
       const tunnelPromises = data.map(({ name, url, intercept }) => {
@@ -137,7 +138,7 @@ export class Cloudflare {
         });
       }))
 
-      console.log("results tunnel", resultTunnelMap);
+      console.log("results tunnel", JSON.stringify(resultTunnelMap));
       resolve(resultTunnelMap);
     });
   }

@@ -40,9 +40,16 @@ export const setProjectConfig = (config) => {
   );
 };
 
-export const getProjectConfig = () => {
+export const getProjectConfigPath = () => {
   const existingProjectConfig = findCrusherProjectConfig();
   const configPath = path.resolve(existingProjectConfig || PROJECT_CONFIG_PATH, "./config.json");
+  if(!fs.existsSync(configPath)) return null;
+
+  return configPath;
+}
+
+export const getProjectConfig = () => {
+  const configPath = getProjectConfigPath();
   if(!fs.existsSync(configPath)) return null;
 
 
