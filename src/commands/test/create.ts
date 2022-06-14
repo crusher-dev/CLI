@@ -2,7 +2,7 @@ import { Command } from "commander";
 
 import { loadUserInfoOnLoad } from "../../utils/hooks";
 import { getUserInfo } from "../../state/userInfo";
-import { resolvePathToAppDirectory } from "../../utils/utils";
+import { getRecorderDistCommand, resolvePathToAppDirectory } from "../../utils/utils";
 import cli from "cli-ux";
 import { getProjectConfig, getProjectConfigPath } from "../../utils/projectConfig";
 import { execSync } from "child_process";
@@ -82,26 +82,10 @@ export default class CommandBase {
     const projectConfigPath = getProjectConfigPath();
     
     const customFlags = projectConfig && projectConfig.project ? `--project-config-file=${projectConfigPath}` : "";
-
-    if (process.platform === "darwin") {
-      execSync(
-        `${resolvePathToAppDirectory(
-          'bin/"Crusher Recorder.app"/Contents/MacOS/"Crusher Recorder"'
-        )} --open-recorder ${customFlags} --no-sandbox --exit-on-save --projectId=${
-          flags.projectID ? flags.projectID : projectConfig.project
-        } --token=${ flags.token ? flags.token : userInfo?.token}`,
-        { stdio: "ignore" }
-      );
-    } else {
-      execSync(
-        `${resolvePathToAppDirectory(
-          "bin/electron-app"
-        )} --open-recorder ${customFlags} --no-sandbox --exit-on-save --projectId=${
-          flags.projectID ? flags.projectID : projectConfig.project
-        } --token=${flags.token ? flags.token : userInfo?.token}`,
-        { stdio: "ignore" }
-      );
-    }
+    const projectId = flags.projectID ? flags.projectID : projectConfig.project;
+    const userToken = flags.token ? flags.token : userInfo?.token;
+  
+    execSync(`${getRecorderDistCommand()} ${customFlags} --no-sandbox --open-recorder --projectId=${projectId} --token=${userToken}`, {stdio: "ignore"});
 
     cli.log("Created your test. Few command that might be helpful\n");
     cli.log("1.) Run all tests in your project");
