@@ -1,6 +1,8 @@
 const path = require("path");
 const glob = require("glob");
 const webpack = require("webpack");
+const { FixSharedOutputPlugin } = require("./webpack/plugins/fixShardOutput");
+
 console.log( glob.sync("./src/**/*.ts").reduce(function (obj, el) {
   obj[el.replace(".ts", "")] = {
     import: el,
@@ -45,6 +47,7 @@ module.exports = {
         NODE_ENV: JSON.stringify("production"),
       },
     }),
+    new FixSharedOutputPlugin(),
   ],
   externals: ["iconv-lite"]
 };
