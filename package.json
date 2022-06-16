@@ -35,7 +35,8 @@
     "test:coverage": "jest --coverage",
     "report:coverage": "npm run test:coverage && codecov",
     "semantic-release": "semantic-release",
-    "webpack": "webpack && cp package.json dist"
+    "webpack": "webpack && node scripts/copyPackageJson.js",
+    "webpack:debug": "PACKAGE_NAME=crusher-debug yarn webpack"
   },
   "bin": {
     "crusher-cli": "./src/bin/index.js"
