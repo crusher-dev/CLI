@@ -15,15 +15,15 @@ if (parseFloat(nodeVersion) >= 10.0) {
     // console.log("Choose a command to run");
     // new EntryCommand().help();
 
-    new Promise(async() => {
+    new Promise(async () => {
+
       // @Todo: Add support for flag token here
       await loadUserInfoOnLoad({token: undefined});
       await installCrusherRecorder();
       const projectConfigPath = getProjectConfigPath();
       const projectConfig = getProjectConfig();
-      
       const customFlags = projectConfig && projectConfig.project ? `--project-config-file=${projectConfigPath} --projectId=${projectConfig.project}` : "";
-      execSync(`${getRecorderDistCommand()} ${customFlags} --no-sandbox`, {stdio: "ignore"});
+      execSync(`${getRecorderDistCommand()} --crusher-cli-path=${eval("__dirname") + "/index.js"} ${customFlags} --no-sandbox`, {stdio: "inherit"});
     })
 
   } else {

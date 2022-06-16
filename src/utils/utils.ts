@@ -171,7 +171,7 @@ export const getIsArm = () => {
 
 /*
   Returns cmd command to run the recorder dist.
-  
+
   Env variables:-
   __DEV_CRUSHER_PROJECT_DIR__
   __DEV__ => Use development binaries (helps with hot-reloading)
@@ -193,7 +193,7 @@ export const getRecorderDistCommand = () => {
       if(useDevelopmentBinary) {
         const arch = "x64";
         const electronDist = path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, `./packages/electron-app/bin/linux-${arch}/electron`);
-        
+
         return `${electronDist} ${path.resolve(getRuntimeEnv().__DEV_CRUSHER_PROJECT_DIR__, './output/crusher-electron-app')}`;
       }
 
