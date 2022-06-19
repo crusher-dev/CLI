@@ -1,5 +1,6 @@
 import { execSync } from "child_process";
 import EntryCommand from "../commands/index";
+import { getProjectNameFromGitInfo } from "../utils";
 import { loadUserInfoOnLoad } from "../utils/hooks";
 import { getProjectConfig, getProjectConfigPath } from "../utils/projectConfig";
 import { installCrusherRecorder } from "../utils/setup";
@@ -22,6 +23,12 @@ if (parseFloat(nodeVersion) >= 10.0) {
       await installCrusherRecorder();
       const projectConfigPath = getProjectConfigPath();
       const projectConfig = getProjectConfig();
+
+      // let noProjectFlags = "";
+      // if (!projectConfig) {
+      //   const suggestedProjectName = await getProjectNameFromGitInfo();
+      //   noProjectFlags = "--suggested-project-name=" + suggestedProjectName;
+      // }
       const customFlags = projectConfig && projectConfig.project ? `--project-config-file=${projectConfigPath} --projectId=${projectConfig.project}` : "";
       execSync(`${getRecorderDistCommand()} --crusher-cli-path=${eval("__dirname") + "/index.js"} ${customFlags} --no-sandbox`, {stdio: "inherit"});
     })

@@ -49,5 +49,4 @@ module.exports = {
     }),
     new FixSharedOutputPlugin(),
   ],
-  externals: ["iconv-lite"]
 };

@@ -48,10 +48,15 @@ export const getProjectConfigPath = () => {
   return configPath;
 }
 
+let hasLoggedProjectConfig = false;
 export const getProjectConfig = () => {
   const configPath = getProjectConfigPath();
-  if(!fs.existsSync(configPath)) return null;
+  if(!fs.existsSync(configPath)) { if(!hasLoggedProjectConfig) { console.log("No project config found"); hasLoggedProjectConfig=true;} return null; }
 
-
+  if(!hasLoggedProjectConfig) {
+    hasLoggedProjectConfig = true;
+    console.log("Reading project config from: " + configPath);
+  }
+  hasLoggedProjectConfig = true;
   return JSON.parse(fs.readFileSync(configPath, "utf8"));
 };
