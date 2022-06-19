@@ -16,10 +16,23 @@ import { getProjectNameFromGitInfo } from "./index";
 import { getAppConfig, setAppConfig } from "../utils/appConfig";
 import { downloadFile } from "./common";
 
-export async function makeSureSetupIsCorrect(projectId: string | null = null) {
+export async function makeSureSetupIsCorrect(projectId: string | null = null, ask = false) {
   const projectConfig = getProjectConfig();
 
   if (!projectConfig) {
+    if(ask === true) {
+      console.log("");
+      const shouldInit = await inquirer.prompt([
+        {
+          name: "shouldInit",
+          message: "Should we create a project for this dir?",
+          type: "confirm",
+          default: true,
+        },
+      ]);
+      if(!shouldInit)
+      return;
+    }
     const projectConfig: any = { backend: resolveBackendServerUrl("") };
     if (projectId) {
       projectConfig.project = projectId;

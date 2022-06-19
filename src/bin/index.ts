@@ -3,7 +3,7 @@ import EntryCommand from "../commands/index";
 import { getProjectNameFromGitInfo } from "../utils";
 import { loadUserInfoOnLoad } from "../utils/hooks";
 import { getProjectConfig, getProjectConfigPath } from "../utils/projectConfig";
-import { installCrusherRecorder } from "../utils/setup";
+import { installCrusherRecorder, makeSureSetupIsCorrect } from "../utils/setup";
 import { getRecorderDistCommand, resolvePathToAppDirectory } from "../utils/utils";
 
 const nodeVersion = process.version.match(/^v(\d+\.\d+)/)[1];
@@ -24,6 +24,7 @@ if (parseFloat(nodeVersion) >= 10.0) {
       const projectConfigPath = getProjectConfigPath();
       const projectConfig = getProjectConfig();
 
+      await makeSureSetupIsCorrect(null, true);
       // let noProjectFlags = "";
       // if (!projectConfig) {
       //   const suggestedProjectName = await getProjectNameFromGitInfo();
