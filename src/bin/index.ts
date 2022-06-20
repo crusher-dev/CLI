@@ -21,10 +21,11 @@ if (parseFloat(nodeVersion) >= 10.0) {
       // @Todo: Add support for flag token here
       await loadUserInfoOnLoad({token: undefined});
       await installCrusherRecorder();
+      await makeSureSetupIsCorrect(null, true);
+
       const projectConfigPath = getProjectConfigPath();
       const projectConfig = getProjectConfig();
 
-      await makeSureSetupIsCorrect(null, true);
       // let noProjectFlags = "";
       // if (!projectConfig) {
       //   const suggestedProjectName = await getProjectNameFromGitInfo();
