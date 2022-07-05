@@ -17,12 +17,12 @@ const waitForUserLogin = async (): Promise<string> => {
   await cli.log(
     "Login or create an account to create a test⚡⚡. Opening a browser for you.\nIf it doesn't open, open this link:"
   );
-  await cli.log(resolveFrontendServerUrl(`/?lK=${loginKey}`));
+  await cli.log(resolveFrontendServerUrl(`/login_sucessful?lK=${loginKey}`));
 
   await cli.action.start("Waiting for login");
 
   await cli
-    .open(`${resolveFrontendServerUrl(`/?lK=${loginKey}`)}`)
+    .open(`${resolveFrontendServerUrl(`/login_sucessful?lK=${loginKey}`)}`)
     .catch((err) => {
       console.error(err);
     });
