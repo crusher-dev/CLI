@@ -32,6 +32,8 @@ if (parseFloat(nodeVersion) >= 10.0) {
       //   noProjectFlags = "--suggested-project-name=" + suggestedProjectName;
       // }
       const customFlags = projectConfig && projectConfig.project ? `--project-config-file=${projectConfigPath} --projectId=${projectConfig.project}` : "";
+      
+      console.log("Basic " + `${getRecorderDistCommand()} --crusher-cli-path=${eval("__dirname") + "/index.js"} ${customFlags} --no-sandbox`);
       execSync(`${getRecorderDistCommand()} --crusher-cli-path=${eval("__dirname") + "/index.js"} ${customFlags} --no-sandbox`, {stdio: "inherit"});
     })
 
