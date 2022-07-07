@@ -37,29 +37,26 @@ program
 
 export default class CommandBase {
   options;
-  constructor() {
-    this.options = program.opts();
-    const { help, version } = this.options;
-
-    this.run();
-  }
+  constructor() {}
+  
   help() {
     console.log(`Create a new test`);
   }
 
-  init() {
+  async init() {
     this.options = program.opts();
     const { help, version } = this.options;
     if (help === true) {
-      this.help();
+      await this.help();
       return;
     }
+
+    await this.run();
   }
 
   async run(): Promise<any> {
-    this.init();
     const { token } = this.options;
-
+    console.log("Token is " + token);
     await loadUserInfoOnLoad({ token: token });
     await installCrusherRecorder();
     await makeSureSetupIsCorrect(this.options.projectID);

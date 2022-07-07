@@ -22,7 +22,6 @@ export default class CommandBase {
     const { help, version } = options;
     if (help === true) {
       this.help();
-      return;
     }
     this.run();
   }

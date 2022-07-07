@@ -34,7 +34,7 @@ export default class CommandBase {
     return arr.join("/");
   }
 
-  run() {
+  async run() {
     const type = process.argv[2];
     if (
       type &&
@@ -51,7 +51,7 @@ export default class CommandBase {
       //@ts-ignore
       const requireCommand =typeof __webpack_require__ === "function" ? __non_webpack_require__ : require;
       try {
-        new (requireCommand(
+        await (new (requireCommand(
           path.resolve(
             __dirname,
             "../commands/",
@@ -59,11 +59,11 @@ export default class CommandBase {
               process.env.NODE_ENV === "production" ? "js" : "ts"
             }`
           )
-        ).default)();
+        ).default)()).init();
       } catch (err) {
         if (err.message === "SIGINT") process.exit(1);
 
-        console.log("Error:", err.message);
+        console.log("Error:", err);
         process.exit(1);
       }
     } else {

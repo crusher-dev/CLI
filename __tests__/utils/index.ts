@@ -20,6 +20,9 @@ function createTempGitRepo() {
 }
 
 function createTempCrusherGlobalDir() {
+  if(!fs.existsSync(path.join(__dirname, "../../tmp"))) {
+    fs.mkdirSync(path.join(__dirname, "../../tmp"));
+  }
   const tempDir = fs.mkdtempSync(
     path.join(__dirname, "..", "..", "tmp", ".crusher")
   );

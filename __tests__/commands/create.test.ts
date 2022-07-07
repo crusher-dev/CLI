@@ -6,7 +6,7 @@ import fs from "fs";
 import cli from "cli-ux";
 import { resolve } from "path";
 
-var mock = new MockAdapter(axios);
+var mock = new MockAdapter(axios, { onNoMatch: "passthrough" });
 jest.setTimeout(15000);
 describe("Test create command", () => {
   let stdout, stderr, mockExit, lastTempPath, globalAppDir;
@@ -62,26 +62,23 @@ describe("Test create command", () => {
 
   it("should throw error if not logged in", async () => {
     mock
-      .onGet("https://backend.crusher.dev/cli/get.key")
+      .onGet("http://localhost:8000/cli/get.key")
       .reply(200, { loginKey: "xyzyzyzyzyzy" });
     mock
-      .onGet("https://backend.crusher.dev/cli/status.key?loginKey=xyzyzyzyzyzy")
+      .onGet("http://localhost:8000/cli/status.key?loginKey=xyzyzyzyzyzy")
       .reply(200, {
         status: "Validated",
         userToken: "blablablabla",
       });
 
     try {
-      await new EntryPoint().run([
-        process.argv[0],
-        process.argv[1],
-        "test:create",
-      ]);
+      process.argv[2] = "test:create";
+      await new EntryPoint().run();
     } catch (ex) {
       stderr.push(ex.message);
     }
 
-    expect(stdout.join(" ")).toContain("No user logged in.");
+    expect(stdout.join(" ")).toContain("Invalid user authentication");
   });
 
   it("should request user info", async () => {

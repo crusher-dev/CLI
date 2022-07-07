@@ -10,6 +10,7 @@ import { getProjectConfig } from "./projectConfig";
 
 const getUserInfoFromToken = async (token: string) => {
   // call axios request with token as cookie header
+  console.log("Resolving " +   resolveBackendServerUrl("/users/actions/getUserAndSystemInfo") + " " + token);
   const infoResponse = await axios.get(
     resolveBackendServerUrl("/users/actions/getUserAndSystemInfo"),
     {

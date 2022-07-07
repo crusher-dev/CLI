@@ -46,7 +46,9 @@ describe("Whoami command", () => {
 
   it("should throw error if not logged in", async () => {
     try {
-      await new EntryPoint().run([process.argv[0], process.argv[1], "whoami"]);
+      // command
+      process.argv[2] = "whoami";
+      await new EntryPoint().run();
     } catch (ex) {
       stderr.push(ex.message);
     }
