@@ -18,24 +18,15 @@ program.parse(process.argv);
 export default class CommandBase {
   constructor() {}
 
-  printVersion() {
-    console.log(packgeJSON.version);
-  }
-
   help() {
     console.log(`Logs user out from this machine`);
   }
 
-  init() {
+  async init() {
     const options = program.opts();
-    const { help, version } = options;
+    const { help } = options;
     if (help === true) {
-      this.help();
-      return;
-    }
-
-    if (version === true) {
-      this.printVersion();
+      await this.help();
       return;
     }
   }

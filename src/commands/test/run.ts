@@ -25,14 +25,18 @@ program
 
 export default class CommandBase {
   constructor() {
+
+  }
+
+  async init() {
     const options = program.opts();
     const { help, version } = options;
     if (help === true) {
-      this.help();
+      await this.help();
       return;
     }
 
-    this.run();
+    await this.run();
   }
 
   help() {

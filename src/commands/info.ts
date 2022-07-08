@@ -17,13 +17,15 @@ program.addHelpText(
 program.parse(process.argv);
 
 export default class CommandBase {
-  constructor() {
+  constructor() {}
+
+  async init() {
     const options = program.opts();
     const { help, version } = options;
     if (help === true) {
-      this.help();
+      await this.help();
     }
-    this.run();
+    await this.run();
   }
 
   help() {
